@@ -1,0 +1,28 @@
+.login-header {
+  margin: 0px;
+  padding: 0px;
+  background-color: rgb(3,9,54);
+  height: 80px;
+}
+
+.container-root {
+  padding: 0px;
+  margin: 0px;
+  overflow-x: hidden;
+}
+
+.nav-link {
+  color: rgb(89,146,192);
+  text-decoration: none;
+}
+
+::marker {
+  color: transparent;
+}
+
+.card_component{
+  margin: 15px;
+  border: solid transparent 2px;
+  border-radius: 15px;
+  box-shadow: whitesmoke;
+}

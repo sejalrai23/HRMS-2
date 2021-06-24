@@ -1,0 +1,285 @@
+---------------------------------------input field----------------------------------------
+<CFormFloating className="mb-3" >
+    <CFormControl
+        size="sm"
+        type="text"
+        id="designation"
+        placeholder="name@example.com"
+        required
+    />
+    <CFormLabel htmlFor="designation">Designation</CFormLabel>
+</CFormFloating>
+
+
+---------------------------------------dropdown Select---------------------------------------------
+<CFormFloating>
+    <CFormSelect id="user_type">
+        <option disabled>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </CFormSelect>
+    <CFormLabel htmlFor="user_type">Choose a User Type</CFormLabel>
+</CFormFloating>
+
+
+---------------------------------------form section heading----------------------------------------                    
+<CFormLabel>Hierarchy</CFormLabel>
+
+
+---------------------------------------dropdown+input field----------------------------------------
+<CInputGroup className="mb-3">
+    <CDropdown variant="input-group">
+        <CDropdownToggle color="secondary" variant="outline">
+            Hierarchy Type
+        </CDropdownToggle>
+        <CDropdownMenu>
+            <CDropdownItem href="#">Department</CDropdownItem>
+            <CDropdownItem href="#">Sub-Department</CDropdownItem>
+            <CDropdownItem href="#">Team</CDropdownItem>
+            <CDropdownItem href="#">Management</CDropdownItem>
+        </CDropdownMenu>
+    </CDropdown>
+    <CFormControl size="sm" type="text" id="Hierarchy_name" placeholder="Hierarchy name" />
+</CInputGroup>
+
+
+---------------------------------------button disable technique----------------------------------------                      
+{/* <CButton type="submit" color="success" disabled={enteredPassword === enteredRePassword ? false : true}>Add Employee</CButton> */}
+
+---------------------------------------Radio Button with diasabled, default check & inline------------------------------------------------
+<CFormCheck
+  inline
+  type="radio"
+  name="inlineRadioOptions"
+  id="inlineCheckbox1"
+  value="option1"
+  label="1"
+  defaultChecked
+/>
+<CFormCheck
+  inline
+  type="radio"
+  name="inlineRadioOptions"
+  id="inlineCheckbox2"
+  value="option2"
+  label="2"
+/>
+<CFormCheck
+  inline
+  type="radio"
+  name="inlineRadioOptions"
+  id="inlineCheckbox3"
+  value="option3"
+  label="3 (disabled)"
+  disabled
+/>
+
+
+---------------------------------------blah blah------------------------------------------------
+
+<CForm onSubmit={registerHandler}>
+                <CRow>
+                    <h3>Add User</h3>
+                    {/* <p className="text-medium-emphasis">Create your account</p> */}
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="first_name"
+                                placeholder="name@example.com"
+                                onChange={fNameChangeHandler}
+                                value={enteredFName}
+                                required
+                            />
+                            <CFormLabel htmlFor="first_name">First Name</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="last_name"
+                                placeholder="name@example.com"
+                                onChange={lNameChangeHandler}
+                                value={enteredLName}
+                                required
+                            />
+                            <CFormLabel htmlFor="last_name">Last Name</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                </CRow>
+                <CRow>
+                    <CCol>
+                        <CFormFloating>
+                            <CFormSelect id="user_type">
+                                <option >Open this select menu</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Recruiter">Recruiter</option>
+                                <option value="Vendor">Vendor</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Interviwer">Interviewer</option>
+                            </CFormSelect>
+                            <CFormLabel htmlFor="user_type">Choose a User Type</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    <CCol>
+                        <CFormFloating>
+                            <CFormSelect id="user_role">
+                                <option >Open this select menu</option>
+                                <option value="Super-Admin">Super-Admin</option>
+                                <option value="HR">HR</option>
+                                <option value="Special">Special</option>
+                                <option value="Interviewer">Interviewer</option>
+                            </CFormSelect>
+                            <CFormLabel htmlFor="user_role">Choose a User Role</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                </CRow>
+                <hr />
+                <CFormLabel><b>Hierarchy</b></CFormLabel>
+                <CRow>
+                    <CCol>
+                        <CFormFloating>
+                            <CFormSelect id="Hierarchy_type">
+                                <option >Open this select menu</option>
+                                <option value="Department">Department</option>
+                                <option value="Sub-Department">Sub-Department</option>
+                                <option value="Team">Team</option>
+                                <option value="Management">Management</option>
+                            </CFormSelect>
+                            <CFormLabel htmlFor="user_role">Choose hierarchy type</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="hierarcy_name"
+                                placeholder="name@example.com"
+                                onChange={lNameChangeHandler}
+                                value={enteredLName}
+                                required
+                            />
+                            <CFormLabel htmlFor="hierarcy_name">Hierarchy Name</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    {/* <CInputGroup className="mb-3">
+                    <CDropdown variant="input-group">
+                        <CDropdownToggle color="secondary" variant="outline">
+                            Hierarchy Type
+                        </CDropdownToggle>
+                        <CDropdownMenu>
+                            <CDropdownItem href="#">Department</CDropdownItem>
+                            <CDropdownItem href="#">Sub-Department</CDropdownItem>
+                            <CDropdownItem href="#">Team</CDropdownItem>
+                            <CDropdownItem href="#">Management</CDropdownItem>
+                        </CDropdownMenu>
+                    </CDropdown>
+                    <CFormControl size="sm" type="text" id="Hierarchy_name" placeholder="Hierarchy name" />
+                </CInputGroup> */}
+                </CRow>
+                <CCol>
+                    <CFormLabel htmlFor="job_type">Job Type : </CFormLabel>
+                    <CFormFloating className="mb-3" >
+                        <CFormCheck
+                            inline
+                            type="radio"
+                            name="job_type"
+                            id="job_type"
+                            value="Internship"
+                            label="Internship"
+                        />
+                        <CFormCheck
+                            inline
+                            type="radio"
+                            name="job_type"
+                            id="job_type"
+                            value="Full-Time"
+                            label="Full-Time"
+                        />
+                        <CFormCheck
+                            inline
+                            type="radio"
+                            name="job_type"
+                            id="job_type"
+                            value="Temporary"
+                            label="Temporary"
+                        />
+                    </CFormFloating>
+                </CCol>
+                <CRow>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="email"
+                                id="emailInput"
+                                placeholder="name@example.com"
+                                onChange={emailChangeHandler}
+                                value={enteredEmail}
+                                required
+                            />
+                            <CFormLabel htmlFor="emailInput">Email address</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="designation"
+                                placeholder="name@example.com"
+                            />
+                            <CFormLabel htmlFor="designation">Designation</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                </CRow>
+                <CRow>
+
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="password"
+                                placeholder="name@example.com"
+                                onChange={passwordChangeHandler}
+                                value={enteredPassword}
+                                required
+                            />
+                            <CFormLabel htmlFor="password">Location</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                    <CCol>
+                        <CFormFloating className="mb-3" >
+                            <CFormControl
+                                size="sm"
+                                type="text"
+                                id="password"
+                                placeholder="name@example.com"
+                                onChange={passwordChangeHandler}
+                                value={enteredPassword}
+                                required
+                            />
+                            <CFormLabel htmlFor="password">Branch ID</CFormLabel>
+                        </CFormFloating>
+                    </CCol>
+                </CRow>
+
+                <CCol className="d-flex align-items-center justify-content-center">
+                    <CButton type="submit" color="success" >Add Employee</CButton>
+                </CCol>
+
+            </CForm >
+
+---------------------------------------blah blah------------------------------------------------
+
+
+
+---------------------------------------blah blah------------------------------------------------

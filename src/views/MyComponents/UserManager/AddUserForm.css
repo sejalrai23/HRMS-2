@@ -1,0 +1,24 @@
+.form_container{
+    background-color: whitesmoke;
+    border: 2px solid whitesmoke;
+    border-radius: 25px;
+    padding: 15px;
+    margin: 5px;
+}
+
+.remove_button{
+    border: 0px transparent;
+    background-color: transparent;
+    margin-left: 20px;
+}
+
+.table{
+    overflow-x: auto;
+}
+
+.add{
+    /* display: -ms-inline-grid; */
+    display:flex;
+    justify-content: flex-end;
+    align-items: baseline;
+}

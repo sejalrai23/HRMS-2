@@ -1,0 +1,189 @@
+import React, { useState } from 'react';
+import '../login/Login.css'
+import { Link } from 'react-router-dom'
+import PropTypes from "prop-types";
+import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel } from '@coreui/react'
+// import {CInputGroup, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle} from '@coreui/react'
+function RegisterCard(props) {
+
+    // const existingLoginHandler = (event) => {
+    //     props?.isExistingUser(true);
+    // }
+
+    const [enteredFName, setEnteredFName] = useState("");
+    const [enteredLName, setEnteredLName] = useState("");
+    const [enteredEmail, setEnteredEmail] = useState("");
+    const [enteredPassword, setEnteredPassword] = useState("");
+    const [enteredRePassword, setEnteredRePassword] = useState("");
+    // const [isDisabled, SetIsDisabled] = useState(true)
+
+    const fNameChangeHandler = (event) => {
+        setEnteredFName(event.target.value);
+    };
+    const lNameChangeHandler = (event) => {
+        setEnteredLName(event.target.value);
+    };
+    const emailChangeHandler = (event) => {
+        setEnteredEmail(event.target.value);
+    };
+    const passwordChangeHandler = (event) => {
+        setEnteredPassword(event.target.value);
+    };
+    const rePasswordChangeHandler = (event) => {
+        setEnteredRePassword(event.target.value);
+    };
+
+    // useEffect(()=>{
+    //     if(enteredPassword===enteredRePassword){
+    //         SetIsDisabled(false)
+    //     }
+    // },[enteredPassword,enteredRePassword])
+
+    const registerHandler = (event) => {
+        event.preventDefault();
+        const registerData = {
+            name: {
+                firstName: enteredFName,
+                lastName: enteredLName
+            },
+            email: enteredEmail,
+            password: enteredPassword
+        };
+        postData("https://crm1728.herokuapp.com/super-admin/add", registerData)
+            .then(data => {
+                console.log(data); // JSON data parsed by data.json() call
+            });
+        console.log(registerData)
+        setEnteredFName("");
+        setEnteredLName("");
+        setEnteredEmail("");
+        setEnteredPassword("");
+        setEnteredRePassword("");
+    };
+
+    async function postData(url, data) {
+        console.log(data)
+        const response = await fetch(url, {
+            // mode : 'no-cors',
+            method: 'POST', // *GET, POST, PUT, DELETE, etvc.
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(data)// body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    return (
+        <CCard className="card_component">
+            <CCardBody>
+                <CForm onSubmit={registerHandler}>
+                    <CRow>
+                        <h3>Register</h3>
+                        <p className="text-medium-emphasis">Create your account</p>
+                    </CRow>
+                    <CRow>
+                        <CCol>
+                            <CFormFloating className="mb-3" >
+                                <CFormControl
+                                    size="sm"
+                                    type="text"
+                                    id="first_name"
+                                    placeholder="name@example.com"
+                                    onChange={fNameChangeHandler}
+                                    value={enteredFName}
+                                    required
+                                />
+                                <CFormLabel htmlFor="first_name">First Name</CFormLabel>
+                            </CFormFloating>
+                        </CCol>
+                        <CCol>
+                            <CFormFloating className="mb-3" >
+                                <CFormControl
+                                    size="sm"
+                                    type="text"
+                                    id="last_name"
+                                    placeholder="name@example.com"
+                                    onChange={lNameChangeHandler}
+                                    value={enteredLName}
+                                    required
+                                />
+                                <CFormLabel htmlFor="last_name">Last Name</CFormLabel>
+                            </CFormFloating>
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol>
+                            <CFormFloating className="mb-3" >
+                                <CFormControl
+                                    size="sm"
+                                    type="email"
+                                    id="emailInput"
+                                    placeholder="name@example.com"
+                                    onChange={emailChangeHandler}
+                                    value={enteredEmail}
+                                    required
+                                />
+                                <CFormLabel htmlFor="emailInput">Email address</CFormLabel>
+                            </CFormFloating>
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol>
+                            <CFormFloating className="mb-3" >
+                                <CFormControl
+                                    size="sm"
+                                    type="password"
+                                    id="password"
+                                    placeholder="name@example.com"
+                                    onChange={passwordChangeHandler}
+                                    value={enteredPassword}
+                                    required
+                                />
+                                <CFormLabel htmlFor="password">Password</CFormLabel>
+                            </CFormFloating>
+                        </CCol>
+                        <CCol>
+                            <CFormFloating className="mb-3" >
+                                <CFormControl
+                                    size="sm"
+                                    type="password"
+                                    id="password_repeat"
+                                    placeholder="name@example.com"
+                                    onChange={rePasswordChangeHandler}
+                                    value={enteredRePassword}
+                                    required
+                                />
+                                <CFormLabel htmlFor="password_repeat">Repeat Password</CFormLabel>
+                            </CFormFloating>
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CButton type="submit" color="success" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton>
+                    </CRow>
+                </CForm>
+                <hr />
+                <CRow className="justify-content-start">
+                    <CCol md="4">
+                        Already Existing User?
+                    </CCol>
+
+                    <CCol>
+
+                        <Link to="/login">
+                            <CButton color="primary" className="px-4">Login to existing account</CButton>
+                        </Link>
+
+                        {/* <CButton color="primary" className="px-4" onClick={existingLoginHandler} >Login to existing account</CButton> */}
+                    </CCol>
+
+                </CRow>
+            </CCardBody>
+        </CCard>
+    );
+}
+RegisterCard.propTypes = {
+    isExistingUser: PropTypes.bool
+}
+export default RegisterCard;

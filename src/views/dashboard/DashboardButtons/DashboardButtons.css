@@ -1,0 +1,46 @@
+.mycard{
+    background-color: rgb(51, 153, 255);
+    margin: 5px;
+    height: 100px;
+    width: 150px;
+    display: flex;
+    border-radius: 25px;
+}
+
+.mycard:hover{
+    
+}
+
+.card_text{
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-align: -webkit-center;
+}
+
+/* .mycard:hover .card_text{
+    color: white;
+    font-weight: 500;
+} */
+
+/* .card_icon{
+    margin: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: 45px;
+    margin-right: 45px;
+    border: 1px solid black;
+    border-radius: 80px;
+    background-color: whitesmoke;
+    color: rgb(51, 153, 255);
+}
+
+.mycard:hover .card_icon{
+    background-color: white;
+    border-radius: 80px;
+} */
+
+.mycard > a{
+    text-decoration: none;
+}

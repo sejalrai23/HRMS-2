@@ -1,0 +1,86 @@
+.tree-view{
+  margin: 2px;
+  padding: 2px;
+  max-width: 600px;
+}
+
+.tree-view_item{
+  font-size: 20px;
+  font-weight: bold;
+  animation: items-appear 0.3s ease-out backwards;
+}
+
+.tree-view_item:hover{
+  background-color: rgb(205, 209, 214);
+  border-radius: 20px;
+}
+
+.delete{
+  border: 0px transparent;
+  background-color: inherit;
+  margin-left: 20px;
+}
+
+.tree-view_arrow{
+  
+}
+
+.node{
+  
+}
+
+.tree-view_box{
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.tree-view_children{
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  animation: items-appear 0.3s ease-out backwards;
+  padding-left: 35px;
+}
+
+.inputText{
+  margin-left: 4px;
+  margin-right: 5px;
+  border-radius: 10px;
+  background-color: inherit;
+}
+
+.inputText:focus{
+  background-color: white;
+}
+
+.inputButton{
+  border-radius: 10px;
+  background-color: 	#2eb85c;
+  border-color: inherit;
+  width: 100px;
+}
+
+.info{
+  margin: 2px;
+  padding: 2px;
+}
+
+.info:hover{
+  background-color: rgb(205, 209, 214);
+  border-radius: 20px;
+}
+
+.searchBar{
+  margin: 5px;
+}
+
+
+@keyframes items-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
