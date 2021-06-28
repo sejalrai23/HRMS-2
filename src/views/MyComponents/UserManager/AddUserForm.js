@@ -359,7 +359,7 @@ function AddUserForm(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol> */}
                 <CCol md={2} className="add">
-                    <CButton color="primary" onClick={() => setVisible(!visible)}>+ Add Branch</CButton>
+                    <CButton color="primary" onClick={() => setVisible(!visible)}>+ Add User</CButton>
                 </CCol>
             </CRow>
             <CTable striped hover responsive color="light">

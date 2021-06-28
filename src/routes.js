@@ -1,23 +1,7 @@
 import React from 'react'
 
 // examples
-const MyDashboard = React.lazy(() => import('./views/dashboard/MyDashboard'))
-const UserManager = React.lazy(() => import('./views/MyComponents/UserManager/AddUserForm'))
-const BranchManager = React.lazy(() => import('./views/MyComponents/BranchManager/BranchManager'))
-const HierarchyManager = React.lazy(() => import('./views/MyComponents/HierarchyManager/Hierarchy'))
-// const MRF = React.lazy(() => import('./views/MyComponents/MRF/MRFform'))
-// const LayOffs = React.lazy(() => import('./views/MyComponents/LayOffs/layoffs'))
-// const SourcingChannels = React.lazy(() => import('./views/MyComponents/SourcingChannels/sourcingChannels'))
-// const vendors = React.lazy(() => import('./views/MyComponents/Vendors/vendors'))
-// const walkInHiringEvents = React.lazy(() => import('./views/MyComponents/HiringEvents/hiringEvents'))
-// const orgChart = React.lazy(() => import('./views/MyComponents/OrgChart/orgChart'))
-// const parseResume = React.lazy(() => import('./views/MyComponents/parseResume/parseResume'))
-// const pendingJoinings = React.lazy(() => import('./views/MyComponents/PendingJoinings/pendingJoinings'))
-// const batchwiseJoinings = React.lazy(() => import('./views/MyComponents/'))
-// const hirings = React.lazy(() => import('./views/MyComponents/Hirings/hirings'))
-// const remarks = React.lazy(() => import('./views/MyComponents/Remarks/remarks'))
-// const performance = React.lazy(() => import('./views/MyComponents/Performance/performance'))
-// const BGVreports = React.lazy(() => import('./views/MyComponents/BGV/BGVreports.js'))
+// const MyDashboard = React.lazy(() => import('./views/dashboard/MyDashboard'))
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -66,12 +50,26 @@ const Toasts = React.lazy(() => import('./views/components/notifications/toasts/
 const Widgets = React.lazy(() => import('./views/components/widgets/Widgets'))
 const Charts = React.lazy(() => import('./views/components/charts/Charts'))
 const TryAnything = React.lazy(() => import('./TryAnything'))
+const TryAnything2 = React.lazy(() => import('./TryAnything2'))
+
+
+const MRF = React.lazy(() => import('./views/MyComponents/MRF/MRFform.js'))
+const UserManager = React.lazy(() => import('./views/MyComponents/UserManager/AddUserForm.js'))
+const BranchManager = React.lazy(() => import('./views/MyComponents/BranchManager/BranchManager.js'))
+const HierarchyManager = React.lazy(() => import('./views/MyComponents/HierarchyManager/Hierarchy.js'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/mydashboard', name: 'MyDashboard', component: MyDashboard },
+  // { path: '/mydashboard', name: 'MyDashboard', component: MyDashboard },
   { path: '/tryAnything', name: 'TryAnything', component: TryAnything },
+  { path: '/tryAnything2', name: 'TryAnything2', component: TryAnything2 },
+
+  { path: '/mrf', name: 'MRF', component: MRF },
+  { path: '/userManager', name: 'UserManager', component: UserManager },
+  { path: '/branchManager', name: 'BranchManager', component: BranchManager },
+  { path: '/hierarchyManager', name: 'HierarchyManager', component: HierarchyManager },
+
 
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },

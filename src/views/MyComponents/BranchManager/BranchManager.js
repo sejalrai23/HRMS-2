@@ -56,10 +56,8 @@ function BranchManager(props) {
         console.log("new Branch: ", newBranch)
         postData(endPoints.addBranch, newBranch)
             .then(Data => {
-                setBranches(Data)
                 setIsLoading(true)
-                console.log("ADD called data", Data)
-                console.log("ADD called branches", branches)
+                setBranches([...branches, Data])
             })
     }
 
@@ -75,20 +73,7 @@ function BranchManager(props) {
             })
     }
 
-    useEffect(() => {
-        postData(endPoints.searchBranch, {})
-            .then(Data => {
-                console.log("useEffect called DATA", Data)
-                setBranches(Data)
-                setIsLoading(false)
-            })
-    }, [])
-
-    useEffect(() => {
-        setIsLoading(false)
-    }, [branches])
-
-    async function postData(url, data) {
+    const postData = async (url, data) => {
         setIsLoading(true)
         const response = await fetch(url, {
             method: 'POST',
@@ -103,8 +88,23 @@ function BranchManager(props) {
         console.log(typeof (Data))
         return Data
     }
-    if (isLoading) return null;
-    return (
+
+    useEffect(() => {
+        postData(endPoints.searchBranch, {})
+            .then(Data => {
+                debugger
+                setBranches(Data)
+                setIsLoading(false)
+            })
+    }, [])
+
+    useEffect(() => {
+        setIsLoading(false)
+    }, [branches])
+
+
+
+    return isLoading ? <></> : (
         <CContainer>
             <CRow className="justify-content-between">
                 <CCol xs={10}><h2><b>Manage branches here</b></h2></CCol>
@@ -162,7 +162,9 @@ function BranchManager(props) {
                                     />
                                 </CCol>
                             </CRow>
-                            <CButton type="submit" onClick={() => setVisible(false)} >Add Branch</CButton>
+                            <CButton type="submit" onClick={() => {
+                                setVisible(false);
+                            }} >Add Branch</CButton>
                         </CForm>
                     </CModalBody>
                     <CModalFooter>

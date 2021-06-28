@@ -10,9 +10,9 @@ function MyDashboard(props) {
     return (
         <CContainer>
             <CRow className="d-flex justify-content-around align-items-center">
-                <CCol><DashboardButtons colors="info" path="/login" title="DASHBOARD" /></CCol>
-                <CCol><DashboardButtons colors="info" path="#" title="SEARCH / ADD CANDIDATE" /></CCol>
-                <CCol><DashboardButtons colors="info" path="#" title="MRF" /></CCol>
+                <CCol><DashboardButtons colors="info" path="/mydashboard" title="DASHBOARD" /></CCol>
+                <CCol><DashboardButtons colors="info" path="/userManager" title="SEARCH / ADD CANDIDATE" /></CCol>
+                <CCol><DashboardButtons colors="info" path="/mrf" title="MRF" /></CCol>
                 <CCol><DashboardButtons colors="info" path="#" title="LAYOFFS" /></CCol>
             </CRow>
             <CRow>
@@ -29,8 +29,8 @@ function MyDashboard(props) {
             </CRow>
             <CRow>
                 <CCol><DashboardButtons colors="info" path="#" title="REMARKS" /></CCol>
-                <CCol><DashboardButtons colors="info" path="#" title="ADD/DELETE USER ACCOUNT" /></CCol>
-                <CCol><DashboardButtons colors="info" path="#" title="USER PROFILES" /></CCol>
+                <CCol><DashboardButtons colors="info" path="/userManager" title="ADD/DELETE USER ACCOUNT" /></CCol>
+                <CCol><DashboardButtons colors="info" path="/userManager" title="USER PROFILES" /></CCol>
                 <CCol><DashboardButtons colors="info" path="#" title="PERFORMANCE" /></CCol>
             </CRow>
             <CRow className="justify-content-around align-items-center">
