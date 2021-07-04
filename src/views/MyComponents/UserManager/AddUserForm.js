@@ -208,9 +208,8 @@ function AddUserForm(props) {
         setFilter(event.target.value)
     }
     const fNameChangeHandler = (event) => {
-        // dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
+        dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
         console.log(event.target.value)
-        console.log(formState.fName)
     };
     const lNameChangeHandler = (event) => {
         dispatchForm({ type: "LNAME_INPUT", val: event.target.value })
@@ -406,7 +405,7 @@ function AddUserForm(props) {
             </CTable>
             <CModal size="lg" alignment="center" visible={visible} backdrop={true}>
                 <CModalHeader onDismiss={() => setVisible(false)}>
-                    <CModalTitle>Add New Branch</CModalTitle>
+                    <CModalTitle>Add New Employee</CModalTitle>
                 </CModalHeader>
                 <CModalBody className="bg-light">
                     <CForm onSubmit={formSubmitHandler}>
@@ -492,6 +491,7 @@ function AddUserForm(props) {
                                     // placeholder=""
                                     onChange={hiearchyNameChangeHandler}
                                     required
+                                    on
                                 />
                             </CCol>
                         </CRow>

@@ -18,6 +18,9 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const MyDashboard = React.lazy(() => import('./views/dashboard/MyDashboard'))
 const MRF = React.lazy(() => import('./views/MyComponents/MRF/MRFform.js'))
+const CreateMRFPage = React.lazy(() => import('./views/MyComponents/MRF/CreateMRFPage'))
+const ApprovalForm = React.lazy(() => import('./views/MyComponents/MRF/ApprovalForm.js'))
+
 
 class App extends Component {
   render() {
@@ -31,6 +34,8 @@ class App extends Component {
             <Route exact path="/500" name="Page 500" render={(props) => <Page500 {...props} />} />
             <Route exact path="/mydashboard" name="My Dashboard" render={(props) => <MyDashboard {...props} />} />
             <Route exact path="/mrf" name="MRF" render={(props) => <MRF {...props} />} />
+            <Route exact path="/CreateMRFPage" name="CreateMRFPage" render={(props) => <CreateMRFPage {...props} />} />
+            <Route exact path="/approvalform" name="ApprovalForm" render={(props) => <ApprovalForm {...props} />} />
             <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
           </Switch>
         </React.Suspense>

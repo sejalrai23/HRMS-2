@@ -53,7 +53,7 @@ const TryAnything = React.lazy(() => import('./TryAnything'))
 const TryAnything2 = React.lazy(() => import('./TryAnything2'))
 
 
-const MRF = React.lazy(() => import('./views/MyComponents/MRF/MRFform.js'))
+// const MRF = React.lazy(() => import('./views/MyComponents/MRF/MRFform.js'))
 const UserManager = React.lazy(() => import('./views/MyComponents/UserManager/AddUserForm.js'))
 const BranchManager = React.lazy(() => import('./views/MyComponents/BranchManager/BranchManager.js'))
 const HierarchyManager = React.lazy(() => import('./views/MyComponents/HierarchyManager/Hierarchy.js'))
@@ -65,7 +65,7 @@ const routes = [
   { path: '/tryAnything', name: 'TryAnything', component: TryAnything },
   { path: '/tryAnything2', name: 'TryAnything2', component: TryAnything2 },
 
-  { path: '/mrf', name: 'MRF', component: MRF },
+  // { path: '/mrf', name: 'MRF', component: MRF },
   { path: '/userManager', name: 'UserManager', component: UserManager },
   { path: '/branchManager', name: 'BranchManager', component: BranchManager },
   { path: '/hierarchyManager', name: 'HierarchyManager', component: HierarchyManager },
