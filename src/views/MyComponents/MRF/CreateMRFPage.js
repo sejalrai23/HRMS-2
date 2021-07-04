@@ -161,10 +161,6 @@ const formReducer = (formState, action) => {
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
 
-    // const fNameChangeHandler = (event) => {
-    //     dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
-    //     console.log("inside function", event.target.value)
-    // };
     console.log('hello', formState)
     const positionIDChangeHandler = (event) => {
         dispatchForm({ type: "POSID_INPUT", val: event.target.value })
@@ -303,14 +299,13 @@ function CreateMRFPage(props) {
                         <CCol md={1} className="align-self-end align-items-center justify-content-center"><CButton color="primary">Save</CButton></CCol>
                     </CRow>
                     <CForm onSubmit={addMrfHandler} className="form bg-white">
-                        <h4><b>Title 1</b></h4>
+                        <h4><b>Position</b></h4>
                         <CRow className="mb-3">
                             <CFormLabel htmlFor="pos_id" className="col-sm-2 col-form-label">Position ID</CFormLabel>
                             <CCol sm="4">
                                 <CFormControl
                                     type="text"
                                     id="pos_id"
-                                    // placeholder="First Name"
                                     onChange={positionIDChangeHandler}
                                     required
                                 />
@@ -345,14 +340,13 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="rep_name"
-                                    // placeholder="First Name"
                                     onChange={ReplacementIDChangeHandler}
                                     required
                                 />
                             </CCol>
                         </CRow>
                         <br />
-                        <h4><b>Title 2</b></h4>
+                        <h4><b>Position Details</b></h4>
                         <CRow className="mb-3">
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="h_type">
                                 Hierarchy Type:
@@ -373,21 +367,7 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="h_name"
-                                    // placeholder=""
                                     onChange={hNameChangeHandler}
-                                    required
-                                />
-                            </CCol>
-                        </CRow>
-                        <CRow classname="mb-3">
-                            <CFormLabel htmlFor="skills" className="col-sm-2 col-form-label">Skills required :</CFormLabel>
-                            <CCol className="mb-2">
-                                <CFormControl
-                                    component="textarea"
-                                    rows="1"
-                                    id="skills"
-                                    // placeholder="First Name"
-                                    onChange={skillsChangeHandler}
                                     required
                                 />
                             </CCol>
@@ -398,7 +378,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="rep_man"
-                                    // placeholder="First Name"
                                     onChange={repManChangeHandler}
                                     required
                                 />
@@ -408,7 +387,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="dep_head"
-                                    // placeholder="First Name"
                                     onChange={depHeadChangeHandler}
                                     required
                                 />
@@ -420,40 +398,22 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="sub_head"
-                                    // placeholder="First Name"
                                     onChange={subHeadChangeHandler}
                                     required
                                 />
                             </CCol>
-
-                            <CFormLabel htmlFor="budget" className="col-md-2 col-form-label">Budget</CFormLabel>
-                            <CCol sm="4">
-                                <CInputGroup className="mb-2">
-                                    <CInputGroupText id="basic-addon1">₹</CInputGroupText>
-                                    <CFormControl
-                                        type="number"
-                                        id="budget"
-                                        // placeholder="First Name"
-                                        onChange={budgetChangeHandler}
-                                        required
-                                    />
-                                </CInputGroup>
-                            </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
                             <CFormLabel htmlFor="location" className="col-md-2 col-form-label">location</CFormLabel>
                             <CCol sm="4">
                                 <CFormControl
                                     type="text"
                                     id="location"
-                                    // placeholder="First Name"
                                     onChange={locationChangeHandler}
                                     required
                                 />
                             </CCol>
                         </CRow>
                         <br />
-                        <h4><b>Title 3</b></h4>
+                        <h4><b>Job Details</b></h4>
                         <CInputGroup className="mb-2">
                             <CFormLabel className="col-md-2 col-form-label" htmlFor="j_desc">Job Description</CFormLabel>
                             <CFormControl type="file" id="j_desc" onChange={jDescChangeHandler} />
@@ -464,7 +424,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="number"
                                     id="age"
-                                    // placeholder="First Name"
                                     onChange={ageChangeHandler}
                                     required
                                 />
@@ -474,8 +433,19 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="text"
                                     id="h_qual"
-                                    // placeholder="First Name"
                                     onChange={hQualChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow classname="mb-3">
+                            <CFormLabel htmlFor="skills" className="col-sm-2 col-form-label">Skills required :</CFormLabel>
+                            <CCol className="mb-2">
+                                <CFormControl
+                                    component="textarea"
+                                    rows="1"
+                                    id="skills"
+                                    onChange={skillsChangeHandler}
                                     required
                                 />
                             </CCol>
@@ -486,7 +456,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="number"
                                     id="rel_exp"
-                                    // placeholder="First Name"
                                     onChange={relExpChangeHandler}
                                     required
                                 />
@@ -496,7 +465,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="number"
                                     id="tot_exp"
-                                    // placeholder="First Name"
                                     onChange={totExpChangeHandler}
                                     required
                                 />
@@ -576,7 +544,6 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="date"
                                     id="s_date"
-                                    // placeholder="First Name"
                                     onChange={sDateChangeHandler}
                                     required
                                 />
@@ -586,10 +553,32 @@ function CreateMRFPage(props) {
                                 <CFormControl
                                     type="date"
                                     id="e_date"
-                                    // placeholder="First Name"
                                     onChange={eDateChangeHandler}
                                     required
                                 />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel htmlFor="req_cand" className="col-md-2 col-form-label">Candidates Required</CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    type="number"
+                                    id="req_cand"
+                                    onChange={requirementChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                            <CFormLabel htmlFor="budget" className="col-md-2 col-form-label">Budget</CFormLabel>
+                            <CCol sm="4">
+                                <CInputGroup className="mb-2">
+                                    <CInputGroupText id="basic-addon1">₹</CInputGroupText>
+                                    <CFormControl
+                                        type="number"
+                                        id="budget"
+                                        onChange={budgetChangeHandler}
+                                        required
+                                    />
+                                </CInputGroup>
                             </CCol>
                         </CRow>
                         <CRow classname="mb-3">
@@ -599,24 +588,12 @@ function CreateMRFPage(props) {
                                     component="textarea"
                                     rows="2"
                                     id="remarks"
-                                    // placeholder="First Name"
                                     onChange={remarksChangeHandler}
                                     required
                                 />
                             </CCol>
                         </CRow>
-                        <CRow className="mb-3">
-                            <CFormLabel htmlFor="req_cand" className="col-md-2 col-form-label">Candidates Required</CFormLabel>
-                            <CCol sm="1">
-                                <CFormControl
-                                    type="number"
-                                    id="req_cand"
-                                    // placeholder="First Name"
-                                    onChange={requirementChangeHandler}
-                                    required
-                                />
-                            </CCol>
-                        </CRow>
+
                         <br />
                         <div className="center">
                             <CButton type="submit" >Create MRF</CButton>

@@ -305,7 +305,7 @@ function MRFform(props) {
                                 FILTER BAR
                             </CCol>
                             <CCol md={10} className="mainContent align-self-end align-items-center justify-content-center">
-                                <CContainer fluid className="bg-danger">
+                                <CContainer fluid >
                                     <MDBDataTableV5
                                         small
                                         hover
@@ -313,7 +313,7 @@ function MRFform(props) {
                                         fullPagination
                                         entriesOptions={[5, 20, 25]}
                                         entries={5}
-                                        bordered
+                                        // bordered
                                         scrollX
                                         searchTop
                                         searchBottom={false}

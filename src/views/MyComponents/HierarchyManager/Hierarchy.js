@@ -10,6 +10,7 @@ import endPoints from 'src/utils/EndPointApi';
 
 function HierarchyF(props) {
 
+    const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU0MjA0MTEsImV4cCI6MTYyNTQ1NjQxMX0.lBPfeOFJKZYNWCH1eXlhimL3JMQDar2sidMizgBx43I'
     const [isLoading, setIsLoading] = useState()
     const [dataList, setDataList] = useState([])
     const [searchedDepartment, setSearchedDepartment] = useState("")
@@ -32,11 +33,13 @@ function HierarchyF(props) {
     const searchHandler = () => {
         console.log("Search button hit")
         console.log("dataList : ", dataList)
+        console.log("searched department: ", searchedDepartment)
         const arr = dataList.filter(obj => (obj.type === "Department" && obj.name.toUpperCase().includes(searchedDepartment.toUpperCase())))
         console.log("arr : ", arr)
         var searchArr = []
         for (let deps of arr) {
             console.log("before condition : ", deps)
+            searchArr.push(deps)
             for (let subs of dataList) {
                 if (subs.type === "Sub-Department" && subs.parent === deps.name) {
                     console.log("subs : ", subs)
@@ -57,7 +60,7 @@ function HierarchyF(props) {
         // setDataList(dataList.filter(obj => (obj.type === "Department" && obj.name.toUpperCase().includes(searchedDepartment.toUpperCase()))))
     }
     const clearHandler = () => {
-        postData(endPoints.searchHierarchy, {})
+        showData(endPoints.searchHierarchy)
             .then(data => setDataList(data))
         setSearchedDepartment("")
     }
@@ -67,11 +70,11 @@ function HierarchyF(props) {
             name: event.target.className.baseVal,
         }
         console.log("Department to be removed: ", delDep)
-        postData(endPoints.removeHierarchy, delDep)
+        removeData(endPoints.removeHierarchy, delDep)
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy, {})
                         .then(data => setDataList(data))
                 }
             })
@@ -82,11 +85,11 @@ function HierarchyF(props) {
             name: event.target.className.baseVal,
         }
         console.log("Sub- Department to be removed: ", delSub)
-        postData(endPoints.removeHierarchy, delSub)
+        removeData(endPoints.removeHierarchy, delSub)
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy)
                         .then(data => setDataList(data))
                 }
             })
@@ -97,11 +100,11 @@ function HierarchyF(props) {
             name: event.target.className.baseVal,
         }
         console.log("Team to be removed: ", delTeam)
-        postData(endPoints.removeHierarchy, delTeam)
+        removeData(endPoints.removeHierarchy, delTeam)
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy)
                         .then(data => setDataList(data))
                 }
             })
@@ -118,7 +121,7 @@ function HierarchyF(props) {
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy)
                         .then(data => setDataList(data))
                 }
             })
@@ -137,7 +140,7 @@ function HierarchyF(props) {
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy)
                         .then(data => setDataList(data))
                 }
             })
@@ -156,7 +159,7 @@ function HierarchyF(props) {
             .then(data => {
                 console.log(data.success)
                 if (data.success === true) {
-                    postData(endPoints.searchHierarchy, {})
+                    showData(endPoints.searchHierarchy)
                         .then(data => setDataList(data))
                 }
             })
@@ -164,15 +167,48 @@ function HierarchyF(props) {
         setEnteredTeam("")
     }
     useEffect(() => {
-        postData(endPoints.searchHierarchy, {})
-            .then(data => setDataList(data))
+        showData(endPoints.searchHierarchy)
+            .then(data => {
+                setDataList(data)
+                console.log("Data:", dataList)
+            })
     }, [])
+
+
     async function postData(url, data) {
         setIsLoading(true)
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        });
+        const Data = await response.json();
+        setIsLoading(false)
+        return Data
+    }
+    async function showData(url) {
+        setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+        });
+        const Data = await response.json();
+        setIsLoading(false)
+        return Data
+    }
+    async function removeData(url, data) {
+        setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(data)
         });
@@ -209,7 +245,7 @@ function HierarchyF(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol>
             </CRow>
-
+            {console.log("tree structure starting", dataList, Departments)}
             <CRow className="mt-3 pt-3 tree-view_box">
                 {Departments.map((department, i) => {
                     const label = <span className="node"><RiBuilding4Line /> {department.name} <CTooltip content="Delete Department" placement="end"><button id={department.name} className="delete" onClick={deleteDepartmentHandler}><AiOutlineMinusCircle className={department.name} /></button></CTooltip></span>
