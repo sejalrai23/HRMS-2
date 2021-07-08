@@ -11,6 +11,9 @@ const endPoints = {
     searchBranch: baseLink + "/branch",
     removeBranch: baseLink + "/branch",
     addBranch: baseLink + "/branch",
+    searchUser: baseLink + "/user", //
+    removeUser: baseLink + "/user", //success
+    addUser: baseLink + "/user", //success
 }
 
 module.exports = endPoints;

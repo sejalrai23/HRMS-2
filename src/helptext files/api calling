@@ -12,7 +12,7 @@
         });
             return response.json(); // parses JSON response into native JavaScript objects
         }
-
+------------------------------------------------------------------------------------------------------------
 const registerData = {
             name: {
                 firstName: enteredFName,
@@ -21,11 +21,50 @@ const registerData = {
             email: enteredEmail,
             password: enteredPassword
         };
-        postData("https://crm1728.herokuapp.com/super-admin/add", registerData)
-            .then(data => {
-                console.log(data); // JSON data parsed by data.json() call
-            });
-        console.log(registerData)
+postData("https://crm1728.herokuapp.com/super-admin/add", registerData)
+    .then(data => {
+        console.log(data); // JSON data parsed by data.json() call
+    });
+console.log(registerData)
+----------------------------------------------------------------------------------------------------------------
+async function postData(url, data) {
+    setIsLoading(true)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    const Data = await response.json();
+    setIsLoading(false)
+    return Data
+}
 
+async function showData(url) {
+    setIsLoading(true)
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    const Data = await response.json();
+    setIsLoading(false)
+    return Data
+}
 
-------------------------------------------------
+async function removeData(url, data) {
+    setIsLoading(true)
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    const Data = await response.json();
+    setIsLoading(false)
+    return Data
+}
+-------------------------------------------------------------------

@@ -57,6 +57,8 @@ const TryAnything2 = React.lazy(() => import('./TryAnything2'))
 const UserManager = React.lazy(() => import('./views/MyComponents/UserManager/AddUserForm.js'))
 const BranchManager = React.lazy(() => import('./views/MyComponents/BranchManager/BranchManager.js'))
 const HierarchyManager = React.lazy(() => import('./views/MyComponents/HierarchyManager/Hierarchy.js'))
+const Approval = React.lazy(() => import('./views/MyComponents/Approval/Approval.js'))
+// const Approval = React.lazy(() => import('./views/MyComponents/Approval/Approval.js'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -69,7 +71,8 @@ const routes = [
   { path: '/userManager', name: 'UserManager', component: UserManager },
   { path: '/branchManager', name: 'BranchManager', component: BranchManager },
   { path: '/hierarchyManager', name: 'HierarchyManager', component: HierarchyManager },
-
+  { path: '/approval', name: 'Approval', component: Approval },
+  // { path: '/approval', name: 'Approval', component: Approval },
 
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },

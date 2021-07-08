@@ -49,7 +49,7 @@ const _nav = [
   {
     _component: 'CNavItem',
     as: NavLink,
-    anchor: 'HIerarchyManager',
+    anchor: 'HierarchyManager',
     to: '/hierarchyManager',
     icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
   },
@@ -58,6 +58,13 @@ const _nav = [
     as: NavLink,
     anchor: 'MRF',
     to: '/mrf',
+    icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
+  },
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Approval',
+    to: '/approval',
     icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
   },
   {

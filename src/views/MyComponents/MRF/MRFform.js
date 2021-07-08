@@ -2,152 +2,10 @@ import React, { useState, useReducer } from 'react';
 import { Link } from 'react-router-dom'
 import './MRFform.css'
 import { MDBDataTableV5 } from 'mdbreact';
-import {
-    CContainer, CRow, CCol, CBadge, CButton, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle,
-    CForm, CFormControl, CFormLabel, CFormSelect, CFormCheck, CInputGroup, CInputGroupText
-} from '@coreui/react'
-import { AppContent, AppSidebar, AppFooter, AppHeader, AppHeader2 } from '../../../components/index'
-
-const InitialFormState = {
-    designation: {
-        positionID: "",
-        position_type: "",
-        replacement_id: ""
-    },
-    hierarchyName: "",
-    hierarchyType: "",
-    skillsRequired: [{}],
-    reporting_manage: "",
-    department_head: "",
-    sub_dep_head: "",
-    location: "",
-    budget: "",
-    jd_attachment: "",
-    specification: {
-        age: "",
-        rel_exp: "",
-        total_exp: "",
-        education: "",
-    },
-    diversity: "",
-    start_date: "",
-    end_date: "",
-    job_type: "",
-    status: "",
-    candidate: {
-        requirement: "",
-        screening: "",
-        lined_up: "",
-        interviewed: "",
-        shortlisted: "",
-    },
-    remarks: ""
-}
-
-const formReducer = (formState, action) => {
-    switch (action.type) {
-        case "POS_ID_INPUT":
-            return {
-                ...formState,
-                positionID: action.val
-            }
-        case "POS_TYPE_INPUT":
-            return {
-                ...formState,
-                position_type: action.val
-            }
-        case "REPL_ID_INPUT":
-            return {
-                ...formState,
-                replacement_id: action.val
-            }
-        case "SELECT_HTYPE":
-            return {
-                ...formState,
-                hierarchyType: action.val
-            }
-        case "SELECT_HNAME":
-            return {
-                ...formState,
-                hierarchyName: action.val
-            }
-        case "SKILLS_INPUT":
-            return {
-                ...formState,
-                skillsRequired: action.val
-            }
-        case "REP_MAN_INPUT":
-            return {
-                ...formState,
-                reporting_manage: action.val
-            }
-        case "DEP_MAN_INPUT":
-            return {
-                ...formState,
-                department_head: action.val
-            }
-        case "SUB_MAN_INPUT":
-            return {
-                ...formState,
-                sub_dep_head: action.val
-            }
-        case "BUDGET_INPUT":
-            return {
-                ...formState,
-                budget: action.val
-            }
-        case "ATTACH_JD":
-            return {
-                ...formState,
-                jd_attachment: action.val
-            }
-        case "AGE_INPUT":
-            return {
-                ...formState,
-                budget: action.val
-            }
-        case "HQUAL_INPUT":
-            return {
-                ...formState,
-                budget: action.val
-            }
-        case "REL_EXP_INPUT":
-            return {
-                ...formState,
-                budget: action.val
-            }
-        case "TOT_EXP_INPUT":
-            return {
-                ...formState,
-                budget: action.val
-            }
-        case "DIVERSITY_INPUT":
-            return {
-                ...formState,
-                diversity: action.val
-            }
-        case "JTYPE_INPUT":
-            return {
-                ...formState,
-                diversity: action.val
-            }
-        case "START_DATE_INPUT":
-            return {
-                ...formState,
-                uRole: action.val
-            }
-        case "END_DATE_INPUT":
-            return {
-                ...formState,
-                uRole: action.val
-            }
-        default: return formState
-    }
-}
+import { CContainer, CRow, CCol, CBadge, CButton } from '@coreui/react'
+import { AppFooter, AppHeader2 } from '../../../components/index'
 
 function MRFform(props) {
-    const [visible, setVisible] = useState(false)
-    const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
     const [datatable, setDatatable] = useState({
         columns: [
             {
@@ -287,6 +145,8 @@ function MRFform(props) {
 
         ],
     });
+
+
 
     return (
         <div>

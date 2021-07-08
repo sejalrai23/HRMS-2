@@ -9,7 +9,6 @@ import { GrAddCircle } from "react-icons/gr";
 import endPoints from 'src/utils/EndPointApi';
 
 function HierarchyF(props) {
-
     const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU0MjA0MTEsImV4cCI6MTYyNTQ1NjQxMX0.lBPfeOFJKZYNWCH1eXlhimL3JMQDar2sidMizgBx43I'
     const [isLoading, setIsLoading] = useState()
     const [dataList, setDataList] = useState([])
@@ -221,6 +220,7 @@ function HierarchyF(props) {
     const Departments = dataList.filter(obj => obj.type === "Department")
     return (
         <CContainer fluid>
+            {console.log("inside return")}
             <CRow>
                 <CCol md={3} >
                     <CFormFloating className="mb-3" >

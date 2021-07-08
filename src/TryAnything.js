@@ -1,21 +1,15 @@
 import React from 'react';
-import { CRow, CContainer } from '@coreui/react'
-import BranchManager from './views/MyComponents/BranchManager/BranchManager'
+// import { useState, useEffect } from 'react';
+// import BranchManager from './views/MyComponents/BranchManager/BranchManager'
 // import Hierarchy from './views/MyComponents/HierarchyManager/Hierarchy';
 // import AddUserForm from './views/MyComponents/UserManager/AddUserForm';
-
+// import { Link } from "react-router-dom";
+// import { CButton } from '@coreui/react';
 
 function TryAnything(props) {
+
     return (
-        <CContainer>
-            <h1>Try anything here</h1>
-            <hr />
-            <CRow>
-                {/* <Hierarchy /> */}
-                {/* <AddUserForm /> */}
-                <BranchManager />
-            </CRow>
-        </CContainer>
+        <h1>try</h1>
     );
 }
 
