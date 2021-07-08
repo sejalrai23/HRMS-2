@@ -176,7 +176,7 @@ const formReducer = (formState, action) => {
 
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU2OTA4MDMsImV4cCI6MTYyNTcyNjgwM30.pjh7vt1uRzrj9SyGU_v-7NmbPiSRvwnZizYX61iBG6E";
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
 
     const [userList, setUserList] = useState()
     const [hierarchyList, setHierarchyList] = useState()
@@ -318,21 +318,22 @@ function CreateMRFPage(props) {
             hierarchyID: formState.hierarchyID,
             skillsRequired: formState.skillsRequired,
             reporting_manager: formState.reporting_manager,
-            department_head: formState.department_head,
-            sub_dep_head: formState.sub_dep_head,
-            location: formState.branch_name,
+            departmentHead: formState.department_head,
+            subDepHead: formState.sub_dep_head,
+            branchID: formState.branch_name,
+            location: formState.branch_location,
             budget: formState.budget,
             jd_attachment: formState.jd_attachment,
             specifications: {
                 age: formState.age,
-                rel_exp: formState.rel_exp,
-                total_exp: formState.total_exp,
+                relExp: formState.rel_exp,
+                totalExp: formState.total_exp,
                 education: formState.education,
             },
             diversity: formState.diversity,
-            start_date: formState.start_date,
-            end_date: formState.end_date,
-            job_type: formState.job_type,
+            startDate: formState.start_date,
+            endDate: formState.end_date,
+            jobType: formState.job_type,
             status: formState.status,
             candidate: {
                 requirement: formState.requirement,
@@ -471,15 +472,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="rep_name"
-                                    onChange={ReplacementIDChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-
                         </CRow>
 
 
@@ -513,14 +505,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="h_name"
-                                    onChange={hNameChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
 
 
@@ -535,14 +519,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="rep_man"
-                                    onChange={repManChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
 
                             <CFormLabel htmlFor="dep_head" className="col-sm-2 col-form-label">Department Head</CFormLabel>
                             <CCol sm="4">
@@ -554,14 +530,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="dep_head"
-                                    onChange={depHeadChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
 
 
@@ -576,33 +544,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="sub_head"
-                                    onChange={subHeadChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-
-                            {/* <CFormLabel htmlFor="location" className="col-md-2 col-form-label">location</CFormLabel>
-                            <CCol sm="4">
-                                <Select
-                                    options={branchLocationOptions}
-                                    isSearchable
-                                    // isClearable
-                                    onChange={locationChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="location"
-                                    onChange={locationChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
                         <CRow className="mb-3">
 
@@ -661,15 +602,6 @@ function CreateMRFPage(props) {
 
                         <CRow classname="mb-3">
                             <CFormLabel htmlFor="skills" className="col-sm-2 col-form-label">Skills required :</CFormLabel>
-                            {/* <CCol className="mb-2">
-                                <CFormControl
-                                    component="textarea"
-                                    rows="1"
-                                    id="skills"
-                                    onChange={skillsChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                             <CCol className="mb-2">
                                 <CreatableSelect
                                     isMulti

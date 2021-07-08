@@ -6,6 +6,7 @@ import { CContainer, CRow, CCol, CBadge, CButton } from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index'
 
 function MRFform(props) {
+    const [mrfList, setMRFList] = useState()
     const [datatable, setDatatable] = useState({
         columns: [
             {
@@ -69,84 +70,133 @@ function MRFform(props) {
                 width: 150,
             },
         ],
-        rows: [
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
-            {
-                showButton: <CButton className="">Show</CButton>,
-                position_id: 'System Architect',
-                position_type: 'Edinburgh',
-                hierarchy_type: '61',
-                hierarchy_name: '61',
-                repoting_manager: '61',
-                startDate: '2011/04/25',
-                endDate: '2011/04/25',
-                diversity: '61',
-                job_type: '$320',
-            },
+        rows: mrfList
+        // rows: [
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
+        //     {
+        //         showButton: <CButton className="">Show</CButton>,
+        //         position_id: 'System Architect',
+        //         position_type: 'Edinburgh',
+        //         hierarchy_type: '61',
+        //         hierarchy_name: '61',
+        //         repoting_manager: '61',
+        //         startDate: '2011/04/25',
+        //         endDate: '2011/04/25',
+        //         diversity: '61',
+        //         job_type: '$320',
+        //     },
 
-        ],
+        // ],
     });
 
+    async function postData(url, data) {
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const Data = await response.json();
+        // setIsLoading(false)
+        return Data
+    }
 
+    async function showData(url) {
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const Data = await response.json();
+        // setIsLoading(false)
+        return Data
+    }
+
+    async function removeData(url, data) {
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const Data = await response.json();
+        // setIsLoading(false)
+        return Data
+    }
+
+    useEffect(() => {
+        console.log("in use effect")
+        // showData(endPoints.searchMRF)
+        //     .then(Data => {
+        //         console.log("mrfList:", Data)
+        //         setMRFList(Data)
+        //     })
+    }, [])
 
     return (
         <div>
@@ -169,7 +219,7 @@ function MRFform(props) {
                                     <MDBDataTableV5
                                         small
                                         hover
-                                        striped
+                                        // striped
                                         fullPagination
                                         entriesOptions={[5, 20, 25]}
                                         entries={5}

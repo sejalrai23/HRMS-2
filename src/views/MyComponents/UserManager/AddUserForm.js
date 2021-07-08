@@ -20,6 +20,7 @@ const InitialFormState = {
     hType: "",
     hName: "",
     jType: "",
+    gender: "",
     diversity: "",
     email: "",
     designation: "",
@@ -28,7 +29,6 @@ const InitialFormState = {
 }
 
 const formReducer = (formState, action) => {
-    console.log("formstate", formState.hType)
     switch (action.type) {
         case "FNAME_INPUT":
             return {
@@ -64,6 +64,11 @@ const formReducer = (formState, action) => {
             return {
                 ...formState,
                 jType: action.val
+            }
+        case "GENDER_INPUT":
+            return {
+                ...formState,
+                gender: action.val
             }
         case "DIVERSITY_INPUT":
             return {
@@ -104,7 +109,7 @@ function AddUserForm(props) {
     const [branchList, setBranchList] = useState()
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU2OTA4MDMsImV4cCI6MTYyNTcyNjgwM30.pjh7vt1uRzrj9SyGU_v-7NmbPiSRvwnZizYX61iBG6E";
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
 
 
     const branchNameOptions = []
@@ -138,17 +143,14 @@ function AddUserForm(props) {
         setFilter("")
         showData(endPoints.searchUser)
             .then(Data => {
-                console.log("user:", Data)
                 setUserList(Data)
             })
     }
     const searchInputChangeHandler = (event) => {
         setSearchedItem(event.target.value)
-        console.log("setSearchedItem", event.target.value)
     }
     const selectedFilterByHandler = (event) => {
         setFilter(event.target.value)
-        console.log("setFilter", event.target.value)
     }
     const searchFormHandler = (event) => {
         event.preventDefault()
@@ -158,52 +160,42 @@ function AddUserForm(props) {
             case "name.fName":
                 list = userList.filter(user => user.name.firstName.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "uType":
                 list = userList.filter(user => user.userType.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "uRole":
                 list = userList.filter(user => user.userRole.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "jType":
                 list = userList.filter(user => user.jobType.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "hierarchy.hType":
                 list = userList.filter(user => user.hierarchyID.type.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "hierarchy.hName":
                 list = userList.filter(user => user.hierarchyID.name.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "diversity":
                 list = userList.filter(user => user.diversity.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "location":
                 list = userList.filter(user => user.branchID.location.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "email":
                 list = userList.filter(user => user.email.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                // console.log(list)
                 break;
             case "BID":
                 list = userList.filter(user => user.branchID.name.toUpperCase().includes(searchedItem.toUpperCase()))
                 setUserList(list)
-                console.log(list)
                 break;
         }
     }
@@ -211,46 +203,38 @@ function AddUserForm(props) {
 
     const fNameChangeHandler = (event) => {
         dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
-        console.log(event.target.value)
     };
     const lNameChangeHandler = (event) => {
         dispatchForm({ type: "LNAME_INPUT", val: event.target.value })
-        console.log(event.target.value)
     };
     const selectedUserTypeHandler = (event) => {
         dispatchForm({ type: "SELECT_UTYPE", val: event.target.value })
-        console.log(event.target.value)
     }
     const selectedUserRoleHandler = (event) => {
         dispatchForm({ type: "SELECT_UROLE", val: event.target.value })
-        console.log(event.target.value)
     }
     const hirearchyTypeChangeHandler = (event) => {
         dispatchForm({ type: "HTYPE_INPUT", val: event.target.value })
-        console.log(event.target.value)
     }
     const hiearchyNameChangeHandler = (event) => {
         dispatchForm({ type: "HNAME_INPUT", val: event.value })
-        console.log(event.value)
     }
     const choosenJobTypeHandler = (event) => {
         dispatchForm({ type: "JTYPE_INPUT", val: event.target.value })
-        console.log(event.target.value)
+    }
+    const genderHandler = (event) => {
+        dispatchForm({ type: "GENDER_INPUT", val: event.target.value })
     }
     const diversityHandler = (event) => {
         dispatchForm({ type: "DIVERSITY_INPUT", val: event.target.value })
-        console.log(event.target.value)
     }
     const emailChangeHandler = (event) => {
         dispatchForm({ type: "EMAIL_INPUT", val: event.target.value })
-        console.log(event.target.value)
     };
     const designationChangeHandler = (event) => {
         dispatchForm({ type: "DESIGNATION_INPUT", val: event.target.value })
-        console.log(event.target.value)
     }
     const locationChangeHandler = (event) => {
-        console.log(event, event.value)
         dispatchForm({ type: "LOCATION_INPUT", val: event.value })
     };
     const branchIDHandler = (event) => {
@@ -269,11 +253,7 @@ function AddUserForm(props) {
             userType: formState.uType,
             userRole: formState.uRole,
             hierarchyID: formState.hName,
-            // hierarchy: {
-            //     type: formState.hType,
-            //     name: formState.hName,
-            // },
-            gender: "male",
+            gender: formState.gender,
             designation: formState.designation,
             jobType: formState.jType,
             diversity: formState.diversity,
@@ -281,29 +261,30 @@ function AddUserForm(props) {
             location: formState.location,
             branchID: formState.BID
         }
-        console.log(newEmp)
+        console.log("adding: ", newEmp)
         postData(endPoints.addUser, newEmp)
             .then(data => {
-                console.log(data)
                 if (data.Success === true) {
                     showData(endPoints.searchUser)
-                        .then(data => setUserList(data))
+                        .then(Data => {
+                            setUserList(Data)
+                        })
                 }
             })
         event.target.reset()
     }
-
-
     const deleteUserHandler = (event) => {
-        console.log(event.target.className.baseVal)
-        const delUser = userList.filter(user => user.email === event.target.className.baseVal)
-        console.log(delUser)
+        const delUser = {
+            _id: event.target.className.baseVal
+        }
+        console.log("deleting user: ", delUser)
         removeData(endPoints.removeUser, delUser)
             .then(data => {
-                console.log(data)
                 if (data.Success === true) {
                     showData(endPoints.searchUser)
-                        .then(data => setUserList(data))
+                        .then(Data => {
+                            setUserList(Data)
+                        })
                 }
             })
     }
@@ -358,17 +339,17 @@ function AddUserForm(props) {
         console.log("in use effect")
         showData(endPoints.searchUser)
             .then(Data => {
-                console.log("user:", Data)
+                console.log("userList:", Data)
                 setUserList(Data)
             })
         showData(endPoints.searchHierarchy)
             .then(Data => {
-                console.log("hierarchy:", Data)
+                console.log("hierarchyList:", Data)
                 setHierarchyList(Data)
             })
         showData(endPoints.searchBranch)
             .then(Data => {
-                console.log("branch:", Data)
+                console.log("branchList:", Data)
                 setBranchList(Data)
             })
     }, [])
@@ -376,7 +357,6 @@ function AddUserForm(props) {
 
     return (
         <CContainer>
-            {console.log("hello")}
             <CRow className="mb-3">
                 <CForm onSubmit={searchFormHandler}>
                     <CRow>
@@ -423,11 +403,11 @@ function AddUserForm(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol> */}
             </CRow>
-            <CTable striped hover responsive color="light">
+            <CTable striped responsive hover color="light">
                 <CTableHead color="primary">
                     <CTableRow >
                         <CTableHeaderCell className="text-center" scope="col"></CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">First Name</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center fnh" scope="col" style={{ width: "30%" }}>First Name</CTableHeaderCell>
                         <CTableHeaderCell className="text-center" scope="col">Last Name</CTableHeaderCell>
                         <CTableHeaderCell className="text-center" scope="col">User Type</CTableHeaderCell>
                         <CTableHeaderCell className="text-center" scope="col">User Role</CTableHeaderCell>
@@ -444,11 +424,10 @@ function AddUserForm(props) {
                 <CTableBody>
                     {
                         userList?.map((user, key) => {
-                            console.log("user", user)
                             return (
                                 <CTableRow key={user.email} className="t_row">
-                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user.email} /></button></CTableHeaderCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.name.firstName}</CTableDataCell>
+                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button></CTableHeaderCell>
+                                    <CTableDataCell className="text-center" scope="col" style={{ width: "30%" }}>{user.name.firstName}</CTableDataCell>
                                     <CTableDataCell className="text-center" scope="col">{user.name.lastName}</CTableDataCell>
                                     <CTableDataCell className="text-center" scope="col">{user.userType}</CTableDataCell>
                                     <CTableDataCell className="text-center" scope="col">{user.userRole}</CTableDataCell>
@@ -594,9 +573,9 @@ function AddUserForm(props) {
                                     inline
                                     type="radio"
                                     name="diversity"
-                                    id="diversity1"
-                                    value="Physically Challenged"
-                                    label="Physically Challenged"
+                                    id="diversity3"
+                                    value="General"
+                                    label="General"
                                     onChange={diversityHandler}
                                     required
                                 />
@@ -614,14 +593,49 @@ function AddUserForm(props) {
                                     inline
                                     type="radio"
                                     name="diversity"
-                                    id="diversity3"
-                                    value="Male"
-                                    label="Male"
+                                    id="diversity1"
+                                    value="Physically Challenged"
+                                    label="Physically Challenged"
                                     onChange={diversityHandler}
                                     required
                                 />
                             </CCol>
 
+                        </CRow>
+                        <CRow classname="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="gender">Gender : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender3"
+                                    value="Male"
+                                    label="Male"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender2"
+                                    value="Female"
+                                    label="Female"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender1"
+                                    value="Others"
+                                    label="Others"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                            </CCol>
                         </CRow>
                         <CRow className="mb-3">
 
@@ -675,7 +689,7 @@ function AddUserForm(props) {
                         <br />
 
                         <CCol className="d-flex align-items-center justify-content-center">
-                            <CButton type="submit" color="primary" >Add Employee</CButton>
+                            <CButton type="submit" color="primary" onClick={() => setVisible(false)}>Add Employee</CButton>
                         </CCol>
                     </CForm>
                 </CModalBody>
