@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-import { AppBreadcrumb } from './index'
+// import { AppBreadcrumb } from './index'
 
 import { AppHeaderDropdown } from './header/index'
 
@@ -74,7 +74,7 @@ const AppHeader = () => {
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>
-        <AppBreadcrumb />
+        {/* <AppBreadcrumb /> */}
       </CContainer>
     </CHeader>
   )
