@@ -24,17 +24,19 @@ function ApprovalForm(props) {
     const [Approvers, setApprovers] = React.useState([]);
 
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDY2MzYsImV4cCI6MTYyNTc4MjYzNn0.HzOR8l5v2qqUNJ393k8fpYJL7zNwhrcxU-Nil-tb9A8";
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU5MTEyMjcsImV4cCI6MTYyNTk0NzIyN30.mu3O8gn5iIyPq7UM2jtqclnrMu80C9Pi1L68R5G9Oec";
 
 
 
 
     const [position, setPosition] = useState("");
-    const [cooling, setCooling] = useState("");
-    const [tat, setTAT] = useState("");
+    const [cooling, setCooling] = useState();
+    const [tat, setTAT] = useState();
     const [heirarchydata, setHeirarchyData] = useState("");
     const [branch, setBranch] = useState("");
     const [approver, setApprover] = useState("");
+
+
 
 
     const hierarchyNameOptions = []
@@ -109,6 +111,22 @@ function ApprovalForm(props) {
         // console.log(Data2);
         return Data2
     }
+    async function postData(url, data) {
+        console.log("in post data")
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        });
+        const Data3 = await response.json();
+        console.log(Data3);
+        // setIsLoading(false)
+        return Data3
+    }
 
     useEffect(() => {
         showHeirarchyData(endPoints.searchHierarchy).then(Data => setHeirarchyList(Data));
@@ -121,6 +139,7 @@ function ApprovalForm(props) {
             // console.log(Approvers);
 
         });
+
 
 
 
@@ -152,21 +171,35 @@ function ApprovalForm(props) {
         setApprover(event);
 
     }
+    const approver_id = [];
+    for (var i = 0; i < approver.length; i++) {
+
+        approver_id.push({
+            _id: approver[i].value
+        });
+        console.log(approver_id);
+    }
+
 
     const formSubmitHandler = (event) => {
         event.preventDefault()
         const newEmp = {
             position: position,
-            coolingperiod: cooling,
-            TAT: tat,
-            heirarchytype_id: heirarchydata,
-            branch_id: branch,
-            Approver_id: approver,
+            coolingPeriod: parseInt(cooling),
+            tat: parseInt(tat),
+            hierarchyID: heirarchydata,
+            branchID: branch,
+            approversID: approver_id,
 
         }
+        // console.log(newEmp.TAT);
         console.log(newEmp)
+        // postData(endPoints.addApprovalMatrix, newEmp).then(Data => { console.log(Data) });
         event.target.reset()
     }
+
+
+
 
 
 
@@ -206,7 +239,7 @@ function ApprovalForm(props) {
                                     Cooling Period
                                 </CFormLabel>
                                 <div className="col-sm-6">
-                                    <CFormControl type="text"
+                                    <CFormControl type="number"
                                         onChange={CoolingPeriodChangeHandler}
                                         required />
                                 </div>
@@ -220,7 +253,7 @@ function ApprovalForm(props) {
                                     Turn Around Time
                                 </CFormLabel>
                                 <div className="col-sm-6">
-                                    <CFormControl type="text"
+                                    <CFormControl type="number"
                                         onChange={TATChangeHandler}
                                         required />
                                 </div>
@@ -291,6 +324,7 @@ function ApprovalForm(props) {
                                         isMulti
                                         onChange={ApproverChangeHandler}
                                         options={ApproverNameOptions}
+                                        ActionTypes='clear-option'
                                     />
                                 </CCol>
                                 <CCol className="col-sm-2"></CCol>
