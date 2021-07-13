@@ -4,17 +4,18 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-
 import { icons } from './assets/icons'
-
+import StateProvider from './StateProvider';
 import { Provider } from 'react-redux'
 import store from './store'
-
+import StateReducer, { initialState } from "./Reducer";
 React.icons = icons
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <StateProvider initialState={initialState} reducer={StateReducer}>
+      <App />
+    </StateProvider>
   </Provider>,
   document.getElementById('root'),
 )

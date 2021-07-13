@@ -16,6 +16,10 @@
     overflow-x: auto;
 }
 
+.fnh{
+    color: crimson;
+}
+
 .add{
     /* display: -ms-inline-grid; */
     display:flex;

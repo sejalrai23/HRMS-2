@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import endPoints from 'src/utils/EndPointApi';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import makeAnimated from 'react-select/animated'
+import EditMRFPage from './EditMRFPage';
 
 
 const InitialFormState = {
@@ -176,12 +176,19 @@ const formReducer = (formState, action) => {
 
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU2OTA4MDMsImV4cCI6MTYyNTcyNjgwM30.pjh7vt1uRzrj9SyGU_v-7NmbPiSRvwnZizYX61iBG6E";
-
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYwNzIzNzQsImV4cCI6MTYyNjEwODM3NH0.6PFMGLIN6pjCEPb8c9pOy7tEh5-xkCYWWIg2HVK_9iA"
     const [userList, setUserList] = useState()
     const [hierarchyList, setHierarchyList] = useState()
     const [branchList, setBranchList] = useState()
+    const [approvalList, setApprovalList] = useState()
 
+    const positionNameOptions = []
+    {
+        approvalList?.map(matrix => {
+            positionNameOptions.push({ label: matrix.position, value: matrix._id })
+        })
+    }
+    console.log("positionNameOptions", positionNameOptions)
     const userNameOptions = []
     {
         userList?.map(user => {
@@ -216,8 +223,8 @@ function CreateMRFPage(props) {
 
     console.log('hello0000000000000000000000000000000000000', formState)
     const positionIDChangeHandler = (event) => {
-        dispatchForm({ type: "POSID_INPUT", val: event.target.value })
-        console.log(event.target.value)
+        dispatchForm({ type: "POSID_INPUT", val: event.value })
+        console.log(event.value)
     }
     const posTypeChangeHandler = (event) => {
         dispatchForm({ type: "POSTYPE_INPUT", val: event.target.value })
@@ -318,21 +325,22 @@ function CreateMRFPage(props) {
             hierarchyID: formState.hierarchyID,
             skillsRequired: formState.skillsRequired,
             reporting_manager: formState.reporting_manager,
-            department_head: formState.department_head,
-            sub_dep_head: formState.sub_dep_head,
-            location: formState.branch_name,
+            departmentHead: formState.department_head,
+            subDepHead: formState.sub_dep_head,
+            branchID: formState.branch_name,
+            location: formState.branch_location,
             budget: formState.budget,
             jd_attachment: formState.jd_attachment,
             specifications: {
                 age: formState.age,
-                rel_exp: formState.rel_exp,
-                total_exp: formState.total_exp,
+                relExp: formState.rel_exp,
+                totalExp: formState.total_exp,
                 education: formState.education,
             },
             diversity: formState.diversity,
-            start_date: formState.start_date,
-            end_date: formState.end_date,
-            job_type: formState.job_type,
+            startDate: formState.start_date,
+            endDate: formState.end_date,
+            jobType: formState.job_type,
             status: formState.status,
             candidate: {
                 requirement: formState.requirement,
@@ -407,6 +415,11 @@ function CreateMRFPage(props) {
                 console.log("branch:", Data)
                 setBranchList(Data)
             })
+        showData(endPoints.searchApproval)
+            .then(Data => {
+                console.log("approvals:", Data)
+                setApprovalList(Data)
+            })
     }, [])
 
     return (
@@ -426,9 +439,10 @@ function CreateMRFPage(props) {
                         <CRow className="mb-3">
                             <CFormLabel htmlFor="pos_id" className="col-sm-2 col-form-label">Position ID</CFormLabel>
                             <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="pos_id"
+                                <Select
+                                    options={positionNameOptions}
+                                    isSearchable
+                                    // isClearable
                                     onChange={positionIDChangeHandler}
                                     required
                                 />
@@ -471,15 +485,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="rep_name"
-                                    onChange={ReplacementIDChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-
                         </CRow>
 
 
@@ -513,14 +518,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="h_name"
-                                    onChange={hNameChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
 
 
@@ -535,14 +532,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="rep_man"
-                                    onChange={repManChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
 
                             <CFormLabel htmlFor="dep_head" className="col-sm-2 col-form-label">Department Head</CFormLabel>
                             <CCol sm="4">
@@ -554,14 +543,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="dep_head"
-                                    onChange={depHeadChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
 
 
@@ -576,33 +557,6 @@ function CreateMRFPage(props) {
                                     required
                                 />
                             </CCol>
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="sub_head"
-                                    onChange={subHeadChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-
-                            {/* <CFormLabel htmlFor="location" className="col-md-2 col-form-label">location</CFormLabel>
-                            <CCol sm="4">
-                                <Select
-                                    options={branchLocationOptions}
-                                    isSearchable
-                                    // isClearable
-                                    onChange={locationChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
-                            {/* <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="location"
-                                    onChange={locationChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                         </CRow>
                         <CRow className="mb-3">
 
@@ -661,15 +615,6 @@ function CreateMRFPage(props) {
 
                         <CRow classname="mb-3">
                             <CFormLabel htmlFor="skills" className="col-sm-2 col-form-label">Skills required :</CFormLabel>
-                            {/* <CCol className="mb-2">
-                                <CFormControl
-                                    component="textarea"
-                                    rows="1"
-                                    id="skills"
-                                    onChange={skillsChangeHandler}
-                                    required
-                                />
-                            </CCol> */}
                             <CCol className="mb-2">
                                 <CreatableSelect
                                     isMulti
