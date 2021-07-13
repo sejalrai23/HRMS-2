@@ -24,7 +24,7 @@ function ApprovalForm(props) {
     const [Approvers, setApprovers] = React.useState([]);
 
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU5MTEyMjcsImV4cCI6MTYyNTk0NzIyN30.mu3O8gn5iIyPq7UM2jtqclnrMu80C9Pi1L68R5G9Oec";
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYxNTU5ODgsImV4cCI6MTYyNjE5MTk4OH0.f7bg9bZWHRu3aIC3e-7UFpWW5Mb4s9EWft2smIvsDWQ";
 
 
 
@@ -194,7 +194,7 @@ function ApprovalForm(props) {
         }
         // console.log(newEmp.TAT);
         console.log(newEmp)
-        // postData(endPoints.addApprovalMatrix, newEmp).then(Data => { console.log(Data) });
+        postData(endPoints.addApprovalMatrix, newEmp).then(Data => { console.log(Data) });
         event.target.reset()
     }
 

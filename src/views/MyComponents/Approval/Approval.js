@@ -3,32 +3,30 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import '../MRF/MRFform.css'
 import { MDBDataTableV5 } from 'mdbreact';
-import { CContainer, CRow, CCol, CBadge, CButton } from '@coreui/react'
+import { CContainer, CRow, CCol, CBadge, CButton, CFormCheck, CFormControl } from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index';
 import endPoints from "../../../utils/EndPointApi";
+import { AiOutlineMinusCircle } from "react-icons/ai";
+import { BsEyeFill } from "react-icons/bs";
+import "./Approval.css";
+import ViewApprovalForm from '../MRF/ViewApprovalForm';
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 
 
 
 function Approval(props) {
     const [approvalMatrix, setApprovalMatrix] = useState([]);
+    // const [documentID, setDocumentID] = useState("");
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU5MTEyMjcsImV4cCI6MTYyNTk0NzIyN30.mu3O8gn5iIyPq7UM2jtqclnrMu80C9Pi1L68R5G9Oec";
+    var searchPosition;
+    var searchHierarchy;
+    var searchBranch;
+
+    var searchApprover;
 
 
-    const DataRows = []
-    {
-        approvalMatrix?.map(data => {
-            // console.log(data)
-            for (var i = 0; i < data.approversID.length; i++) {
-                DataRows.push({
-                    position: data.position, heirarchy: data.hierarchyID.name, branchname: data.branchID.name, cooling: data.coolingPeriod,
-                    verificationstatus: data.verified, tatdate: data.tat,
-                    // approverName: data.approversID[i]._id.name.firstName + "" + data.approversID[i]._id.name.lastName
-                })
-            }
-        })
-    }
 
 
     async function showApprovalMatrix(url) {
@@ -47,6 +45,23 @@ function Approval(props) {
         return Data
     }
 
+    async function deleteMatrix(url, data) {
+        // console.log("in post data")
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(data)
+        });
+        const Data1 = await response.json();
+        // console.log(Data1);
+        // setIsLoading(false)
+        return Data1
+    }
+
     useEffect(() => {
 
         showApprovalMatrix(endPoints.showApprovalMatrix).then(Data => {
@@ -55,9 +70,127 @@ function Approval(props) {
         });
 
     }, [])
-    // console.log(approvalMatrix);
+
+
+
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYxNTU5ODgsImV4cCI6MTYyNjE5MTk4OH0.f7bg9bZWHRu3aIC3e-7UFpWW5Mb4s9EWft2smIvsDWQ";
+
+
+
+    // var documentID = "";
+
+    const dataDeleteHandler = (event) => {
+        console.log("deleted")
+        const documentID = event.target.id;
+        // approvalMatrix?.map(data => {
+        //     documentID = data._id;
+        // })
+
+        deleteMatrix(endPoints.deleteApprovalMatrix, { _id: documentID }).then(Data => { console.log(Data) });
+        console.log(typeof (documentID));
+
+
+    }
+
+    const pageChangeHandler = (event) => {
+        console.log("pressed");
+        // <Link to="/viewapprovalform"  ></Link>
+
+
+
+
+
+    }
+
+
+    var approverList = "";
+
+    const DataRows = []
+    {
+        approvalMatrix?.map(data => {
+
+            for (var i = 0; i < data.approversID.length; i++) {
+
+                approverList += data.approversID[i]._id.name.firstName + "  " + data.approversID[i]._id.name.lastName + " " + ",";
+                var approverListfinal = approverList;
+
+            }
+
+            approverList = "";
+
+            console.log(approverListfinal);
+
+
+            // console.log(data)
+            {
+                DataRows.push({
+                    document_id: data._id,
+                    delete: <div className="icons">
+                        <AiOutlineMinusCircle size={20} className="icon1" onClick={dataDeleteHandler} id={data._id} />
+                        <Link to="/viewapprovalform">
+                            <BsEyeFill size={20} className="icon2" onClick={pageChangeHandler} >
+
+                            </BsEyeFill>
+                        </Link>
+                    </div>,
+                    position: data.position,
+                    heirarchy: data.hierarchyID.name,
+                    branchname: data.branchID.name,
+                    cooling: data.coolingPeriod,
+                    verified: data.verified.toString(),
+                    tatdate: data.tat,
+                    approverName: approverListfinal,
+
+                })
+            }
+
+        })
+    }
+
+
+
+
+    console.log(approvalMatrix);
 
     // console.log(DataRows)
+
+    const positionSearchHandler = (event) => {
+        searchPosition = event.target.value;
+        console.log(searchPosition);
+
+
+
+    }
+
+    const heirarchySearchHandler = (event) => {
+        searchHierarchy = event.target.value;
+
+    }
+
+    const branchSearchHandler = (event) => {
+        searchBranch = event.target.value;
+
+    }
+    const approverSearchHandler = (event) => {
+        searchApprover = event.target.value;
+
+    }
+
+    // const filterHandler = (event) => {
+    //     let list = [];
+    //     switch (filterBy) {
+    //         case "searchPosition":
+    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase()))
+    //         case "searchCooling":
+    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchCooling.toUpperCase()))
+    //             break;
+
+
+    //     }
+    //     console.log(list);
+    // }
+
+
 
     const rows = [
         {
@@ -82,13 +215,20 @@ function Approval(props) {
 
 
 
-    const [datatable, setDatatable] = useState({
+    const datatable = {
         columns: [
+
+            {
+                label: '',
+                field: 'delete',
+                width: 20
+
+            },
             {
                 label: 'position',
                 field: 'position',
                 sort: 'asc',
-                width: 200
+                width: 100
             },
             {
                 label: 'Heirarchy',
@@ -102,7 +242,7 @@ function Approval(props) {
                 label: 'Branch Name',
                 field: 'branchname',
                 sort: 'asc',
-                width: 50
+                width: 100
             },
             {
                 label: 'Cooling Period',
@@ -110,12 +250,7 @@ function Approval(props) {
                 sort: 'asc',
                 width: 50
             },
-            {
-                label: 'Verified',
-                field: 'verificationstatus',
-                sort: 'asc',
-                width: 100
-            },
+
             {
                 label: 'TAT',
                 field: 'tatdate',
@@ -123,17 +258,17 @@ function Approval(props) {
                 width: 50
             },
             {
+                label: 'Verification status',
+                field: 'verified',
+                sort: 'asc',
+                width: 100
+            },
+            {
                 label: 'Approver',
                 field: 'approverName',
                 sort: 'asc',
                 width: 100
             },
-            // {
-            //     label: '',
-            //     field: 'id',
-            //     sort: 'asc',
-            //     width: 100
-            // },
         ],
 
 
@@ -144,16 +279,17 @@ function Approval(props) {
         //         position: 'System Architect',
         //         heirarchy: 'dep-1',
         //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
+        //         cooling: '25',
+        //         verified: 'true',
         //         tatdate: '2011/04/25',
         //         approverName: "sejal",
 
-        //         id: <Link to="/approvalform"><CButton>
+        //         button: <Link to="/approvalform"><CButton>
         //             open
         //         </CButton>
         //         </Link>
         //     },
+        // ]
         //     {
 
         //         position: 'machine learning',
@@ -216,12 +352,64 @@ function Approval(props) {
         //     },
 
         // ],
-    });
+    }
+    const widerData = {
+        columns: [
+            ...datatable.columns.map((col) => {
+                col.width = 200;
+                return col;
+            }),
+        ],
+        rows: [...datatable.rows],
+    }
 
-    console.log(typeof (rows))
+    // console.log(typeof (rows))
+
+    // console.log(searchHierarchy);
+    const checkList = []
+
+    const changeValueHandler = (event) => {
+        if (event.target.checked) {
+            checkList.push(event.target.value);
 
 
-    console.log(typeof (DataRows))
+
+        } else if (event.target.checked == false) {
+            const index1 = checkList.indexOf(event.target.value);
+            checkList.splice(index1, 1);
+        }
+        console.log(checkList);
+    }
+
+
+    const filterHandler = (event) => {
+        if (checkList.includes("searchPosition")) {
+            const pos = DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase()))
+            console.log(pos);
+        }
+        if (checkList.includes("searchHeirarchy")) {
+            const hei = DataRows.filter(data => data.heirarchy.toUpperCase().includes(searchHierarchy.toUpperCase()))
+            console.log(hei);
+
+        }
+        if (checkList.includes("searchBranch")) {
+            const branch = DataRows.filter(data => data.branchname.toUpperCase().includes(searchBranch.toUpperCase()))
+            console.log(branch);
+
+        }
+        if (checkList.includes("searchApprover")) {
+            const app = DataRows.filter(data => data.approverName.toUpperCase().includes(searchApprover.toUpperCase()))
+            console.log(app);
+
+        }
+    }
+
+
+
+
+
+
+    // console.log(DataRows)
     return (
         <div>
             {/* <AppSidebar /> */}
@@ -230,28 +418,108 @@ function Approval(props) {
                 <div className="body flex-grow-1 px-3">
                     <CRow className="py-2 justify-content-between">
                         <CCol md={6} className="align-self-start align-items-center justify-content-center"><h2>CREATE | VIEW | DELETE - APPROVAL</h2></CCol>
+                        <CCol md={2} className="align-self-end align-items-center justify-content-center"><Link to="/approvalform"><CButton color="primary">+ CREATE NEW APPROVAL</CButton></Link></CCol>
                     </CRow>
                     <hr />
                     <CContainer fluid className="justify-content-between">
                         <CRow>
-                            <CCol md={2} className="filterbar align-self-start align-items-center justify-content-center">
+                            <CCol className=" col-sm-4 col-md-2 filter ">
                                 FILTER BAR
+                                <hr />
+                                <CRow>
+                                    <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By Position" value="searchPosition" onChange={changeValueHandler} />
+                                        <CRow>
+                                            <input className="input" type="text" placeholder="enter position" onChange={positionSearchHandler} />
+
+                                        </CRow>
+
+                                    </CRow>
+                                    <hr />
+                                    <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By Heirarchy" value="searchHeirarchy" onChange={changeValueHandler} />
+                                        <CRow>
+                                            <input className="input" type="text" placeholder="enter heirarchy " onChange={heirarchySearchHandler} />
+                                            {/* <Select
+                                                className="select"
+                                            // onChange={heirarchySearchHandler}
+                                            /> */}
+                                        </CRow>
+                                    </CRow>
+                                    <hr />
+                                    <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By Branch" value="searchBranch" onChange={changeValueHandler} />
+                                        <CRow>
+                                            <input className="input" type="text" placeholder="enter branch" onChange={branchSearchHandler} />
+                                        </CRow>
+                                    </CRow>
+                                    <hr />
+                                    {/* <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By Cooling Period" value="searchCooling" onChange={changeValueHandler} />
+                                        <CRow>
+                                            <CFormControl
+                                                className="select"
+                                                type="number"
+                                                id="age"
+
+                                                onChange={coolingSearchHandler}
+                                            // required
+                                            />
+                                        </CRow>
+                                    </CRow>
+                                    <hr />
+                                    <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By TAT" value="searchTAT" />
+                                        <CRow>
+                                            <CFormControl
+                                                className="select"
+                                                type="number"
+                                                id="age"
+
+                                            // onChange={ageChangeHandler}
+                                            // required
+                                            />
+                                        </CRow>
+                                    </CRow> */}
+                                    <hr />
+                                    <CRow>
+                                        <CFormCheck id="flexCheckDefault" label="By Approver" value="searchApprover" onChange={changeValueHandler} />
+                                        <CRow>
+                                            <input className="input" type="text" placeholder="enter approver" onChange={approverSearchHandler} />
+                                        </CRow>
+                                    </CRow>
+                                    <CRow className="mt-4">
+                                        <CCol className="col-sm-2"></CCol>
+                                        <CCol className="col-sm-9">
+                                            <CButton onClick={filterHandler}>APPLY FILTER</CButton>
+
+                                        </CCol>
+
+                                        <CCol className="col-sm-2"></CCol>
+
+                                    </CRow>
+
+                                </CRow>
+
                             </CCol>
-                            <CCol md={10} className="mainContent align-self-end align-items-center justify-content-center">
+
+                            <CCol className="col-sm-8 col-md-10 ">
                                 <CContainer fluid >
-                                    <MDBDataTableV5
-                                        small
+                                    {/* <MDBDataTableV5
+                                        // small
                                         hover
                                         striped
                                         fullPagination
                                         entriesOptions={[5, 20, 25]}
                                         entries={5}
-                                        // bordered
-                                        scrollX
+                                        bordered
+                                        
                                         searchTop
                                         searchBottom={false}
                                         data={datatable}
-                                    />;
+                                    />; */}
+                                    <MDBDataTableV5 hover bordered
+                                        entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} scrollX data={widerData} fullPagination />
                                 </CContainer>
                             </CCol>
                         </CRow>
@@ -263,3 +531,6 @@ function Approval(props) {
     );
 }
 export default Approval;
+
+//filterbar align-self-start align-items-center justify-content-center
+//mainContent align-self-end align-items-center justify-content-center

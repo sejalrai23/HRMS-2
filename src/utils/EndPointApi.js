@@ -16,6 +16,7 @@ const endPoints = {
     addUser: baseLink + "/user", //success
     addApprovalMatrix: baseLink + "/approvalmatrix",
     showApprovalMatrix: baseLink + "/approvalmatrix",
+    deleteApprovalMatrix: baseLink + "/approvalmatrix",
 }
 
 module.exports = endPoints;
