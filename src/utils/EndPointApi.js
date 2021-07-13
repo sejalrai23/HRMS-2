@@ -16,7 +16,9 @@ const endPoints = {
     addUser: baseLink + "/user", //success
     searchMrf: baseLink + '/mrfrequest',
     addMrf: baseLink + "/mrfrequest",
-    searchApproval: baseLink + "/approvalmatrix"
+    searchApproval: baseLink + "/approvalmatrix",
+    addApprovalMatrix: baseLink + "/approvalmatrix",
+    showApprovalMatrix: baseLink + "/approvalmatrix",
 }
 
 module.exports = endPoints;
