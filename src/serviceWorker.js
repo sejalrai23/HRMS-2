@@ -8,12 +8,27 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
+import * as PusherPushNotifications from "@pusher/push-notifications-web"
+const script = document.createElement("script"); script.async = true; script.src = "https://js.pusher.com/beams/service-worker.js";
+// importScripts("https://js.pusher.com/beams/service-worker.js");
+window.navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
+  const beamsClient = new PusherPushNotifications.Client({
+    instanceId: 'ba32bcb7-f654-40e9-bb81-d7dd4533dff4',
+    serviceWorkerRegistration: serviceWorkerRegistration,
+  })
+  beamsClient.start()
+    .then(() => beamsClient.addDeviceInterest('hello'))
+    .then(() => console.log('Successfully registered and subscribed!!'))
+    .catch(console.error);
+})
+
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === '[::1]' ||
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
+  // [::1] is the IPv6 localhost address.
+  window.location.hostname === '[::1]' ||
+  // 127.0.0.1/8 is considered localhost for IPv4.
+  window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
 )
 
 export function register(config) {
@@ -39,7 +54,7 @@ export function register(config) {
         navigator.serviceWorker.ready.then(() => {
           console.log(
             'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://goo.gl/SC7cgQ',
+            'worker. To learn more, visit https://goo.gl/SC7cgQ',
           )
         })
       } else {

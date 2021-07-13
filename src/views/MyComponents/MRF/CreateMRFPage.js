@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import endPoints from 'src/utils/EndPointApi';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import makeAnimated from 'react-select/animated'
+import EditMRFPage from './EditMRFPage';
 
 
 const InitialFormState = {
@@ -176,12 +176,19 @@ const formReducer = (formState, action) => {
 
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
-
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYwNzIzNzQsImV4cCI6MTYyNjEwODM3NH0.6PFMGLIN6pjCEPb8c9pOy7tEh5-xkCYWWIg2HVK_9iA"
     const [userList, setUserList] = useState()
     const [hierarchyList, setHierarchyList] = useState()
     const [branchList, setBranchList] = useState()
+    const [approvalList, setApprovalList] = useState()
 
+    const positionNameOptions = []
+    {
+        approvalList?.map(matrix => {
+            positionNameOptions.push({ label: matrix.position, value: matrix._id })
+        })
+    }
+    console.log("positionNameOptions", positionNameOptions)
     const userNameOptions = []
     {
         userList?.map(user => {
@@ -216,8 +223,8 @@ function CreateMRFPage(props) {
 
     console.log('hello0000000000000000000000000000000000000', formState)
     const positionIDChangeHandler = (event) => {
-        dispatchForm({ type: "POSID_INPUT", val: event.target.value })
-        console.log(event.target.value)
+        dispatchForm({ type: "POSID_INPUT", val: event.value })
+        console.log(event.value)
     }
     const posTypeChangeHandler = (event) => {
         dispatchForm({ type: "POSTYPE_INPUT", val: event.target.value })
@@ -408,6 +415,11 @@ function CreateMRFPage(props) {
                 console.log("branch:", Data)
                 setBranchList(Data)
             })
+        showData(endPoints.searchApproval)
+            .then(Data => {
+                console.log("approvals:", Data)
+                setApprovalList(Data)
+            })
     }, [])
 
     return (
@@ -427,9 +439,10 @@ function CreateMRFPage(props) {
                         <CRow className="mb-3">
                             <CFormLabel htmlFor="pos_id" className="col-sm-2 col-form-label">Position ID</CFormLabel>
                             <CCol sm="4">
-                                <CFormControl
-                                    type="text"
-                                    id="pos_id"
+                                <Select
+                                    options={positionNameOptions}
+                                    isSearchable
+                                    // isClearable
                                     onChange={positionIDChangeHandler}
                                     required
                                 />

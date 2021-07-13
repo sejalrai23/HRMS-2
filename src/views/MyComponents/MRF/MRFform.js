@@ -1,13 +1,54 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, createContext } from 'react';
+import endPoints from 'src/utils/EndPointApi';
 import { Link } from 'react-router-dom'
 import './MRFform.css'
+import { BsEyeFill } from "react-icons/bs";
 import { MDBDataTableV5 } from 'mdbreact';
-import { CContainer, CRow, CCol, CBadge, CButton } from '@coreui/react'
+import {
+    CContainer, CRow, CCol, CBadge, CButton, CModal, CModalHeader, CModalFooter, CModalTitle, CModalBody,
+    CForm, CFormControl, CFormLabel, CFormSelect, CFormCheck, CInputGroup, CInputGroupText
+} from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index'
+// import EditMRFPage from './EditMRFPage';
+// import AuthContext from "../../../AuthContext"
+import { useStateValue } from "../../../StateProvider"
 
-function MRFform(props) {
+export default function MRFform(props) {
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
     const [mrfList, setMRFList] = useState()
-    const [datatable, setDatatable] = useState({
+
+    const showButtonHandler = (event) => {
+        console.log("event : ", event.target.id)
+        console.log("reducerState::::::: ", reducerState)
+        console.log("event id: ", event.target.id)
+        dispatch({
+            type: "VIEW_MRF",
+            mrfID: event.target.id
+        })
+        // console.log(selectedMRF)
+    }
+    {/* <BsEyeFill className={item._id} id={item._id} /> */ }
+    const tableRows = []
+    {
+        mrfList?.map(item => {
+            // console.log("item:", item)
+            tableRows.push({
+                showButton: <Link to="/EditMrfPage"><CButton id={item._id} onClick={showButtonHandler}>Show MRF</CButton></Link>,
+                position_id: item.designation.positionID.position,
+                position_type: item.designation.positionType,
+                hierarchy: item.hierarchyID.type + ": " + item.hierarchyID.name,
+                repoting_manager: item.reportingManager.name.firstName + " " + item.reportingManager.name.lastName,
+                startDate: item.startDate.toString().slice(0, 10),
+                endDate: item.endDate.toString().slice(0, 10),
+                diversity: item.diversity,
+                job_type: item.jobType,
+                job_location: item.branchID.name + ", " + item.branchID.location
+            })
+        })
+    }
+
+    const dataTable = {
         columns: [
             {
                 label: '',
@@ -15,35 +56,29 @@ function MRFform(props) {
                 width: 90,
             },
             {
-                label: 'Position ID',
+                label: 'Position Name',
                 field: 'position_id',
-                width: 150,
+                width: 170,
                 attributes: {
                     'aria-controls': 'DataTable',
                     'aria-label': 'Name',
                 },
             },
             {
-                label: 'Position type',
+                label: 'Type',
                 field: 'position_type',
-                width: 150,
+                width: 100,
             },
             {
-                label: 'Hierarchy Type',
-                field: 'hierarchy_type',
-                width: 150,
-            },
-            {
-                label: 'Hierarchy Name',
-                field: 'hierarchy_name',
-                sort: 'asc',
-                width: 150,
+                label: 'Hierarchy',
+                field: 'hierarchy',
+                width: 200,
             },
             {
                 label: 'Repoting Manager',
                 field: 'repoting_manager',
-                sort: 'asc',
-                width: 150,
+                sort: 'disabled',
+                width: 200,
             },
             {
                 label: 'Start date',
@@ -61,7 +96,7 @@ function MRFform(props) {
                 label: 'Diversity',
                 field: 'diversity',
                 sort: 'disabled',
-                width: 150,
+                width: 100,
             },
             {
                 label: 'Job Type',
@@ -69,91 +104,24 @@ function MRFform(props) {
                 sort: 'disabled',
                 width: 150,
             },
-        ],
-        rows: mrfList
-        // rows: [
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
-        //     {
-        //         showButton: <CButton className="">Show</CButton>,
-        //         position_id: 'System Architect',
-        //         position_type: 'Edinburgh',
-        //         hierarchy_type: '61',
-        //         hierarchy_name: '61',
-        //         repoting_manager: '61',
-        //         startDate: '2011/04/25',
-        //         endDate: '2011/04/25',
-        //         diversity: '61',
-        //         job_type: '$320',
-        //     },
+            {
+                label: 'Job Location',
+                field: 'job_location',
+                sort: 'disabled',
+                width: 200,
+            },
 
-        // ],
-    });
+        ],
+        rows: tableRows
+    }
 
     async function postData(url, data) {
         // setIsLoading(true)
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
             body: JSON.stringify(data)
         });
@@ -161,44 +129,31 @@ function MRFform(props) {
         // setIsLoading(false)
         return Data
     }
-
     async function showData(url) {
         // setIsLoading(true)
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token
             },
         });
         const Data = await response.json();
         // setIsLoading(false)
         return Data
     }
-
-    async function removeData(url, data) {
-        // setIsLoading(true)
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        const Data = await response.json();
-        // setIsLoading(false)
-        return Data
-    }
-
     useEffect(() => {
-        console.log("in use effect")
-        // showData(endPoints.searchMRF)
-        //     .then(Data => {
-        //         console.log("mrfList:", Data)
-        //         setMRFList(Data)
-        //     })
+        // console.log("in use effect")
+        showData(endPoints.searchMrf)
+            .then(Data => {
+                // console.log("mrfList:", Data)
+                setMRFList(Data)
+            })
     }, [])
-
+    console.log("reducerState::::::: ", reducerState)
+    // console.log("selected MRF: ", viewMRF)
     return (
+        // <SelectedMRF.Provider value={viewMRF}>
         <div>
             {/* <AppSidebar /> */}
             <div className="wrapper d-flex flex-column min-vh-100 bg-light">
@@ -227,7 +182,7 @@ function MRFform(props) {
                                         scrollX
                                         searchTop
                                         searchBottom={false}
-                                        data={datatable}
+                                        data={dataTable}
                                     />;
                                 </CContainer>
                             </CCol>
@@ -236,7 +191,7 @@ function MRFform(props) {
                 </div>
                 <AppFooter />
             </div>
-        </div>
+        </div >
+        // </SelectedMRF.Provider >
     );
 }
-export default MRFform;
