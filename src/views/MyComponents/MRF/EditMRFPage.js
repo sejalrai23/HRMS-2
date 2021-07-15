@@ -176,15 +176,10 @@ function EditMRFPage(props) {
     const [reducerState, dispatch] = useStateValue()
     const token = reducerState.token
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-    const [userList, setUserList] = useState()
-    const [hierarchyList, setHierarchyList] = useState()
-    const [branchList, setBranchList] = useState()
-    const [approvalList, setApprovalList] = useState()
-    const [mrfList, setMRFList] = useState()
-
-    // const mrf = mrfList?.filter((item) => item._id === reducerState.selectedMRF)
-    // console.log("selected mrf:  ", reducerState.selectedMRF)
-    // console.log("selected mrf's positionID:  ", reducerState.selectedMRF[0].designation.positionID.position)
+    const userList = JSON.parse(localStorage.getItem("userList"))
+    const hierarchyList = JSON.parse(localStorage.getItem("hierarchyList"))
+    const branchList = JSON.parse(localStorage.getItem("branchList"))
+    const approvalList = JSON.parse(localStorage.getItem("approvalList"))
 
     const positionNameOptions = []
     {
@@ -192,40 +187,44 @@ function EditMRFPage(props) {
             positionNameOptions.push({ label: matrix.position, value: matrix._id })
         })
     }
-    // console.log("positionNameOptions", positionNameOptions)
+    console.log("positionNameOptions", positionNameOptions)
     const userNameOptions = []
     {
         userList?.map(user => {
             userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
         })
     }
-    // console.log("userNameOptions", userNameOptions)
+    console.log("userNameOptions", userNameOptions)
     const branchNameOptions = []
     {
         branchList?.map(branch => {
             branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
         })
     }
-    // console.log("branchNameOptions", branchNameOptions)
+    console.log("branchNameOptions", branchNameOptions)
     const branchLocationOptions = []
     {
         branchList?.map(branch => {
             branchLocationOptions.push({ label: branch.location, value: branch.location })
         })
     }
-    // console.log("branchLocationOptions", branchLocationOptions)
+    console.log("branchLocationOptions", branchLocationOptions)
     const hierarchyNameOptions = []
     {
         hierarchyList?.map(hierarchy => {
             hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
         })
     }
-    // console.log("hierarchyNameOptions", hierarchyNameOptions)
+    console.log("hierarchyNameOptions", hierarchyNameOptions)
 
-    console.log("selected mrf's positionID:  ", positionNameOptions.filter(item => item.label === reducerState.selectedMRF.designation.positionID.position))
-    console.log("selected mrf's positionID[0]:  ", positionNameOptions.filter(item => item.label === reducerState.selectedMRF.designation.positionID.position)[0])
-    console.log("selected mrf's replacementID:  ", userNameOptions.filter(item => item.value === reducerState.selectedMRF.designation.replacementID))
-    console.log("selected mrf's replacementID[0]:  ", userNameOptions.filter(item => item.value === reducerState.selectedMRF.designation.replacementID)[0])
+    // const mrf = mrfList?.filter((item) => item._id === reducerState.selectedMRF)
+    // console.log("selected mrf:  ", reducerState.selectedMRF)
+    // console.log("selected mrf's positionID:  ", reducerState.selectedMRF[0].designation.positionID.position)
+
+    // console.log("selected mrf's positionID:  ", positionNameOptions.filter(item => item.label === reducerState.selectedMRF.designation.positionID.position))
+    // console.log("selected mrf's positionID[0]:  ", positionNameOptions.filter(item => item.label === reducerState.selectedMRF.designation.positionID.position)[0])
+    // console.log("selected mrf's replacementID:  ", userNameOptions.filter(item => item.value === reducerState.selectedMRF.designation.replacementID))
+    // console.log("selected mrf's replacementID[0]:  ", userNameOptions.filter(item => item.value === reducerState.selectedMRF.designation.replacementID)[0])
 
     const positionIDChangeHandler = (event) => {
         dispatchForm({ type: "POSID_INPUT", val: event.value })

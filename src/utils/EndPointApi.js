@@ -1,5 +1,5 @@
-const baseLink = "https://crm1728.herokuapp.com";
-// const baseLink = "https://ae44ff8423bf.ngrok.io";
+// const baseLink = "https://crm1728.herokuapp.com";
+const baseLink = "https://323f71aaee57.ngrok.io";
 
 
 const endPoints = {

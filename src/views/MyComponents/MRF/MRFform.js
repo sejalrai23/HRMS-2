@@ -20,71 +20,38 @@ export default function MRFform(props) {
     const [branchList, setBranchList] = useState()
     const [approvalList, setApprovalList] = useState()
 
-    const positionNameOptions = []
-    {
-        approvalList?.map(matrix => {
-            positionNameOptions.push({ label: matrix.position, value: matrix._id })
-        })
-    }
-    console.log("positionNameOptions", positionNameOptions)
-    const userNameOptions = []
-    {
-        userList?.map(user => {
-            userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
-        })
-    }
-    console.log("userNameOptions", userNameOptions)
-    const branchNameOptions = []
-    {
-        branchList?.map(branch => {
-            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
-        })
-    }
-    console.log("branchNameOptions", branchNameOptions)
 
-    const branchLocationOptions = []
-    {
-        branchList?.map(branch => {
-            branchLocationOptions.push({ label: branch.location, value: branch.location })
-        })
-    }
-    console.log("branchLocationOptions", branchLocationOptions)
-
-    const hierarchyNameOptions = []
-    {
-        hierarchyList?.map(hierarchy => {
-            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
-        })
-    }
-    console.log("hierarchyNameOptions", hierarchyNameOptions)
+    if (approvalList) { localStorage.setItem("approvalList", JSON.stringify(approvalList)) }
+    if (userList) { localStorage.setItem("userList", JSON.stringify(userList)) }
+    if (hierarchyList) { localStorage.setItem("hierarchyList", JSON.stringify(hierarchyList)) }
+    if (branchList) { localStorage.setItem("branchList", JSON.stringify(branchList)) }
 
     const showButtonHandler = (event) => {
-        // console.log("event : ", event.target.id)
-        // console.log("reducerState::::::: ", reducerState)
         console.log("event id: ", event.target.id)
         const mrfSelected = mrfList.filter((item) => item._id === event.target.id)
-        dispatch({
-            type: "VIEW_MRF",
-            // mrfID: event.target.id,
-            mrf: mrfSelected[0],
-            positions: positionNameOptions,
-            users: userNameOptions,
-            hierarchies: hierarchyNameOptions,
-            branchName: branchNameOptions,
-            branchLocation: branchLocationOptions,
-        })
+        localStorage.setItem("ViewMRF", JSON.stringify(mrfSelected))
+        // dispatch({
+        //     type: "VIEW_MRF",
+        //     // mrfID: event.target.id,
+        //     mrf: mrfSelected[0],
+        //     positions: positionNameOptions,
+        //     users: userNameOptions,
+        //     hierarchies: hierarchyNameOptions,
+        //     branchName: branchNameOptions,
+        //     branchLocation: branchLocationOptions,
+        // })
     }
     const createButtonHandler = () => {
         // console.log("event : ", event.target.id)
         // console.log("reducerState::::::: ", reducerState)
-        dispatch({
-            type: "CREATE_MRF",
-            positions: positionNameOptions,
-            users: userNameOptions,
-            hierarchies: hierarchyNameOptions,
-            branchName: branchNameOptions,
-            branchLocation: branchLocationOptions,
-        })
+        // dispatch({
+        //     type: "CREATE_MRF",
+        //     positions: positionNameOptions,
+        //     users: userNameOptions,
+        //     hierarchies: hierarchyNameOptions,
+        //     branchName: branchNameOptions,
+        //     branchLocation: branchLocationOptions,
+        // })
     }
     {/* <BsEyeFill className={item._id} id={item._id} /> */ }
     const tableRows = []
@@ -229,7 +196,6 @@ export default function MRFform(props) {
             })
     }, [])
     console.log("reducerState::::::: ", reducerState)
-    // console.log("selected MRF: ", viewMRF)
     return (
         <div>
             {/* <AppSidebar /> */}

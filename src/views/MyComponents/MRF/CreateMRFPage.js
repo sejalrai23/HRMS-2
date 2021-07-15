@@ -178,17 +178,46 @@ function CreateMRFPage(props) {
     const [reducerState, dispatch] = useStateValue()
 
     const token = reducerState.token
-    const userNameOptions = reducerState.users
-    const hierarchyNameOptions = reducerState.hierarchies
-    const branchNameOptions = reducerState.branchName
-    const branchLocationOptions = reducerState.branchLocation
-    const positionNameOptions = reducerState.positions
+    const userList = JSON.parse(localStorage.getItem("userList"))
+    const hierarchyList = JSON.parse(localStorage.getItem("hierarchyList"))
+    const branchList = JSON.parse(localStorage.getItem("branchList"))
+    const approvalList = JSON.parse(localStorage.getItem("approvalList"))
 
-    console.log(userNameOptions)
-    console.log(hierarchyNameOptions)
-    console.log(branchNameOptions)
-    console.log(branchLocationOptions)
-    console.log(positionNameOptions)
+    const positionNameOptions = []
+    {
+        approvalList?.map(matrix => {
+            positionNameOptions.push({ label: matrix.position, value: matrix._id })
+        })
+    }
+    console.log("positionNameOptions", positionNameOptions)
+    const userNameOptions = []
+    {
+        userList?.map(user => {
+            userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
+        })
+    }
+    console.log("userNameOptions", userNameOptions)
+    const branchNameOptions = []
+    {
+        branchList?.map(branch => {
+            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
+        })
+    }
+    console.log("branchNameOptions", branchNameOptions)
+    const branchLocationOptions = []
+    {
+        branchList?.map(branch => {
+            branchLocationOptions.push({ label: branch.location, value: branch.location })
+        })
+    }
+    console.log("branchLocationOptions", branchLocationOptions)
+    const hierarchyNameOptions = []
+    {
+        hierarchyList?.map(hierarchy => {
+            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
+        })
+    }
+    console.log("hierarchyNameOptions", hierarchyNameOptions)
 
     console.log('hello0000000000000000000000000000000000000', formState)
     const positionIDChangeHandler = (event) => {
@@ -393,6 +422,13 @@ function CreateMRFPage(props) {
         //         console.log("approvals:", Data)
         //         setApprovalList(Data)
         //     })
+
+        // const userNameOptions = JSON.parse(localStorage.getItem("userNameOptions"))
+        // console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", userNameOptions)
+        // const hierarchyNameOptions = JSON.parse(localStorage.getItem("hierarchyNameOptions"))
+        // const branchNameOptions = JSON.parse(localStorage.getItem("branchNameOptions"))
+        // const branchLocationOptions = JSON.parse(localStorage.getItem("branchLocationOptions"))
+        // const positionNameOptions = JSON.parse(localStorage.getItem("positionNameOptions"))
     }, [])
 
     return (
