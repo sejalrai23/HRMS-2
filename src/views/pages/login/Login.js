@@ -26,8 +26,8 @@ const Login = () => {
           <LoginHeader />
         </CRow>
         <CRow className="justify-content-between">
-          <CCol md="6" className="align-self-start align-items-center justify-content-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWIgU-j-IiyYBQTQ_CeyH-kxl9tzBYj2lhPw&usqp=CAU"
+          <CCol md="6" className="align-items-center justify-content-center">
+            <img className="login_image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToxaHQiLVAlLRDtYhb48y4oWWk-BDBhj0q5A&usqp=CAU"
               alt="Random to fill space"
             />
           </CCol>

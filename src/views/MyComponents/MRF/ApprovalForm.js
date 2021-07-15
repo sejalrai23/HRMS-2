@@ -139,12 +139,7 @@ function ApprovalForm(props) {
             // console.log(Approvers);
 
         });
-
-
-
-
     }, [])
-
 
 
     const positionChangeHandler = (event) => {
@@ -155,7 +150,6 @@ function ApprovalForm(props) {
     }
     const TATChangeHandler = (event) => {
         setTAT(event.target.value);
-
     }
 
 

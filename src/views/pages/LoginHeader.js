@@ -13,13 +13,14 @@ function LoginHeader(props) {
     <div>
       <CNavbar expand="lg" colorScheme="dark" className="bg-primary">
         <CContainer fluid >
-          <CCol className="align-self-start">
-            <CNavbarBrand href="#">
+          <CCol className="align-self-start align-item-center">
+            {/* <CNavbarBrand href="#">
               <CIcon className="sidebar-brand-full" name="logo-negative" height={65} />
-            </CNavbarBrand>
+            </CNavbarBrand> */}
+            <h1 className="align-item-center navbar-title">Next</h1>
           </CCol>
           <CCol className="align-items-center justify-content-between">
-            <CNavbarToggler onClick={() => setVisible(!visible)} />
+            {/* <CNavbarToggler onClick={() => setVisible(!visible)} />
             <CCollapse className="navbar-collapse" visible={visible}>
               <CNavbarNav>
                 <CNavItem>
@@ -57,7 +58,7 @@ function LoginHeader(props) {
                   Search
                 </CButton>
               </CForm>
-            </CCollapse>
+            </CCollapse> */}
           </CCol>
         </CContainer>
       </CNavbar>

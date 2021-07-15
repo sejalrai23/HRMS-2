@@ -160,7 +160,10 @@ function RegisterCard(props) {
                         </CCol>
                     </CRow>
                     <CRow>
-                        <CButton type="submit" color="success" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton>
+                        <div className="center">
+                            <CButton type="submit" color="primary" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton>
+                        </div>
+                        {/* <CButton type="submit" color="primary" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton> */}
                     </CRow>
                 </CForm>
                 <hr />

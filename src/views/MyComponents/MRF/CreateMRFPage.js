@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import endPoints from 'src/utils/EndPointApi';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import EditMRFPage from './EditMRFPage';
+import { useStateValue } from "../../../StateProvider"
 
 
 const InitialFormState = {
@@ -173,53 +173,22 @@ const formReducer = (formState, action) => {
     }
 }
 
-
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYwNzIzNzQsImV4cCI6MTYyNjEwODM3NH0.6PFMGLIN6pjCEPb8c9pOy7tEh5-xkCYWWIg2HVK_9iA"
-    const [userList, setUserList] = useState()
-    const [hierarchyList, setHierarchyList] = useState()
-    const [branchList, setBranchList] = useState()
-    const [approvalList, setApprovalList] = useState()
+    const [reducerState, dispatch] = useStateValue()
 
-    const positionNameOptions = []
-    {
-        approvalList?.map(matrix => {
-            positionNameOptions.push({ label: matrix.position, value: matrix._id })
-        })
-    }
-    console.log("positionNameOptions", positionNameOptions)
-    const userNameOptions = []
-    {
-        userList?.map(user => {
-            userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
-        })
-    }
-    console.log("userNameOptions", userNameOptions)
-    const branchNameOptions = []
-    {
-        branchList?.map(branch => {
-            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
-        })
-    }
-    console.log("branchNameOptions", branchNameOptions)
+    const token = reducerState.token
+    const userNameOptions = reducerState.users
+    const hierarchyNameOptions = reducerState.hierarchies
+    const branchNameOptions = reducerState.branchName
+    const branchLocationOptions = reducerState.branchLocation
+    const positionNameOptions = reducerState.positions
 
-    const branchLocationOptions = []
-    {
-        branchList?.map(branch => {
-            branchLocationOptions.push({ label: branch.location, value: branch.location })
-        })
-    }
-    console.log("branchLocationOptions", branchLocationOptions)
-
-    const hierarchyNameOptions = []
-    {
-        hierarchyList?.map(hierarchy => {
-            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
-        })
-    }
-    console.log("hierarchyNameOptions", hierarchyNameOptions)
-
+    console.log(userNameOptions)
+    console.log(hierarchyNameOptions)
+    console.log(branchNameOptions)
+    console.log(branchLocationOptions)
+    console.log(positionNameOptions)
 
     console.log('hello0000000000000000000000000000000000000', formState)
     const positionIDChangeHandler = (event) => {
@@ -316,41 +285,45 @@ function CreateMRFPage(props) {
     }
     const addMrfHandler = (event) => {
         event.preventDefault()
+        const skillList = []
+        formState.skillsRequired.map(skill => {
+            skillList.push(skill.label)
+        })
         const newMRF = {
             designation: {
                 positionID: formState.positionID,
-                position_type: formState.position_type,
-                replacement_id: formState.replacement_id,
+                positionType: formState.position_type,
+                replacementID: formState.replacement_id,
             },
             hierarchyID: formState.hierarchyID,
-            skillsRequired: formState.skillsRequired,
-            reporting_manager: formState.reporting_manager,
+            skillsRequired: skillList,
+            // reporting_manager: formState.reporting_manager,
             departmentHead: formState.department_head,
             subDepHead: formState.sub_dep_head,
             branchID: formState.branch_name,
             location: formState.branch_location,
             budget: formState.budget,
             jd_attachment: formState.jd_attachment,
-            specifications: {
+            specification: {
                 age: formState.age,
                 relExp: formState.rel_exp,
                 totalExp: formState.total_exp,
                 education: formState.education,
             },
             diversity: formState.diversity,
-            startDate: formState.start_date,
-            endDate: formState.end_date,
+            startDate: new Date(formState.start_date),
+            endDate: new Date(formState.end_date),
             jobType: formState.job_type,
             status: formState.status,
-            candidate: {
+            candidates: {
                 requirement: formState.requirement,
             },
             remarks: formState.remarks,
         }
         console.log(newMRF)
         // dispatchForm({ type: "RESET" })
-        // postData(endPoints.addUser, {})
-        //     .then(data => setUserList(data))
+        postData(endPoints.addMrf, newMRF)
+            .then(data => console.log(data))
         event.target.reset()
     }
 
@@ -400,26 +373,26 @@ function CreateMRFPage(props) {
     }
     useEffect(() => {
         console.log("in use effect")
-        showData(endPoints.searchUser)
-            .then(Data => {
-                console.log("user:", Data)
-                setUserList(Data)
-            })
-        showData(endPoints.searchHierarchy)
-            .then(Data => {
-                console.log("hierarchy:", Data)
-                setHierarchyList(Data)
-            })
-        showData(endPoints.searchBranch)
-            .then(Data => {
-                console.log("branch:", Data)
-                setBranchList(Data)
-            })
-        showData(endPoints.searchApproval)
-            .then(Data => {
-                console.log("approvals:", Data)
-                setApprovalList(Data)
-            })
+        // showData(endPoints.searchUser)
+        //     .then(Data => {
+        //         console.log("user:", Data)
+        //         setUserList(Data)
+        //     })
+        // showData(endPoints.searchHierarchy)
+        //     .then(Data => {
+        //         console.log("hierarchy:", Data)
+        //         setHierarchyList(Data)
+        //     })
+        // showData(endPoints.searchBranch)
+        //     .then(Data => {
+        //         console.log("branch:", Data)
+        //         setBranchList(Data)
+        //     })
+        // showData(endPoints.searchApproval)
+        //     .then(Data => {
+        //         console.log("approvals:", Data)
+        //         setApprovalList(Data)
+        //     })
     }, [])
 
     return (
@@ -455,7 +428,7 @@ function CreateMRFPage(props) {
                                     type="radio"
                                     name="pos_type"
                                     id="position_type1"
-                                    value="New"
+                                    value="new"
                                     label="New"
                                     onChange={posTypeChangeHandler}
                                     required
@@ -465,7 +438,7 @@ function CreateMRFPage(props) {
                                     type="radio"
                                     name="pos_type"
                                     id="position_type2"
-                                    value="Replacement"
+                                    value="replacement"
                                     label="Replacement"
                                     onChange={posTypeChangeHandler}
                                     required
@@ -710,8 +683,8 @@ function CreateMRFPage(props) {
                                     type="radio"
                                     name="j_type"
                                     id="job_type2"
-                                    value="Full-Time"
-                                    label="Full-Time"
+                                    value="Permanent"
+                                    label="Permanent"
                                     onChange={choosenJobTypeHandler}
                                     required
                                 />
@@ -720,8 +693,8 @@ function CreateMRFPage(props) {
                                     type="radio"
                                     name="j_type"
                                     id="job_type3"
-                                    value="Temporary"
-                                    label="Temporary"
+                                    value="Part-Time"
+                                    label="Part-Time"
                                     onChange={choosenJobTypeHandler}
                                     required
                                 />
@@ -791,7 +764,7 @@ function CreateMRFPage(props) {
                         </div>
                     </CForm>
                 </div>
-                <AppFooter />
+                {/* <AppFooter /> */}
             </div>
         </div >
     );
