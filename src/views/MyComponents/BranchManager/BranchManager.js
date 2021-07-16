@@ -8,7 +8,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import endPoints from 'src/utils/EndPointApi';
 
 function BranchManager(props) {
-    const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU0MjA0MTEsImV4cCI6MTYyNTQ1NjQxMX0.lBPfeOFJKZYNWCH1eXlhimL3JMQDar2sidMizgBx43I'
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYzNDM5ODQsImV4cCI6MTYyNjM3OTk4NH0.orxHITyNF0XqM7YUzZdfxBQMqhZ89Ni5NZEu1xzX8og"
     const [isLoading, setIsLoading] = useState()
     const [visible, setVisible] = useState(false)
     const [enteredBranchLocation, setEnteredBranchLocation] = useState()

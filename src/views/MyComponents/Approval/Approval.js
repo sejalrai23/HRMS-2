@@ -12,12 +12,15 @@ import "./Approval.css";
 import ViewApprovalForm from '../MRF/ViewApprovalForm';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
+import { useStateValue } from "../../../StateProvider"
 
 
 
 
 function Approval(props) {
     const [approvalMatrix, setApprovalMatrix] = useState([]);
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
     // const [documentID, setDocumentID] = useState("");
 
     var searchPosition;
@@ -70,13 +73,6 @@ function Approval(props) {
         });
 
     }, [])
-
-
-
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYxNTU5ODgsImV4cCI6MTYyNjE5MTk4OH0.f7bg9bZWHRu3aIC3e-7UFpWW5Mb4s9EWft2smIvsDWQ";
-
-
-
     // var documentID = "";
 
     const dataDeleteHandler = (event) => {

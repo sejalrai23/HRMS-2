@@ -5,28 +5,53 @@ import './MRFform.css'
 import { BsEyeFill } from "react-icons/bs";
 import { MDBDataTableV5 } from 'mdbreact';
 import {
-    CContainer, CRow, CCol, CBadge, CButton, CModal, CModalHeader, CModalFooter, CModalTitle, CModalBody,
+    CContainer, CRow, CCol, CBadge, CButton,
     CForm, CFormControl, CFormLabel, CFormSelect, CFormCheck, CInputGroup, CInputGroupText
 } from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index'
-// import EditMRFPage from './EditMRFPage';
-// import AuthContext from "../../../AuthContext"
 import { useStateValue } from "../../../StateProvider"
 
 export default function MRFform(props) {
     const [reducerState, dispatch] = useStateValue()
     const token = reducerState.token
     const [mrfList, setMRFList] = useState()
+    const [userList, setUserList] = useState()
+    const [hierarchyList, setHierarchyList] = useState()
+    const [branchList, setBranchList] = useState()
+    const [approvalList, setApprovalList] = useState()
+
+
+    if (approvalList) { localStorage.setItem("approvalList", JSON.stringify(approvalList)) }
+    if (userList) { localStorage.setItem("userList", JSON.stringify(userList)) }
+    if (hierarchyList) { localStorage.setItem("hierarchyList", JSON.stringify(hierarchyList)) }
+    if (branchList) { localStorage.setItem("branchList", JSON.stringify(branchList)) }
 
     const showButtonHandler = (event) => {
-        console.log("event : ", event.target.id)
-        console.log("reducerState::::::: ", reducerState)
         console.log("event id: ", event.target.id)
-        dispatch({
-            type: "VIEW_MRF",
-            mrfID: event.target.id
-        })
-        // console.log(selectedMRF)
+        const mrfSelected = mrfList.filter((item) => item._id === event.target.id)
+        localStorage.setItem("ViewMRF", JSON.stringify(mrfSelected))
+        // dispatch({
+        //     type: "VIEW_MRF",
+        //     // mrfID: event.target.id,
+        //     mrf: mrfSelected[0],
+        //     positions: positionNameOptions,
+        //     users: userNameOptions,
+        //     hierarchies: hierarchyNameOptions,
+        //     branchName: branchNameOptions,
+        //     branchLocation: branchLocationOptions,
+        // })
+    }
+    const createButtonHandler = () => {
+        // console.log("event : ", event.target.id)
+        // console.log("reducerState::::::: ", reducerState)
+        // dispatch({
+        //     type: "CREATE_MRF",
+        //     positions: positionNameOptions,
+        //     users: userNameOptions,
+        //     hierarchies: hierarchyNameOptions,
+        //     branchName: branchNameOptions,
+        //     branchLocation: branchLocationOptions,
+        // })
     }
     {/* <BsEyeFill className={item._id} id={item._id} /> */ }
     const tableRows = []
@@ -34,7 +59,7 @@ export default function MRFform(props) {
         mrfList?.map(item => {
             // console.log("item:", item)
             tableRows.push({
-                showButton: <Link to="/EditMrfPage"><CButton id={item._id} onClick={showButtonHandler}>Show MRF</CButton></Link>,
+                showButton: <Link to="/EditMrfPage"><CButton id={item._id} onClick={showButtonHandler}>EYE</CButton></Link>,
                 position_id: item.designation.positionID.position,
                 position_type: item.designation.positionType,
                 hierarchy: item.hierarchyID.type + ": " + item.hierarchyID.name,
@@ -143,17 +168,35 @@ export default function MRFform(props) {
         return Data
     }
     useEffect(() => {
-        // console.log("in use effect")
+        console.log("in use effect")
         showData(endPoints.searchMrf)
             .then(Data => {
-                // console.log("mrfList:", Data)
+                console.log("mrfList:", Data)
                 setMRFList(Data)
+                showData(endPoints.searchApproval)
+                    .then(Data => {
+                        console.log("approvals:", Data)
+                        setApprovalList(Data)
+                    })
+            })
+        showData(endPoints.searchUser)
+            .then(Data => {
+                console.log("user:", Data)
+                setUserList(Data)
+                showData(endPoints.searchHierarchy)
+                    .then(Data => {
+                        console.log("hierarchy:", Data)
+                        setHierarchyList(Data)
+                    })
+            })
+        showData(endPoints.searchBranch)
+            .then(Data => {
+                console.log("branch:", Data)
+                setBranchList(Data)
             })
     }, [])
     console.log("reducerState::::::: ", reducerState)
-    // console.log("selected MRF: ", viewMRF)
     return (
-        // <SelectedMRF.Provider value={viewMRF}>
         <div>
             {/* <AppSidebar /> */}
             <div className="wrapper d-flex flex-column min-vh-100 bg-light">
@@ -161,7 +204,7 @@ export default function MRFform(props) {
                 <div className="body flex-grow-1 px-3">
                     <CRow className="py-2 justify-content-between">
                         <CCol md={6} className="align-self-start align-items-center justify-content-center"><h2>CREATE | VIEW | DELETE - MRF</h2></CCol>
-                        <CCol md={2} className="align-self-end align-items-center justify-content-center"><Link to="/CreateMRFPage"><CButton color="primary">+ CREATE NEW MRF</CButton></Link></CCol>
+                        <CCol md={2} className="align-self-end align-items-center justify-content-center"><Link to="/CreateMRFPage"><CButton color="primary" onClick={createButtonHandler}>+ CREATE NEW MRF</CButton></Link></CCol>
                     </CRow>
                     <hr />
                     <CContainer fluid className="justify-content-between">
@@ -189,9 +232,8 @@ export default function MRFform(props) {
                         </CRow>
                     </CContainer>
                 </div>
-                <AppFooter />
+                {/* <AppFooter /> */}
             </div>
         </div >
-        // </SelectedMRF.Provider >
     );
 }

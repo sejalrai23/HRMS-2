@@ -8,20 +8,6 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
-// import * as PusherPushNotifications from "@pusher/push-notifications-web"
-// const script = document.createElement("script"); script.async = true; script.src = "https://js.pusher.com/beams/service-worker.js";
-// // importScripts("https://js.pusher.com/beams/service-worker.js");
-// window.navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
-//   const beamsClient = new PusherPushNotifications.Client({
-//     instanceId: 'ba32bcb7-f654-40e9-bb81-d7dd4533dff4',
-//     serviceWorkerRegistration: serviceWorkerRegistration,
-//   })
-//   beamsClient.start()
-//     .then(() => beamsClient.addDeviceInterest('hello'))
-//     .then(() => console.log('Successfully registered and subscribed!!'))
-//     .catch(console.error);
-// })
-
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||

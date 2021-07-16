@@ -26,3 +26,20 @@
   border-radius: 15px;
   box-shadow: whitesmoke;
 }
+
+.navbar-title{
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_image{
+  max-height:fit-content;
+  width: auto;
+  display: block;
+}

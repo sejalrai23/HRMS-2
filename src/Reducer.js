@@ -1,6 +1,11 @@
 export const initialState = {
-    selectedMRF: "",
-    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYxNTA3MDQsImV4cCI6MTYyNjE4NjcwNH0.PCR6nFb2hDdcgoX1DoOeAsJzsBI8eqTEgP6cP8WKZy4",
+    selectedMRF: {},
+    positions: {},
+    users: {},
+    hierarchies: {},
+    branchName: {},
+    branchLocation: {},
+    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGYwMDE4NzA1MzA4MDAwMTU5MzA0ZDQiLCJlbWFpbCI6InNlamFscmFpMjNAZ21haWwuY29tIiwiUm9sZSI6IlN1cGVyLUFkbWluIiwiaWF0IjoxNjI2MzUzOTA4LCJleHAiOjE2MjYzODk5MDh9.z0t2KEWMStBi0vvh_IzWDIaNH_r4ucqy_Ulhfid-z8M",
 }
 
 const StateReducer = (reducerState, action) => {
@@ -18,7 +23,22 @@ const StateReducer = (reducerState, action) => {
             console.log("view_mrf")
             return {
                 ...reducerState,
-                selectedMRF: action.mrfID
+                selectedMRF: action.mrf,
+                positions: action.positions,
+                users: action.users,
+                hierarchies: action.hierarchies,
+                branchName: action.branchName,
+                branchLocation: action.branchLocation
+            }
+        case "CREATE_MRF":
+            console.log("create_mrf")
+            return {
+                ...reducerState,
+                positions: action.positions,
+                users: action.users,
+                hierarchies: action.hierarchies,
+                branchName: action.branchName,
+                branchLocation: action.branchLocation
             }
         default:
             return reducerState

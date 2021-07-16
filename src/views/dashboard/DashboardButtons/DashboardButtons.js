@@ -9,6 +9,9 @@ function DashboardButtons(props) {
     return (
         <CContainer fluid className="mycard align-items-center justify-content-center" >
             <Link to={props.path}>
+                <CRow className="justify-content-center">
+                    <img className="circular" src={props.image} alt="image" />
+                </CRow>
                 {/* <CRow className="avatar avatar-lg justify-content-center card_icon">
                     <CIcon name="cil-speedometer" customClasses="nav-icon" size="xl" />,
                 </CRow> */}
@@ -18,7 +21,7 @@ function DashboardButtons(props) {
     );
 }
 DashboardButtons.propTypes = {
-    colors: PropTypes.string,
+    image: PropTypes.string,
     path: PropTypes.string,
     title: PropTypes.string
 }

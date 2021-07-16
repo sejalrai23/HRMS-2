@@ -27,30 +27,30 @@ function LoginCard(props) {
             email: enteredEmail,
             password: enteredPassword,
         };
-        postData(endPoints.loginURL,credentials)
-        .then(data => {
-            console.log(data); // JSON data parsed by data.json() call
-        });
+        postData(endPoints.loginURL, credentials)
+            .then(data => {
+                console.log(data); // JSON data parsed by data.json() call
+            });
         console.log(credentials)
         setEnteredEmail("");
         setEnteredPassword("");
     };
 
 
-    async function postData(url,data) {
-            console.log(data)
-            console.log(typeof(data))
-            const response = await fetch(url, {
+    async function postData(url, data) {
+        console.log(data)
+        console.log(typeof (data))
+        const response = await fetch(url, {
             // mode : 'no-cors',
             method: 'POST', // *GET, POST, PUT, DELETE, etvc.
             headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(data)// body data type must match "Content-Type" header
         });
-            return response.json(); // parses JSON response into native JavaScript objects
-        }
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
 
 
     return (
@@ -85,8 +85,12 @@ function LoginCard(props) {
                         />
                         <CFormLabel htmlFor="password">Password</CFormLabel>
                     </CFormFloating>
+
                     <CRow>
-                        <CButton type="submit" color="success" className="px-4">Login</CButton>
+                        <div className="center">
+                            <CButton type="submit" color="primary" className="px-4">Login</CButton>
+                        </div>
+                        {/* <CButton type="submit" color="primary" className="px-4">Login</CButton> */}
                     </CRow>
                     <CRow className="justify-content-center">
                         <CButton color="link" className="px-0">Forgot password?</CButton>
@@ -98,11 +102,9 @@ function LoginCard(props) {
                         New User?
                     </CCol>
                     <CCol md="4">
-
                         <Link to="/register">
                             <CButton color="primary" className="px-4" >Create Account</CButton>
                         </Link>
-
                         {/* <CButton color="primary" className="px-4" onClick={createAccountHandler}>Create Account</CButton> */}
                     </CCol>
                 </CRow>
