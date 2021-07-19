@@ -9,8 +9,8 @@ import {
     CSpinner, CModal, CModalHeader, CModalFooter, CModalTitle, CModalBody
 } from '@coreui/react'
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated'
-
+import { MDBDataTableV5 } from 'mdbreact';
+import { useStateValue } from "../../../StateProvider"
 
 const InitialFormState = {
     fName: "",
@@ -108,9 +108,8 @@ function AddUserForm(props) {
     const [hierarchyList, setHierarchyList] = useState()
     const [branchList, setBranchList] = useState()
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
-
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
 
     const branchNameOptions = []
     {
@@ -354,6 +353,126 @@ function AddUserForm(props) {
             })
     }, [])
 
+    const tableRows = []
+    {
+        userList?.map(user => {
+            // console.log("item:", item)
+            tableRows.push({
+                showButton: <button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button>,
+                first_name: user.name.firstName,
+                last_name: user.name.lastName,
+                user_type: user.userType,
+                user_role: user.userRole,
+                hierarchy: user.hierarchyID.type + "," + user.hierarchyID.name,
+                // hierarchy_type: user.hierarchyID.type,
+                // hierarchy_name: user.hierarchyID.name,
+                job_type: user.jobType,
+                diversity: user.diversity,
+                email: user.email,
+                designation: user.designation,
+                branch: user.branchID.location + "," + user.branchID.name,
+                // branch_location: user.branchID.location,
+                // branch_name: user.branchID.name,
+
+            })
+        })
+    }
+
+    const dataTable = {
+        columns: [
+            {
+                label: '',
+                field: 'showButton',
+                width: 90,
+            },
+            {
+                label: 'First Name',
+                field: 'first_name',
+                sort: 'disabled',
+                width: 150,
+            },
+            {
+                label: 'Last Name',
+                field: 'last_name',
+                sort: 'disabled',
+                width: 150,
+            },
+            {
+                label: 'User Type',
+                field: 'user_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'User Role',
+                field: 'user_role',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Hierarchy',
+                field: 'hierarchy',
+                sort: 'disabled',
+                width: 150,
+            },
+            // {
+            //     label: 'Hierarchy Type',
+            //     field: 'hierarchy_type',
+            //     sort: 'disabled',
+            //     width: 100,
+            // },
+            // {
+            //     label: 'Hierarchy Name',
+            //     field: 'hierarchy_name',
+            //     sort: 'disabled',
+            //     width: 100,
+            // },
+            {
+                label: 'Job Type',
+                field: 'job_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Diversity',
+                field: 'diversity',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Email Address',
+                field: 'email',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Designation',
+                field: 'designation',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Branch',
+                field: 'branch',
+                sort: 'disabled',
+                width: 100,
+            },
+            // {
+            //     label: 'Branch Location',
+            //     field: 'branch_location',
+            //     sort: 'disabled',
+            //     width: 100,
+            // },
+            // {
+            //     label: 'Branch Name',
+            //     field: 'branch_name',
+            //     sort: 'disabled',
+            //     width: 100,
+            // },
+        ],
+        rows: tableRows
+    }
+
 
     return (
         <CContainer>
@@ -403,48 +522,19 @@ function AddUserForm(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol> */}
             </CRow>
-            <CTable striped responsive hover color="light">
-                <CTableHead color="primary">
-                    <CTableRow >
-                        <CTableHeaderCell className="text-center" scope="col"></CTableHeaderCell>
-                        <CTableHeaderCell className="text-center fnh" scope="col" style={{ width: "30%" }}>First Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Last Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Role</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Job Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Diversity</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Email Address</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Designation</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Location</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Name</CTableHeaderCell>
-                    </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                    {
-                        userList?.map((user, key) => {
-                            return (
-                                <CTableRow key={user.email} className="t_row">
-                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button></CTableHeaderCell>
-                                    <CTableDataCell className="text-center" scope="col" style={{ width: "30%" }}>{user.name.firstName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.name.lastName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userRole}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.type}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.name}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.jobType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.diversity}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.email}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.designation}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.location}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.name}</CTableDataCell>
-                                </CTableRow>
-                            )
-                        })
-                    }
-                </CTableBody>
-            </CTable>
+            <MDBDataTableV5
+                small
+                hover
+                // striped
+                fullPagination
+                entriesOptions={[5, 10, 20]}
+                entries={5}
+                // bordered
+                scrollX
+                searchTop
+                searchBottom={false}
+                data={dataTable}
+            />;
             <CModal size="xl" alignment="center" visible={visible} backdrop={true}>
                 <CModalHeader onDismiss={() => setVisible(false)}>
                     <CModalTitle>Add New Employee</CModalTitle>

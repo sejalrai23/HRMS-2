@@ -6,9 +6,12 @@ import {
 } from '@coreui/react'
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import endPoints from 'src/utils/EndPointApi';
+import { useStateValue } from "../../../StateProvider"
+import { MDBDataTableV5 } from 'mdbreact';
 
 function BranchManager(props) {
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjYzNDM5ODQsImV4cCI6MTYyNjM3OTk4NH0.orxHITyNF0XqM7YUzZdfxBQMqhZ89Ni5NZEu1xzX8og"
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
     const [isLoading, setIsLoading] = useState()
     const [visible, setVisible] = useState(false)
     const [enteredBranchLocation, setEnteredBranchLocation] = useState()
@@ -23,6 +26,37 @@ function BranchManager(props) {
         setEnteredBranchName(event.target.value)
     }
 
+    const tableRows = []
+    {
+        branches?.map(item => {
+            tableRows.push({
+                branch_name: item.name,
+                branch_location: item.location,
+                removeButton: <button className="remove_button" onClick={deleteBranchHandler}><AiOutlineMinusCircle className={item._id} /></button>,
+            })
+        })
+    }
+
+    const dataTable = {
+        columns: [
+            {
+                label: 'Branch Name',
+                field: 'branch_name',
+                width: 200,
+            },
+            {
+                label: 'Branch Location',
+                field: 'branch_location',
+                width: 200,
+            },
+            {
+                label: '',
+                field: 'removeButton',
+                width: 90,
+            },
+        ],
+        rows: tableRows
+    }
 
     const addBranchHandler = (event) => {
         console.log("in add branch handler")
@@ -117,28 +151,19 @@ function BranchManager(props) {
                 <CCol><CButton color="primary" onClick={() => setVisible(!visible)}>+ Add Branch</CButton></CCol>
             </CRow>
             <CContainer>
-                <CTable small striped hover responsive="md" color="light">
-                    <CTableHead color="primary">
-                        <CTableRow>
-                            <CTableHeaderCell scope="col">Branch Name</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Branch Location</CTableHeaderCell>
-                            <CTableHeaderCell scope="col-xs"></CTableHeaderCell>
-                        </CTableRow>
-                    </CTableHead>
-                    <CTableBody>
-                        {
-                            branches?.map((branch, key) => {
-                                return (
-                                    <CTableRow key={branch.name} className="t_row">
-                                        <CTableDataCell>{branch.name}</CTableDataCell>
-                                        <CTableDataCell>{branch.location}</CTableDataCell>
-                                        <CTableDataCell><button className="remove_button" onClick={deleteBranchHandler}><AiOutlineMinusCircle className={branch._id} /></button></CTableDataCell>
-                                    </CTableRow>
-                                )
-                            })
-                        }
-                    </CTableBody>
-                </CTable>
+                <MDBDataTableV5
+                    small
+                    hover
+                    // striped
+                    fullPagination
+                    entriesOptions={[5, 10, 20]}
+                    entries={5}
+                    // bordered
+                    scrollX
+                    searchTop
+                    searchBottom={false}
+                    data={dataTable}
+                />;
                 <CModal alignment="center" visible={visible}>
                     <CModalHeader onDismiss={() => setVisible(false)}>
                         <CModalTitle>Add New Branch</CModalTitle>

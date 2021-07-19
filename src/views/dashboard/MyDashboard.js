@@ -15,8 +15,8 @@ function MyDashboard(props) {
             <div className="body flex-grow-1 px-3">
                 <CContainer>
                     <CRow className="d-flex justify-content-around align-items-center">
-                        <CCol><DashboardButtons image="https://img.icons8.com/material-outlined/24/000000/dashboard.png" path="/mydashboard" title="DASHBOARD" /></CCol>
-                        <CCol><DashboardButtons image="https://img.icons8.com/ios/50/000000/add-user-male.png" path="/userManager" title="SEARCH / ADD CANDIDATE" /></CCol>
+                        <CCol><DashboardButtons image="https://img.icons8.com/ios/50/000000/dashboard.png" path="/mydashboard" title="Dashboard" /></CCol>
+                        <CCol><DashboardButtons image="https://img.icons8.com/ios/50/000000/add-user-male.png" path="/userManager" title="Search/Add Candidate" /></CCol>
                         <CCol><DashboardButtons image="info" path="/mrf" title="MRF" /></CCol>
                         <CCol><DashboardButtons image="info" path="#" title="LAYOFFS" /></CCol>
                     </CRow>

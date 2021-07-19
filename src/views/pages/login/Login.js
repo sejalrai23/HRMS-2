@@ -25,20 +25,15 @@ const Login = () => {
         <CRow>
           <LoginHeader />
         </CRow>
-        <CRow className="justify-content-between">
-          <CCol md="6" className="align-items-center justify-content-center">
-            <img className="login_image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToxaHQiLVAlLRDtYhb48y4oWWk-BDBhj0q5A&usqp=CAU"
+        <CRow className="loginSection justify-content-between">
+          <CCol md="6" className="imageSection align-self-center align-items-center justify-content-center">
+            <img className="login_image2 " src="https://image.shutterstock.com/image-photo/human-resources-crm-data-mining-260nw-366555809.jpg"
               alt="Random to fill space"
             />
           </CCol>
-          <CCol md="6" className="align-self-end align-items-center justify-content-center">
+          <CCol md="6" className="FormSection align-items-center justify-content-center">
             <CCardGroup >
-
-              {/* {isUser && <LoginCard isNewUser={newUserHandler} />}
-              {!isUser && <RegisterCard isExistingUser={existingUserHandler} />} */}
-
               <LoginCard />
-
             </CCardGroup>
           </CCol>
         </CRow>

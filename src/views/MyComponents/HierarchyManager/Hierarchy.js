@@ -7,9 +7,11 @@ import { RiBuilding4Line, RiBuildingLine } from "react-icons/ri";
 import { AiOutlineTeam, AiOutlineMinusCircle } from "react-icons/ai";
 import { GrAddCircle } from "react-icons/gr";
 import endPoints from 'src/utils/EndPointApi';
+import { useStateValue } from "../../../StateProvider"
 
 function HierarchyF(props) {
-    const token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU0MjA0MTEsImV4cCI6MTYyNTQ1NjQxMX0.lBPfeOFJKZYNWCH1eXlhimL3JMQDar2sidMizgBx43I'
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
     const [isLoading, setIsLoading] = useState()
     const [dataList, setDataList] = useState([])
     const [searchedDepartment, setSearchedDepartment] = useState("")

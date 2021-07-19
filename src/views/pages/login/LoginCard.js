@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel } from '@coreui/react'
 import PropTypes from "prop-types";
 import endPoints from 'src/utils/EndPointApi';
+import { useStateValue } from "../../../StateProvider"
 function LoginCard(props) {
 
     // const createAccountHandler = (event) => {
     //     props?.isNewUser(false);
     // }
-
+    const [reducerState, dispatch] = useStateValue()
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     // const [errorMessage, seterrorMessage] = useState(null)
@@ -27,19 +28,21 @@ function LoginCard(props) {
             email: enteredEmail,
             password: enteredPassword,
         };
+        console.log(credentials)
         postData(endPoints.loginURL, credentials)
             .then(data => {
-                console.log(data); // JSON data parsed by data.json() call
+                console.log(data);
+                dispatch({
+                    type: 'USER_LOGIN',
+                    token: data.token,
+                    userRole: data.role
+                }) // JSON data parsed by data.json() call
             });
-        console.log(credentials)
-        setEnteredEmail("");
-        setEnteredPassword("");
+        event.target.reset()
     };
 
 
     async function postData(url, data) {
-        console.log(data)
-        console.log(typeof (data))
         const response = await fetch(url, {
             // mode : 'no-cors',
             method: 'POST', // *GET, POST, PUT, DELETE, etvc.
@@ -87,10 +90,10 @@ function LoginCard(props) {
                     </CFormFloating>
 
                     <CRow>
-                        <div className="center">
+                        {/* <div className="center">
                             <CButton type="submit" color="primary" className="px-4">Login</CButton>
-                        </div>
-                        {/* <CButton type="submit" color="primary" className="px-4">Login</CButton> */}
+                        </div> */}
+                        <CButton type="submit" color="primary" className="px-4">Login</CButton>
                     </CRow>
                     <CRow className="justify-content-center">
                         <CButton color="link" className="px-0">Forgot password?</CButton>
