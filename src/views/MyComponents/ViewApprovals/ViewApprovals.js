@@ -103,7 +103,7 @@ function ViewApprovals() {
 
 
 
-                <CCard style={{ width: '30rem' }} key={index} className="mx-auto">
+                <CCard style={{ width: '30rem' }} key={index} className="mx-auto my-5">
                     <CCardBody>
                         <CCardTitle>{card.title}</CCardTitle>
                         <CCardSubtitle className="mb-2 text-muted">Card subtitle</CCardSubtitle>

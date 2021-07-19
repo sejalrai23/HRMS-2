@@ -53,6 +53,7 @@
     "react-filteredlist": "^17.0.2",
     "react-fontawesome": "^1.7.1",
     "react-icons": "^4.2.0",
+    "react-loading-overlay": "^1.0.1",
     "react-redux": "^7.2.3",
     "react-router-dom": "^5.2.0",
     "react-select": "^4.3.1",
