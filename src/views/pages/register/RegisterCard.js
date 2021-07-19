@@ -80,8 +80,8 @@ function RegisterCard(props) {
             <CCardBody>
                 <CForm onSubmit={registerHandler}>
                     <CRow>
-                        <h3>Register</h3>
-                        <p className="text-medium-emphasis">Create your account</p>
+                        <h3 className="heading">Register Your Account</h3>
+                        <p className="heading">Create your account</p>
                     </CRow>
                     <CRow>
                         <CCol>
@@ -160,14 +160,31 @@ function RegisterCard(props) {
                         </CCol>
                     </CRow>
                     <CRow>
-                        <div className="center">
-                            <CButton type="submit" color="primary" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton>
-                        </div>
-                        {/* <CButton type="submit" color="primary" disabled={enteredPassword === enteredRePassword ? false : true}>Create Account</CButton> */}
+                        <CFormFloating className="mb-3">
+                            <CButton type="submit" size="lg" style={{ width: "100%" }} color="primary" className="text-center px-5 heading">Register</CButton>
+
+                        </CFormFloating>
                     </CRow>
                 </CForm>
                 <hr />
-                <CRow className="justify-content-start">
+                <CRow className="justify-content-center">
+                    <CCol className="col-sm-4"></CCol>
+                    <CCol className="col-sm-6">
+                        <div className="heading">
+                            Already a User?
+                            <Link to="/register">
+                                <CButton color="link" className="px-0 heading text-decoration-none"  >Login</CButton>
+                            </Link>
+
+                        </div>
+
+                    </CCol>
+
+                    <CCol className="col-sm-2"></CCol>
+
+
+                </CRow>
+                {/* <CRow className="justify-content-start">
                     <CCol md="4">
                         Already Existing User?
                     </CCol>
@@ -178,10 +195,10 @@ function RegisterCard(props) {
                             <CButton color="primary" className="px-4">Login to existing account</CButton>
                         </Link>
 
-                        {/* <CButton color="primary" className="px-4" onClick={existingLoginHandler} >Login to existing account</CButton> */}
+                        {/* <CButton color="primary" className="px-4" onClick={existingLoginHandler} >Login to existing account</CButton> 
                     </CCol>
 
-                </CRow>
+                </CRow> */}
             </CCardBody>
         </CCard>
     );

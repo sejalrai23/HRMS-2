@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import "./Login.css"
 import { Link } from 'react-router-dom'
-import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel } from '@coreui/react'
+import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel, CAlert } from '@coreui/react'
 import PropTypes from "prop-types";
 import endPoints from 'src/utils/EndPointApi';
 import { useStateValue } from "../../../StateProvider"
+import LoadingOverlay from 'react-loading-overlay';
 function LoginCard(props) {
 
     // const createAccountHandler = (event) => {
@@ -13,7 +14,8 @@ function LoginCard(props) {
     const [reducerState, dispatch] = useStateValue()
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
-    // const [errorMessage, seterrorMessage] = useState(null)
+    const [errorMessage, seterrorMessage] = useState(true);
+
 
     const emailChangeHandler = (event) => {
         setEnteredEmail(event.target.value);
@@ -39,7 +41,11 @@ function LoginCard(props) {
                 }) // JSON data parsed by data.json() call
             });
         event.target.reset()
-    };
+        //     if (true) {
+        //         seterrorMessage(true);
+
+        // } 
+    }
 
 
     async function postData(url, data) {
@@ -57,13 +63,16 @@ function LoginCard(props) {
 
 
     return (
-        <CCard className="card_component">
+        <CCard className="card_component mt-5">
             <CCardBody>
                 <CForm onSubmit={loginHandler}>
                     <CRow>
-                        <CCol ><h1>Log In To Your Account</h1></CCol>
-                        <p className="text-medium-emphasis">Sign In to your account</p>
+                        <CCol ><h1 className="heading">Log In To Your Account</h1></CCol>
+                        <p className="heading">Sign In to your account</p>
+                        {errorMessage ? <CAlert color="danger" dismissible> The email or password you entered is incorrect</CAlert> : ""}
+
                     </CRow>
+
                     <CFormFloating className="mb-3" >
                         <CFormControl
                             size="sm"
@@ -88,8 +97,16 @@ function LoginCard(props) {
                         />
                         <CFormLabel htmlFor="password">Password</CFormLabel>
                     </CFormFloating>
+                    <CFormFloating className="mb-3">
+                        <CButton type="submit" size="lg" style={{ width: "100%" }} color="primary" className="text-center px-5 heading">Login</CButton>
 
+                    </CFormFloating>
+                    <CRow >
+                        <CCol className="col-sm-8"></CCol>
+                        <CCol className="col-sm-4"><CButton color="link" className="px-0 heading text-decoration-none">Forgot password?</CButton></CCol>
+                    </CRow>
                     <CRow>
+
                         {/* <div className="center">
                             <CButton type="submit" color="primary" className="px-4">Login</CButton>
                         </div> */}
@@ -99,17 +116,18 @@ function LoginCard(props) {
                         <CButton color="link" className="px-0">Forgot password?</CButton>
                     </CRow>
                 </CForm>
-                <hr />
-                <CRow className="justify-content-start">
-                    <CCol md="2">
-                        New User?
+                <hr color="white" />
+                <CRow className="justify-content-center">
+                    <CCol className="col-sm-4"></CCol>
+                    <CCol className="col-sm-6">
+                        <div className="heading">
+                            New User?
+                            <Link to="/register">
+                                <CButton color="link" className="px-0 heading text-decoration-none" >Create Account</CButton>
+                            </Link>
+                        </div>
                     </CCol>
-                    <CCol md="4">
-                        <Link to="/register">
-                            <CButton color="primary" className="px-4" >Create Account</CButton>
-                        </Link>
-                        {/* <CButton color="primary" className="px-4" onClick={createAccountHandler}>Create Account</CButton> */}
-                    </CCol>
+                    <CCol className="col-sm-2"></CCol>
                 </CRow>
             </CCardBody>
         </CCard>
