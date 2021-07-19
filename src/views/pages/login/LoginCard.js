@@ -13,7 +13,7 @@ function LoginCard(props) {
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
-    const [errorMessage, seterrorMessage] = useState(true);
+    const [errorMessage, seterrorMessage] = useState(false);
 
 
     const emailChangeHandler = (event) => {
@@ -103,7 +103,7 @@ function LoginCard(props) {
 
 
 
-                
+
                     <CRow >
                         <CCol className="col-sm-8"></CCol>
                         <CCol className="col-sm-4"><CButton color="link" className="px-0 heading text-decoration-none">Forgot password?</CButton></CCol>
