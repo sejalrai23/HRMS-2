@@ -75,6 +75,13 @@ const _nav = [
     icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
   },
   {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'User Profile',
+    to: '/userprofile',
+    icon: <CIcon name="cil-pencil" customClasses="nav-icon" />,
+  },
+  {
     _component: 'CNavTitle',
     anchor: 'Theme',
   },
