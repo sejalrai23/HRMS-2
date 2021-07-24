@@ -239,7 +239,8 @@ function AddUserForm(props) {
     const formSubmitHandler = (event) => {
         event.preventDefault()
         let newEmp = {}
-        if (formState.uRole.name != "special") {
+        console.log("formState.uRole.label::::", formState.uRole.label)
+        if (formState.uRole.label != "Special") {
             newEmp = {
                 name: {
                     firstName: formState.fName,
@@ -248,7 +249,7 @@ function AddUserForm(props) {
                 userType: formState.uType,
                 userRole: {
                     name: formState.uRole.label,
-                    id: formState.uRole.value
+                    _id: formState.uRole.value
                 },
                 hierarchyID: formState.hName,
                 gender: formState.gender,
@@ -268,7 +269,7 @@ function AddUserForm(props) {
                 },
                 userType: formState.uType,
                 userRole: {
-                    name: formState.uRole,
+                    name: formState.uRole.label,
                 },
                 access: objAccess,
                 hierarchyID: formState.hName,
@@ -281,7 +282,7 @@ function AddUserForm(props) {
                 branchID: formState.BID
             }
         }
-        console.log("adding: ", newEmp)
+        console.log("adding new emp ::::::::::::::::::::::::::: ", newEmp)
         postData(endPoints.addUser, newEmp)
             .then(data => {
                 console.log(data)
@@ -410,12 +411,18 @@ function AddUserForm(props) {
 
     const branchLocationOptions = []
     if (branchList) {
+        let branchLocationObject = new Set()
         {
             branchList?.map(branch => {
-                branchLocationOptions.push({ label: branch.location, value: branch.location })
+                branchLocationObject.add(branch.location)
             })
         }
-        console.log("branchLocationOptions", branchLocationOptions)
+        {
+            for (let branch of branchLocationObject) {
+                branchLocationOptions.push({ label: branch, value: branch })
+            }
+        }
+        console.log("branchLocationOptions after", branchLocationOptions)
     }
 
     const hierarchyNameOptions = []
