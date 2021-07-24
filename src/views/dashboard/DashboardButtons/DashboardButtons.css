@@ -1,19 +1,19 @@
 .mycard{
     background-color: rgb(51, 153, 255);
     margin: 5px;
-    height: 130px;
+    height: 150px;
     width: 200px;
     display: flex;
     border-radius: 25px;
 }
 
 .mycard:hover{
-    
+    box-shadow: 2px 2px 8px grey;
 }
 
 .card_text{
     color: white;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 900;
     letter-spacing: 3px;
     text-align: -webkit-center;
@@ -41,15 +41,38 @@
     border-radius: 80px;
 } */
 
-.mycard > a{
+.dashboardLink,.dashboardLink:hover{
     text-decoration: none;
+    color: inherit;
 }
 
 .circular{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 80px;
     width: 80px;
     border-radius: 40px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    /* margin-top: 5px;
+    margin-bottom: 5px; */
     background-color: rgba(24, 94, 122, 0.377);
+}
+
+.image{
+    width: 100%;
+    object-fit:contain ;
+}
+
+.trial:hover{
+    /* border: 2px solid black; */
+    box-shadow: 8px 8px 8px grey;
+}
+
+.dashboard_button{
+    /* height: 300px; */
+    border-radius: 1px;
+}
+
+.fs-5{
+    font-size: 15px !important;
 }

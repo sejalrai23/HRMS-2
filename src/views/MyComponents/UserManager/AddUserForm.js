@@ -9,14 +9,15 @@ import {
     CSpinner, CModal, CModalHeader, CModalFooter, CModalTitle, CModalBody
 } from '@coreui/react'
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated'
-
+import { MDBDataTableV5 } from 'mdbreact';
+import { useStateValue } from "../../../StateProvider"
 
 const InitialFormState = {
     fName: "",
     lName: "",
     uType: "",
-    uRole: "",
+    uRole: { label: undefined },
+    access: {},
     hType: "",
     hName: "",
     jType: "",
@@ -50,6 +51,14 @@ const formReducer = (formState, action) => {
                 ...formState,
                 uRole: action.val
             }
+        // case "CHANGE_ACCESS":
+        //     return {
+        //         ...formState,
+        //         access: {
+        //             ...formstate.access, 
+        //             action.val
+        //         }
+        //     }
         case "HTYPE_INPUT":
             return {
                 ...formState,
@@ -104,37 +113,16 @@ function AddUserForm(props) {
     const [searchedItem, setSearchedItem] = useState()
     const [visible, setVisible] = useState(false)
     const [isLoading, setIsLoading] = useState()
-    const [userList, setUserList] = useState()
+    const [userList, setUserList] = useState([])
     const [hierarchyList, setHierarchyList] = useState()
     const [branchList, setBranchList] = useState()
+    const [userProfile, setUserProfile] = useState()
+    const [currentUserRole, setCurrentUserRole] = useState()
+    const [objAccess, setObjAccess] = useState({})
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
-
-
-    const branchNameOptions = []
-    {
-        branchList?.map(branch => {
-            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
-        })
-    }
-    console.log("branchNameOptions", branchNameOptions)
-
-    const branchLocationOptions = []
-    {
-        branchList?.map(branch => {
-            branchLocationOptions.push({ label: branch.location, value: branch.location })
-        })
-    }
-    console.log("branchLocationOptions", branchLocationOptions)
-
-    const hierarchyNameOptions = []
-    {
-        hierarchyList?.map(hierarchy => {
-            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
-        })
-    }
-    console.log("hierarchyNameOptions", hierarchyNameOptions)
 
 
     const clearHandler = (event) => {
@@ -200,7 +188,6 @@ function AddUserForm(props) {
         }
     }
 
-
     const fNameChangeHandler = (event) => {
         dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
     };
@@ -211,7 +198,13 @@ function AddUserForm(props) {
         dispatchForm({ type: "SELECT_UTYPE", val: event.target.value })
     }
     const selectedUserRoleHandler = (event) => {
-        dispatchForm({ type: "SELECT_UROLE", val: event.target.value })
+        console.log("changeddd")
+        dispatchForm({ type: "SELECT_UROLE", val: event })
+        setCurrentUserRole(event)
+        if (event.label != "Special") {
+            setObjAccess(userProfile?.filter(item => item.role == event.label)[0].access)
+            console.log(objAccess)
+        }
     }
     const hirearchyTypeChangeHandler = (event) => {
         dispatchForm({ type: "HTYPE_INPUT", val: event.target.value })
@@ -245,25 +238,53 @@ function AddUserForm(props) {
 
     const formSubmitHandler = (event) => {
         event.preventDefault()
-        const newEmp = {
-            name: {
-                firstName: formState.fName,
-                lastName: formState.lName,
-            },
-            userType: formState.uType,
-            userRole: formState.uRole,
-            hierarchyID: formState.hName,
-            gender: formState.gender,
-            designation: formState.designation,
-            jobType: formState.jType,
-            diversity: formState.diversity,
-            email: formState.email,
-            location: formState.location,
-            branchID: formState.BID
+        let newEmp = {}
+        if (formState.uRole.name != "special") {
+            newEmp = {
+                name: {
+                    firstName: formState.fName,
+                    lastName: formState.lName,
+                },
+                userType: formState.uType,
+                userRole: {
+                    name: formState.uRole.label,
+                    id: formState.uRole.value
+                },
+                hierarchyID: formState.hName,
+                gender: formState.gender,
+                designation: formState.designation,
+                jobType: formState.jType,
+                diversity: formState.diversity,
+                email: formState.email,
+                location: formState.location,
+                branchID: formState.BID
+            }
+        }
+        else {
+            newEmp = {
+                name: {
+                    firstName: formState.fName,
+                    lastName: formState.lName,
+                },
+                userType: formState.uType,
+                userRole: {
+                    name: formState.uRole,
+                },
+                access: objAccess,
+                hierarchyID: formState.hName,
+                gender: formState.gender,
+                designation: formState.designation,
+                jobType: formState.jType,
+                diversity: formState.diversity,
+                email: formState.email,
+                location: formState.location,
+                branchID: formState.BID
+            }
         }
         console.log("adding: ", newEmp)
         postData(endPoints.addUser, newEmp)
             .then(data => {
+                console.log(data)
                 if (data.Success === true) {
                     showData(endPoints.searchUser)
                         .then(Data => {
@@ -273,6 +294,7 @@ function AddUserForm(props) {
             })
         event.target.reset()
     }
+
     const deleteUserHandler = (event) => {
         const delUser = {
             _id: event.target.className.baseVal
@@ -288,8 +310,6 @@ function AddUserForm(props) {
                 }
             })
     }
-
-
 
     async function postData(url, data) {
         console.log("in post data")
@@ -352,9 +372,175 @@ function AddUserForm(props) {
                 console.log("branchList:", Data)
                 setBranchList(Data)
             })
+        showData(endPoints.searchUserProfile)
+            .then(Data => {
+                console.log("userProfile:", Data)
+                setUserProfile(Data)
+            })
     }, [])
 
 
+
+    // if (userProfile) {
+    //     // console.log("....................................................", userProfile[0].access)
+    //     objAccess = userProfile[0].access
+    //     console.log("user Access Objecttt : ", objAccess)
+    // }
+
+    const userRoleOptions = []
+    if (userProfile) {
+        {
+            userProfile?.map(profile => {
+                userRoleOptions.push({ label: profile.role, value: profile._id })
+            })
+            // userRoleOptions.push({ label: "Special", value: "Special" })
+        }
+        console.log("userRoleOptions", userRoleOptions)
+    }
+
+    const branchNameOptions = []
+    if (branchList) {
+        {
+            branchList?.map(branch => {
+                branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
+            })
+        }
+        console.log("branchNameOptions", branchNameOptions)
+    }
+
+    const branchLocationOptions = []
+    if (branchList) {
+        {
+            branchList?.map(branch => {
+                branchLocationOptions.push({ label: branch.location, value: branch.location })
+            })
+        }
+        console.log("branchLocationOptions", branchLocationOptions)
+    }
+
+    const hierarchyNameOptions = []
+    if (hierarchyList) {
+        {
+            hierarchyList?.map(hierarchy => {
+                hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
+            })
+        }
+        console.log("hierarchyNameOptions", hierarchyNameOptions)
+    }
+
+    const tableRows = []
+    if (userList.length > 0) {
+        {
+            userList?.map(user => {
+                // console.log("item:", item)
+                tableRows.push({
+                    showButton: <button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button>,
+                    full_name: user.name.firstName + " " + user.name.lastName,
+                    // first_name: user.name.firstName,
+                    // last_name: user.name.lastName,
+                    user_type: user.userType,
+                    user_role: user.userRole.name,
+                    hierarchy: user.hierarchyID.type + "," + user.hierarchyID.name,
+                    // hierarchy_type: user.hierarchyID.type,
+                    // hierarchy_name: user.hierarchyID.name,
+                    job_type: user.jobType,
+                    diversity: user.diversity,
+                    email: user.email,
+                    designation: user.designation,
+                    branch: user.branchID.location + "," + user.branchID.name,
+                    // branch_location: user.branchID.location,
+                    // branch_name: user.branchID.name,
+                })
+            })
+        }
+    }
+
+    const dataTable = {
+        columns: [
+            {
+                label: '',
+                field: 'showButton',
+                width: 90,
+            },
+            {
+                label: 'Full Name',
+                field: 'full_name',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'User Type',
+                field: 'user_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'User Role',
+                field: 'user_role',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Hierarchy',
+                field: 'hierarchy',
+                sort: 'disabled',
+                width: 250,
+            },
+            {
+                label: 'Job Type',
+                field: 'job_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Diversity',
+                field: 'diversity',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Email Address',
+                field: 'email',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Designation',
+                field: 'designation',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Branch',
+                field: 'branch',
+                sort: 'disabled',
+                width: 250,
+            },
+        ],
+        rows: tableRows
+    }
+
+    const modalCloseHandler = () => {
+        setVisible(false)
+        setCurrentUserRole(undefined)
+    }
+
+    const accessChangeHandler = (event) => {
+        // console.log("event.target", event.target.id, event.target.checked)
+        setObjAccess({
+            ...objAccess,
+            [event.target.id]: event.target.checked
+        }
+        )
+        // objAccess = {
+        //     ...objAccess,
+        //     [event.target.id]: event.target.checked
+        // }
+        dispatchForm({ type: "SELECT_UROLE", val: { label: "Special", value: "Special" } })
+        setCurrentUserRole({ label: "Special", value: "Special" })
+    }
+    console.log(objAccess)
+    console.log(formState)
     return (
         <CContainer>
             <CRow className="mb-3">
@@ -403,50 +589,21 @@ function AddUserForm(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol> */}
             </CRow>
-            <CTable striped responsive hover color="light">
-                <CTableHead color="primary">
-                    <CTableRow >
-                        <CTableHeaderCell className="text-center" scope="col"></CTableHeaderCell>
-                        <CTableHeaderCell className="text-center fnh" scope="col" style={{ width: "30%" }}>First Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Last Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Role</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Job Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Diversity</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Email Address</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Designation</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Location</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Name</CTableHeaderCell>
-                    </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                    {
-                        userList?.map((user, key) => {
-                            return (
-                                <CTableRow key={user.email} className="t_row">
-                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button></CTableHeaderCell>
-                                    <CTableDataCell className="text-center" scope="col" style={{ width: "30%" }}>{user.name.firstName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.name.lastName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userRole}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.type}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.name}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.jobType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.diversity}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.email}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.designation}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.location}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.name}</CTableDataCell>
-                                </CTableRow>
-                            )
-                        })
-                    }
-                </CTableBody>
-            </CTable>
+            <MDBDataTableV5
+                small
+                hover
+                // striped
+                fullPagination
+                entriesOptions={[5, 10, 20]}
+                entries={5}
+                // bordered
+                scrollX
+                searchTop
+                searchBottom={false}
+                data={dataTable}
+            />;
             <CModal size="xl" alignment="center" visible={visible} backdrop={true}>
-                <CModalHeader onDismiss={() => setVisible(false)}>
+                <CModalHeader onDismiss={modalCloseHandler}>
                     <CModalTitle>Add New Employee</CModalTitle>
                 </CModalHeader>
                 <CModalBody className="bg-light">
@@ -493,7 +650,14 @@ function AddUserForm(props) {
                                 User Role:
                             </CFormLabel>
                             <CCol sm="4">
-                                <CFormSelect id="user_role" required onChange={selectedUserRoleHandler}>
+                                <Select
+                                    options={userRoleOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={selectedUserRoleHandler}
+                                    value={formState.uRole}
+                                />
+                                {/* <CFormSelect id="user_role" required onChange={selectedUserRoleHandler} value={formState.uRole}>
                                     <option>Choose...</option>
                                     <option value="Super-Admin">Super-Admin</option>
                                     <option value="admin">admin</option>
@@ -503,8 +667,44 @@ function AddUserForm(props) {
                                     <option value="BCGVerification">BCGVerification</option>
                                     <option value="Campus">Campus</option>
                                     <option value="Employee">Employee</option>
-                                </CFormSelect>
+                                    <option value="Special">Special</option>
+                                </CFormSelect> */}
                             </CCol>
+                        </CRow>
+                        <CRow classname="mb-3">
+                            {currentUserRole === undefined ? console.log("not yettttttttt") :
+                                currentUserRole.label == "Special" ? Object.entries(objAccess).map(([key, value]) => {
+                                    // console.log("key: ", key, "value: ", value, "currentUserRoleeeeeeeeee", formState.uRole)
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : Object.entries((userProfile?.filter(item => item.role == currentUserRole.label))[0].access).map(([key, value]) => {
+                                    // console.log(Object.entries((userProfile?.filter(item => item.role === currentUserRole))[0].access))
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                })}
+                            {/* {
+                                formState.uRole != null ? Object.entries((userProfile?.filter(item => item.role === formState.uRole))[0].access).map(([key, value]) => {
+                                    console.log("key: ", key, "value: ", value, "currentUserRole", formState.uRole)
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : formState.uRole != "Special" ? Object.entries(objAccess).map(([key, value]) => {
+                                    console.log("key: ", key, "value: ", value, "currentUserRole", formState.uRole)
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : console.log("not yettttttttt")
+                            } */}
                         </CRow>
                         <CRow className="mb-3">
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="hirearchy_type">
@@ -689,12 +889,12 @@ function AddUserForm(props) {
                         <br />
 
                         <CCol className="d-flex align-items-center justify-content-center">
-                            <CButton type="submit" color="primary" onClick={() => setVisible(false)}>Add Employee</CButton>
+                            <CButton type="submit" color="primary" onClick={modalCloseHandler}>Add Employee</CButton>
                         </CCol>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>Close</CButton>
+                    <CButton color="secondary" onClick={modalCloseHandler}>Close</CButton>
                 </CModalFooter>
             </CModal>
         </CContainer >

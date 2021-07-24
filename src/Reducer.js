@@ -5,19 +5,21 @@ export const initialState = {
     hierarchies: {},
     branchName: {},
     branchLocation: {},
-    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjcxMTQ4NjAsImV4cCI6MTYyNzE1MDg2MH0.yZovI5UpxcEAs6Z1HYpzffLdub5F-5Nsaz6nLP_FOaw",
+
+   
+    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjcxMTQ4MDYsImV4cCI6MTYyNzE1MDgwNn0.8Hlbzez4bNqrPsCEbUDG_yQrRjZZc-E9fY0iuigd-NA",
+    userRole: "",
 }
 
 const StateReducer = (reducerState, action) => {
-    // console.log("abc")
     console.log("state ::", reducerState)
-    // console.log("action: ", action)
     switch (action.type) {
         case "USER_LOGIN":
-            // console.log("user_login")
+            console.log("user_login")
             return {
                 ...reducerState,
-                token: action.token
+                token: action.token,
+                userRole: action.role
             }
         case "VIEW_MRF":
             console.log("view_mrf")

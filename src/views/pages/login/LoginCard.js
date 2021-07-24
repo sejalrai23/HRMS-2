@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel, CAlert } from '@coreui/react'
 import PropTypes from "prop-types";
 import endPoints from 'src/utils/EndPointApi';
+import { useStateValue } from "../../../StateProvider"
 import LoadingOverlay from 'react-loading-overlay';
 function LoginCard(props) {
 
     // const createAccountHandler = (event) => {
     //     props?.isNewUser(false);
     // }
-
+    const [reducerState, dispatch] = useStateValue()
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
     const [emailerrorMessage, setEmailerrorMessage] = useState(false);
@@ -30,18 +31,25 @@ function LoginCard(props) {
             email: enteredEmail,
             password: enteredPassword,
         };
+        console.log(credentials)
         postData(endPoints.loginURL, credentials)
             .then(data => {
                 console.log(data);
+
                 if (data.email == "Invalid") {
                     setEmailerrorMessage(true);
                 }
                 else if (data.password = "Invalid") {
                     setPassworderrorMessage(true);
                 }
-            });
-        console.log(credentials);
 
+                dispatch({
+                    type: 'USER_LOGIN',
+                    token: data.token,
+                    userRole: data.role
+                }) // JSON data parsed by data.json() call
+
+            });
         setEnteredEmail("");
         setEnteredPassword("");
     };
@@ -49,9 +57,8 @@ function LoginCard(props) {
 
     async function postData(url, data) {
         console.log(data)
-        console.log(typeof (data))
         const response = await fetch(url, {
-            // mode : 'no-cors',
+            // mode: 'no-cors',
             method: 'POST', // *GET, POST, PUT, DELETE, etvc.
             headers: {
                 // "Access-Control-Allow-Origin": "*",
@@ -75,7 +82,6 @@ function LoginCard(props) {
                         {passworderrorMessage ? <CAlert color="danger" dismissible> The password you entered is incorrect</CAlert> : ""}
 
                     </CRow>
-
                     <CFormFloating className="mb-3" >
                         <CFormControl
                             size="sm"

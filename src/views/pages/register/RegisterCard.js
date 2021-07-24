@@ -172,7 +172,7 @@ function RegisterCard(props) {
                     <CCol className="col-sm-6">
                         <div className="heading">
                             Already a User?
-                            <Link to="/register">
+                            <Link to="/login">
                                 <CButton color="link" className="px-0 heading text-decoration-none"  >Login</CButton>
                             </Link>
 

@@ -1,0 +1,102 @@
+-------------------------------user---------------------------------------
+{/* <CTable striped responsive hover color="light">
+                <CTableHead color="primary">
+                    <CTableRow >
+                        <CTableHeaderCell className="text-center" scope="col"></CTableHeaderCell>
+                        <CTableHeaderCell className="text-center fnh" scope="col" style={{ width: "30%" }}>First Name</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Last Name</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">User Type</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">User Role</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Type</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Name</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Job Type</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Diversity</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Email Address</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Designation</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Branch Location</CTableHeaderCell>
+                        <CTableHeaderCell className="text-center" scope="col">Branch Name</CTableHeaderCell>
+                    </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                    {
+                        userList?.map((user, key) => {
+                            return (
+                                <CTableRow key={user.email} className="t_row">
+                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button></CTableHeaderCell>
+                                    <CTableDataCell className="text-center" scope="col" style={{ width: "30%" }}>{user.name.firstName}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.name.lastName}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.userType}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.userRole}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.type}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.name}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.jobType}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.diversity}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.email}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.designation}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.branchID.location}</CTableDataCell>
+                                    <CTableDataCell className="text-center" scope="col">{user.branchID.name}</CTableDataCell>
+                                </CTableRow>
+                            )
+                        })
+                    }
+                </CTableBody>
+            </CTable> */}
+-------------------------------user---------------------------------------
+
+-------------------------------branch---------------------------------------
+{/* <CTable small striped hover responsive="md" color="light">
+                    <CTableHead color="primary">
+                        <CTableRow>
+                            <CTableHeaderCell scope="col">Branch Name</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Branch Location</CTableHeaderCell>
+                            <CTableHeaderCell scope="col-xs"></CTableHeaderCell>
+                        </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                        {
+                            branches?.map((branch, key) => {
+                                return (
+                                    <CTableRow key={branch.name} className="t_row">
+                                        <CTableDataCell>{branch.name}</CTableDataCell>
+                                        <CTableDataCell>{branch.location}</CTableDataCell>
+                                        <CTableDataCell><button className="remove_button" onClick={deleteBranchHandler}><AiOutlineMinusCircle className={branch._id} /></button></CTableDataCell>
+                                    </CTableRow>
+                                )
+                            })
+                        }
+                    </CTableBody>
+                </CTable> */}
+-------------------------------branch---------------------------------------
+const userAccess = [
+        {
+            id:1,
+            role:"Super-Admin",
+            access:{
+                addUser: true,
+                searchUser: true,
+                deleteUser: true,
+                editUser:true,
+                changePassword:true,
+                addBranch:true,
+                showBranch:true,
+                addUserProfile:true,
+                upgradeUserProfile:true,
+                deleteUserprofile:true,
+                addHierarchy:true,
+                removeHierarchy:true,
+                searchHierarchy:true,
+                searchUserProfile:true,
+                AddApprovalMatrix:true,
+                deleteApprovalMatrix:true,
+                upgradeApprovalMatrix:true,
+                requestApprovalMatrix:true,
+                addMrfRequest:true,
+                deleteMrfRequest:true,
+                editMrfRequest:true,
+                showMrfRequest:true,
+                showApproval:true,
+                giveApproval:true,
+
+            }
+        }
+    ]

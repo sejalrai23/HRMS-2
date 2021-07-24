@@ -1,5 +1,8 @@
 const baseLink = "https://crm1728.herokuapp.com";
+
 // const baseLink = "https://dcf037b90b40.ngrok.io";
+// const baseLink = "https://ce7ec507aeda.ngrok.io";
+
 
 
 const endPoints = {
@@ -11,9 +14,9 @@ const endPoints = {
     searchBranch: baseLink + "/branch",
     removeBranch: baseLink + "/branch",
     addBranch: baseLink + "/branch",
-    searchUser: baseLink + "/user", //
-    removeUser: baseLink + "/user", //success
-    addUser: baseLink + "/user", //success
+    searchUser: baseLink + "/user",
+    removeUser: baseLink + "/user",
+    addUser: baseLink + "/user",
     searchMrf: baseLink + '/mrfrequest',
     addMrf: baseLink + "/mrfrequest",
     searchApproval: baseLink + "/approvalmatrix",
@@ -23,6 +26,8 @@ const endPoints = {
     getUserProfile: baseLink + "/userprofile",
     postUserProfile: baseLink + "/userprofile",
     patchUserProfile: baseLink + "/userprofile",
+    searchUserProfile: baseLink + "/userprofile",
+
 }
 
 module.exports = endPoints;
