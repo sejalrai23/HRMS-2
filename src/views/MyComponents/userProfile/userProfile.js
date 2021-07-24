@@ -248,7 +248,7 @@ function UserProfile() {
                                                             className="mx-5"
                                                             switch
                                                             id={key}
-                                                            defaultChecked={values}
+                                                            defaultChecked={key[1]}
 
 
                                                             onChange={(event) => {
