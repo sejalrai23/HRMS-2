@@ -26,6 +26,24 @@ function BranchManager(props) {
         setEnteredBranchName(event.target.value)
     }
 
+    const deleteBranchHandler = (event) => {
+        console.log("in delete branch handler")
+        const delBranch = branches.filter(branch => branch._id === event.target.className.baseVal)
+        console.log(delBranch)
+        const delObj = {
+            _id: delBranch[0]._id
+        }
+        console.log(delObj)
+        removeData(endPoints.removeBranch, delObj)
+            .then(data => {
+                console.log(data)
+                if (data.Success === true) {
+                    showData(endPoints.searchBranch)
+                        .then(data => setBranches(data))
+                }
+            })
+    }
+
     const tableRows = []
     {
         branches?.map(item => {
@@ -71,18 +89,7 @@ function BranchManager(props) {
             })
     }
 
-    const deleteBranchHandler = (event) => {
-        console.log("in delete branch handler")
-        const delBranch = branches.filter(branch => branch._id === event.target.className.baseVal)
-        removeData(endPoints.removeBranch, delBranch)
-            .then(data => {
-                console.log(data)
-                if (data.Success === true) {
-                    showData(endPoints.searchBranch)
-                        .then(data => setBranches(data))
-                }
-            })
-    }
+
 
     const postData = async (url, data) => {
         console.log("in post data")
@@ -133,6 +140,7 @@ function BranchManager(props) {
 
     useEffect(() => {
         console.log("in use effect")
+        console.log("reducer", reducerState)
         showData(endPoints.searchBranch)
             .then(Data => {
                 setBranches(Data)

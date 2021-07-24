@@ -27,20 +27,29 @@ const Login = () => {
         <CRow>
           <LoginHeader />
         </CRow>
-        <CCol md="6" className="align-items-center align-self-start justify-content-center ">
-          <img className="login_image" src={logo}
-            alt="Random to fill space"
-          />
-        </CCol>
-        <CCol md="6" className=" mr-auto align-self-start align-items-center justify-content-center">
-          <CCardGroup >
+        <CRow className="justify-content-between">
 
-            {/* {isUser && <LoginCard isNewUser={newUserHandler} />}
+
+
+          <CCol md="6" className="align-items-center align-self-start justify-content-center ">
+            <img className="login_image" src={logo}
+              alt="Random to fill space"
+            />
+
+          </CCol>
+
+          <CCol md="6" className=" mr-auto align-self-start align-items-center justify-content-center">
+            <CCardGroup >
+
+              {/* {isUser && <LoginCard isNewUser={newUserHandler} />}
               {!isUser && <RegisterCard isExistingUser={existingUserHandler} />*/}
 
-            <LoginCard />
-          </CCardGroup>
-        </CCol>
+              <LoginCard />
+
+            </CCardGroup>
+          </CCol>
+
+        </CRow>
       </CContainer>
     </div>
   )

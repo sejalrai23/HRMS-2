@@ -14,7 +14,7 @@ function LoginCard(props) {
     const [reducerState, dispatch] = useStateValue()
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
-    const [errorMessage, seterrorMessage] = useState(true);
+    const [errorMessage, seterrorMessage] = useState(false);
 
 
     const emailChangeHandler = (event) => {
@@ -40,17 +40,15 @@ function LoginCard(props) {
                     userRole: data.role
                 }) // JSON data parsed by data.json() call
             });
-        event.target.reset()
-        //     if (true) {
-        //         seterrorMessage(true);
-
-        // } 
-    }
+        setEnteredEmail("");
+        setEnteredPassword("");
+    };
 
 
     async function postData(url, data) {
+        console.log(data)
         const response = await fetch(url, {
-            // mode : 'no-cors',
+            // mode: 'no-cors',
             method: 'POST', // *GET, POST, PUT, DELETE, etvc.
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +70,6 @@ function LoginCard(props) {
                         {errorMessage ? <CAlert color="danger" dismissible> The email or password you entered is incorrect</CAlert> : ""}
 
                     </CRow>
-
                     <CFormFloating className="mb-3" >
                         <CFormControl
                             size="sm"
@@ -101,19 +98,15 @@ function LoginCard(props) {
                         <CButton type="submit" size="lg" style={{ width: "100%" }} color="primary" className="text-center px-5 heading">Login</CButton>
 
                     </CFormFloating>
+
+
+
+
+
                     <CRow >
                         <CCol className="col-sm-8"></CCol>
                         <CCol className="col-sm-4"><CButton color="link" className="px-0 heading text-decoration-none">Forgot password?</CButton></CCol>
-                    </CRow>
-                    <CRow>
 
-                        {/* <div className="center">
-                            <CButton type="submit" color="primary" className="px-4">Login</CButton>
-                        </div> */}
-                        <CButton type="submit" color="primary" className="px-4">Login</CButton>
-                    </CRow>
-                    <CRow className="justify-content-center">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
                     </CRow>
                 </CForm>
                 <hr color="white" />
@@ -125,9 +118,14 @@ function LoginCard(props) {
                             <Link to="/register">
                                 <CButton color="link" className="px-0 heading text-decoration-none" >Create Account</CButton>
                             </Link>
+
                         </div>
+
                     </CCol>
+
                     <CCol className="col-sm-2"></CCol>
+
+
                 </CRow>
             </CCardBody>
         </CCard>

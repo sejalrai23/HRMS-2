@@ -1,5 +1,5 @@
-// const baseLink = "https://crm1728.herokuapp.com";
-const baseLink = "https://tough-husky-92.loca.lt";
+const baseLink = "https://crm1728.herokuapp.com";
+// const baseLink = "https://ce7ec507aeda.ngrok.io";
 
 
 const endPoints = {
@@ -20,6 +20,7 @@ const endPoints = {
     addApprovalMatrix: baseLink + "/approvalmatrix",
     showApprovalMatrix: baseLink + "/approvalmatrix",
     deleteApprovalMatrix: baseLink + "/approvalmatrix",
+    searchUserProfile: baseLink + "/userprofile",
 }
 
 module.exports = endPoints;

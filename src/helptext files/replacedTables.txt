@@ -67,4 +67,36 @@
                     </CTableBody>
                 </CTable> */}
 -------------------------------branch---------------------------------------
+const userAccess = [
+        {
+            id:1,
+            role:"Super-Admin",
+            access:{
+                addUser: true,
+                searchUser: true,
+                deleteUser: true,
+                editUser:true,
+                changePassword:true,
+                addBranch:true,
+                showBranch:true,
+                addUserProfile:true,
+                upgradeUserProfile:true,
+                deleteUserprofile:true,
+                addHierarchy:true,
+                removeHierarchy:true,
+                searchHierarchy:true,
+                searchUserProfile:true,
+                AddApprovalMatrix:true,
+                deleteApprovalMatrix:true,
+                upgradeApprovalMatrix:true,
+                requestApprovalMatrix:true,
+                addMrfRequest:true,
+                deleteMrfRequest:true,
+                editMrfRequest:true,
+                showMrfRequest:true,
+                showApproval:true,
+                giveApproval:true,
 
+            }
+        }
+    ]
