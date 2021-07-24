@@ -1,0 +1,14 @@
+.column{
+    display:flex;
+    
+}
+
+
+.title{
+    margin:0px 30px;
+} 
+
+.column1{
+    display:flex;
+    margin:0px 20px !important;
+}

@@ -22,12 +22,64 @@ function Approval(props) {
     const [reducerState, dispatch] = useStateValue()
     const token = reducerState.token
     // const [documentID, setDocumentID] = useState("");
+    const [hierarchyList, setHierarchyList] = useState()
+    const [branchList, setBranchList] = useState()
+    const [userList, setUserList] = useState()
+
 
     var searchPosition;
     var searchHierarchy;
     var searchBranch;
-
     var searchApprover;
+
+    if (userList) { localStorage.setItem("userList", JSON.stringify(userList)) }
+    if (hierarchyList) { localStorage.setItem("hierarchyList", JSON.stringify(hierarchyList)) }
+    if (branchList) { localStorage.setItem("branchList", JSON.stringify(branchList)) }
+
+
+    async function showData(url) {
+        // setIsLoading(true)
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+        });
+        const Data = await response.json();
+        // setIsLoading(false)
+        return Data
+    }
+    useEffect(() => {
+        console.log("in use effect")
+        showData(endPoints.showApprovalMatrix)
+            .then(Data => {
+                console.log("Approval List:", Data)
+                setApprovalMatrix(Data)
+            })
+        showData(endPoints.searchUser)
+            .then(Data => {
+                console.log("user:", Data)
+                setUserList(Data)
+
+            })
+        showData(endPoints.searchHierarchy)
+            .then(Data => {
+                console.log("hierarchy:", Data)
+                setHierarchyList(Data)
+            })
+        showData(endPoints.searchBranch)
+            .then(Data => {
+                console.log("branch:", Data)
+                setBranchList(Data)
+            })
+    }, [])
+
+    const pageChangeHandler = (event) => {
+        console.log("event id: ", event.target.id)
+        const ApprovalSelected = approvalMatrix.filter((item) => item._id === event.target.id)
+        localStorage.setItem("View Approval", JSON.stringify(ApprovalSelected))
+    }
 
 
 
@@ -65,14 +117,14 @@ function Approval(props) {
         return Data1
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        showApprovalMatrix(endPoints.showApprovalMatrix).then(Data => {
-            setApprovalMatrix(Data)
+    //     showApprovalMatrix(endPoints.showApprovalMatrix).then(Data => {
+    //         setApprovalMatrix(Data)
 
-        });
+    //     });
 
-    }, [])
+    // }, [])
     // var documentID = "";
 
     const dataDeleteHandler = (event) => {
@@ -84,16 +136,6 @@ function Approval(props) {
 
         deleteMatrix(endPoints.deleteApprovalMatrix, { _id: documentID }).then(Data => { console.log(Data) });
         console.log(typeof (documentID));
-
-
-    }
-
-    const pageChangeHandler = (event) => {
-        console.log("pressed");
-        // <Link to="/viewapprovalform"  ></Link>
-
-
-
 
 
     }
@@ -172,42 +214,28 @@ function Approval(props) {
 
     }
 
-    // const filterHandler = (event) => {
-    //     let list = [];
-    //     switch (filterBy) {
-    //         case "searchPosition":
-    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase()))
-    //         case "searchCooling":
-    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchCooling.toUpperCase()))
-    //             break;
 
 
+    // const rows = [
+    //     {
+    //         position: "data.position",
+    //         heirarchy: "data.hierarchyID.name",
+    //         branchname: "data.branchID.name",
+    //         cooling: "data.coolingPeriod",
+    //         verificationstatus: "data.verified",
+    //         tatdate: "data.tat",
+    //         approverName: "data.approversID[i]._id.name.firstName ",
+    //     },
+    //     {
+    //         position: "data.position",
+    //         heirarchy: "data.hierarchyID.name",
+    //         branchname: "data.branchID.name",
+    //         cooling: "data.coolingPeriod",
+    //         verificationstatus: "data.verified",
+    //         tatdate: "data.tat",
+    //         approverName: "data.approversID[i]._id.name.firstName ",
     //     }
-    //     console.log(list);
-    // }
-
-
-
-    const rows = [
-        {
-            position: "data.position",
-            heirarchy: "data.hierarchyID.name",
-            branchname: "data.branchID.name",
-            cooling: "data.coolingPeriod",
-            verificationstatus: "data.verified",
-            tatdate: "data.tat",
-            approverName: "data.approversID[i]._id.name.firstName ",
-        },
-        {
-            position: "data.position",
-            heirarchy: "data.hierarchyID.name",
-            branchname: "data.branchID.name",
-            cooling: "data.coolingPeriod",
-            verificationstatus: "data.verified",
-            tatdate: "data.tat",
-            approverName: "data.approversID[i]._id.name.firstName ",
-        }
-    ];
+    // ];
 
 
 
@@ -269,85 +297,6 @@ function Approval(props) {
 
 
         rows: DataRows
-        // [
-        //     {
-
-        //         position: 'System Architect',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         cooling: '25',
-        //         verified: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         button: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        // ]
-        //     {
-
-        //         position: 'machine learning',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: 'full stack',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: 'web dev',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: ' Architect',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-
-        // ],
     }
     const widerData = {
         columns: [
@@ -360,10 +309,9 @@ function Approval(props) {
     }
 
     // console.log(typeof (rows))
-
     // console.log(searchHierarchy);
-    const checkList = []
 
+    const checkList = []
     const changeValueHandler = (event) => {
         if (event.target.checked) {
             checkList.push(event.target.value);
