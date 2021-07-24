@@ -5,7 +5,7 @@ export const initialState = {
     hierarchies: {},
     branchName: {},
     branchLocation: {},
-    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGYwMDE4NzA1MzA4MDAwMTU5MzA0ZDQiLCJlbWFpbCI6InNlamFscmFpMjNAZ21haWwuY29tIiwiUm9sZSI6IlN1cGVyLUFkbWluIiwiaWF0IjoxNjI2MzUzOTA4LCJleHAiOjE2MjYzODk5MDh9.z0t2KEWMStBi0vvh_IzWDIaNH_r4ucqy_Ulhfid-z8M",
+    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjcxMTQ4NjAsImV4cCI6MTYyNzE1MDg2MH0.yZovI5UpxcEAs6Z1HYpzffLdub5F-5Nsaz6nLP_FOaw",
 }
 
 const StateReducer = (reducerState, action) => {
@@ -39,6 +39,11 @@ const StateReducer = (reducerState, action) => {
                 hierarchies: action.hierarchies,
                 branchName: action.branchName,
                 branchLocation: action.branchLocation
+            }
+        case "CREATE APPROVAL":
+            console.log("create approval")
+            return {
+
             }
         default:
             return reducerState
