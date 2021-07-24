@@ -58,7 +58,7 @@ function UserProfile() {
         return Data
     }
 
-    async function postData(url) {
+    async function postData(url, data) {
         // console.log("in show data")
         // setIsLoading(true)
         const response = await fetch(url, {
@@ -67,6 +67,7 @@ function UserProfile() {
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
+            body: JSON.stringify(data)
         });
         const Data = await response.json();
         // setIsLoading(false)
@@ -111,56 +112,65 @@ function UserProfile() {
     const Access = {};
     {
         showData?.filter(data => data.role == "Super-Admin").map(data => Object.assign(Access, data.access));
+        Object.keys(Access).forEach(key => {
+            Access[key] = false;
+        });
+        // console.log(Access);
 
     }
+
 
     const fetchAccessHandler = () => {
-        console.log("clicked");
-        console.log(Access);
+
+
+
         setAccessRoles(Object.entries(Access));
-
-
-
+        console.log("clicked");
+        // console.log(Access);
     }
+
 
 
     const savePermissionHandler = (event) => {
-        // console.log(showData);
-        showData.map(data => {
-            patchData(endPoints.patchUserProfile, { _id: data._id, access: data.access }).then(res => console.log(res));
+        console.log(roles);
+        // showData.map(data => {
+        //     patchData(endPoints.patchUserProfile, { _id: data._id, access: data.access }).then(res => console.log(res));
 
 
-        })
+        // })
     }
 
     const postDataHandler = () => {
+
         console.log(Access);
-    }
-
-
-    const permissions = {
-        columns: [
-            {
-                label: 'Roles',
-                field: 'roles',
-                width: 100
-
-            },
-
-        ],
-        rows: [
-            {
-                roles: <div className="column1 ">
-                    <h6 className="mx-5">ADD User</h6>
-                    <CFormCheck
-                        className="mx-5"
-                        switch
-                        id="formSwitchCheckDefault"
-                    /></div>
-            }
-        ]
+        postData(endPoints.postUserProfile, { role: newRole, access: Access }).then(res => console.log(res));
 
     }
+
+
+    // const permissions = {
+    //     columns: [
+    //         {
+    //             label: 'Roles',
+    //             field: 'roles',
+    //             width: 100
+
+    //         },
+
+    //     ],
+    //     rows: [
+    //         {
+    //             roles: <div className="column1 ">
+    //                 <h6 className="mx-5">ADD User</h6>
+    //                 <CFormCheck
+    //                     className="mx-5"
+    //                     switch
+    //                     id="formSwitchCheckDefault"
+    //                 /></div>
+    //         }
+    //     ]
+
+    // }
 
 
 
@@ -222,35 +232,42 @@ function UserProfile() {
                             </CTableHead>
                             <CTableBody>
 
+
                                 {roles.map((key, values) => {
                                     {/* console.log(data) */ }
 
                                     return (
-                                        <CTableRow key={values}>
+                                        <CTableRow key={key}>
                                             <CTableDataCell  >
                                                 <div className="column1 ">
-                                                    <h6 className="mx-5">{key}</h6>
-                                                    <CFormCheck
-                                                        className="mx-5"
-                                                        switch
-                                                        // id={key}
-                                                        
-                                                        onChange={(event) => {
-                                                            showData = showData.filter(data => data._id == Id).map(data => {
-                                                                // console.log(showData);
-                                                                // access = { ...data.access };
-                                                                if (event.target.checked == false) {
-                                                                    data.access[key[0]] = false
+                                                    <CCol className="col-sm-6">
+                                                        <h6 className="mx-5">{key}</h6>
+                                                    </CCol>
+                                                    <CCol className="col-sm-4">
+                                                        <CFormCheck
+                                                            className="mx-5"
+                                                            switch
+                                                            id={key}
+                                                            defaultChecked={values}
 
-                                                                }
-                                                                return data;
 
-                                                                // console.log(data.access);
+                                                            onChange={(event) => {
+                                                                showData = showData.filter(data => data._id == Id).map(data => {
+                                                                    // console.log(showData);
+                                                                    // access = { ...data.access };
+                                                                    if (event.target.checked == false) {
+                                                                        data.access[key[0]] = false
 
-                                                            })
+                                                                    }
+                                                                    return data;
 
-                                                        }}
-                                                    />
+                                                                    // console.log(data.access);
+
+                                                                })
+
+                                                            }}
+                                                        />
+                                                    </CCol>
                                                 </div>
                                             </CTableDataCell>
                                         </CTableRow>
@@ -289,18 +306,25 @@ function UserProfile() {
                         </CRow>
                         <CRow>
                             {accessRoles.map((key, value) => {
+                                {/* console.log(Access); */ }
+                                {/* console.log(key[0]) */ }
                                 return (
 
                                     <CCol className="col-sm-6" key={key} >
                                         <CFormCheck
-                                            id="flexCheckDefault"
+                                            id={key}
                                             label={key}
+
                                             onChange={(event) => {
+                                                // console.log(key, value);
+
                                                 if (event.target.checked) {
-                                                    Access[key[0]] = false;
-                                                    console.log(Access);
+
+                                                    Access[key[0]] = true;
+                                                    // console.log(Access);
                                                 }
                                                 return Access;
+
                                             }} />
 
                                     </CCol>
