@@ -176,7 +176,6 @@ const formReducer = (formState, action) => {
 function CreateMRFPage(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
     const [reducerState, dispatch] = useStateValue()
-
     const token = reducerState.token
     const userList = JSON.parse(localStorage.getItem("userList"))
     const hierarchyList = JSON.parse(localStorage.getItem("hierarchyList"))

@@ -13,16 +13,11 @@ import endPoints from "../../../utils/EndPointApi";
 function ViewApprovals() {
 
     const [reducerState, dispatch] = useStateValue()
-
     const [visible, setVisible] = useState(false)
     const [visible1, setVisible1] = useState(false)
     const [activeKey, setActiveKey] = useState(1)
-
-
     const [showApproval, setShowApproval] = useState([]);
     const [remarks, setRemarks] = useState("");
-
-
     const token = reducerState.token
 
 
