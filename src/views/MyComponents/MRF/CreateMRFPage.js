@@ -183,40 +183,60 @@ function CreateMRFPage(props) {
     const approvalList = JSON.parse(localStorage.getItem("approvalList"))
 
     const positionNameOptions = []
-    {
-        approvalList?.map(matrix => {
-            positionNameOptions.push({ label: matrix.position, value: matrix._id })
-        })
+    if (approvalList) {
+        {
+            approvalList?.map(matrix => {
+                positionNameOptions.push({ label: matrix.position, value: matrix._id })
+            })
+        }
+        console.log("positionNameOptions", positionNameOptions)
     }
-    console.log("positionNameOptions", positionNameOptions)
+
     const userNameOptions = []
-    {
-        userList?.map(user => {
-            userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
-        })
+    if (userList) {
+        {
+            userList?.map(user => {
+                userNameOptions.push({ label: user.name.firstName + " " + user.name.lastName, value: user._id })
+            })
+        }
+        console.log("userNameOptions", userNameOptions)
     }
-    console.log("userNameOptions", userNameOptions)
+
     const branchNameOptions = []
-    {
-        branchList?.map(branch => {
-            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
-        })
+    if (branchList) {
+        {
+            branchList?.map(branch => {
+                branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
+            })
+        }
+        console.log("branchNameOptions", branchNameOptions)
     }
-    console.log("branchNameOptions", branchNameOptions)
+
     const branchLocationOptions = []
-    {
-        branchList?.map(branch => {
-            branchLocationOptions.push({ label: branch.location, value: branch.location })
-        })
+    if (branchList) {
+        let branchLocationObject = new Set()
+        {
+            branchList?.map(branch => {
+                branchLocationObject.add(branch.location)
+            })
+        }
+        {
+            for (let branch of branchLocationObject) {
+                branchLocationOptions.push({ label: branch, value: branch })
+            }
+        }
+        console.log("branchLocationOptions", branchLocationOptions)
     }
-    console.log("branchLocationOptions", branchLocationOptions)
+
     const hierarchyNameOptions = []
-    {
-        hierarchyList?.map(hierarchy => {
-            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
-        })
+    if (hierarchyList) {
+        {
+            hierarchyList?.map(hierarchy => {
+                hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
+            })
+        }
+        console.log("hierarchyNameOptions", hierarchyNameOptions)
     }
-    console.log("hierarchyNameOptions", hierarchyNameOptions)
 
     console.log('hello0000000000000000000000000000000000000', formState)
     const positionIDChangeHandler = (event) => {
@@ -311,6 +331,7 @@ function CreateMRFPage(props) {
         dispatchForm({ type: "REQ_INPUT", val: event.target.value })
         console.log(event.target.value)
     }
+    
     const addMrfHandler = (event) => {
         event.preventDefault()
         const skillList = []
