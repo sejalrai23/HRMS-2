@@ -7,7 +7,7 @@ export const initialState = {
     branchLocation: {},
 
 
-    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2Mjc3MTMyODMsImV4cCI6MTYyNzc0OTI4M30.ed9d-niVvoSlzlNGhbrAElFuMcR79VkcmqSi7W0vJZs",
+    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2Mjc4MDM2MTgsImV4cCI6MTYyNzgzOTYxOH0.IaXHeLEW7ySXAUKV5PmrHf0DT19SWhKuVKIR1wO16b4",
     userRole: "",
 }
 
