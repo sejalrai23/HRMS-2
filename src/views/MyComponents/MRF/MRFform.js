@@ -5,8 +5,7 @@ import './MRFform.css'
 import { BsEyeFill } from "react-icons/bs";
 import { MDBDataTableV5 } from 'mdbreact';
 import {
-    CContainer, CRow, CCol, CBadge, CButton,
-    CForm, CFormControl, CFormLabel, CFormSelect, CFormCheck, CInputGroup, CInputGroupText
+    CContainer, CRow, CCol, CButton,
 } from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index'
 import { useStateValue } from "../../../StateProvider";
@@ -155,18 +154,29 @@ export default function MRFform(props) {
         // setIsLoading(false)
         return Data
     }
+    const axios = require('axios').default;
     async function showData(url) {
         // setIsLoading(true)
-        const response = await fetch(url, {
-            method: 'GET',
+        const response = await axios.get(url, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
             },
         });
-        const Data = await response.json();
+        console.log(response)
+        return response.data
+
+        // const response = await fetch(url, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': token
+        //     },
+        // });
+        // const data = await response.json();
+        // console.log("Data from show:", response)
         // setIsLoading(false)
-        return Data
+        // return data
     }
     useEffect(() => {
         console.log("in use effect")
@@ -174,11 +184,11 @@ export default function MRFform(props) {
             .then(Data => {
                 console.log("mrfList:", Data)
                 setMRFList(Data)
-                showData(endPoints.searchApproval)
-                    .then(Data => {
-                        console.log("approvals:", Data)
-                        setApprovalList(Data)
-                    })
+            })
+        showData(endPoints.searchApproval)
+            .then(Data => {
+                console.log("approvals:", Data)
+                setApprovalList(Data)
             })
         showData(endPoints.searchUser)
             .then(Data => {

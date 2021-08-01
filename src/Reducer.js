@@ -10,6 +10,9 @@ export const initialState = {
 
     "token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGZiZjlmZTg2OGM0YTAwMTU0ZmQwY2YiLCJlbWFpbCI6InNhbmthbHAxNzI4QGdtYWlsLmNvbSIsIlJvbGUiOiJTdXBlci1BZG1pbiIsImlhdCI6MTYyNzgwMjcxNywiZXhwIjoxNjI3ODM4NzE3fQ.H-p22Vogx91FD4HthiZ2Yrx0C186yVcqFgpUBEKX7_0",
 
+
+
+  
     userRole: "",
 }
 

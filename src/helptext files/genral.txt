@@ -4,7 +4,10 @@
 --------------------------------------------------------------------------------------------------
 {/* <div fluid className={`mycard bg-${props.colors}`} > */ }
 --------------------------------------------------------------------------------------------------
+Default Value Statements::::
 
+Input Type Text: defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].name.firstName : ""}
+Input Type Radio: defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Internship" ? true : false) : false}
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
