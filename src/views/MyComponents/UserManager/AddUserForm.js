@@ -3,6 +3,7 @@ import SelectSearch, { fuzzySearch } from 'react-select-search';
 import "./AddUserForm.css"
 import endPoints from 'src/utils/EndPointApi';
 import { AiOutlineMinusCircle } from "react-icons/ai";
+import { GrView } from "react-icons/gr";
 import {
     CButton, CCol, CForm, CFormControl, CRow, CFormLabel, CFormSelect, CFormCheck, CContainer,
     CTable, CTableHead, CTableBody, CTableHeaderCell, CTableDataCell, CTableRow,
@@ -110,8 +111,10 @@ const formReducer = (formState, action) => {
 
 function AddUserForm(props) {
     const [filterBy, setFilter] = useState("fName")
+    const [selectedUser, setSelectedUser] = useState("")
     const [searchedItem, setSearchedItem] = useState()
     const [visible, setVisible] = useState(false)
+    const [visible2, setVisible2] = useState(false)
     const [isLoading, setIsLoading] = useState()
     const [userList, setUserList] = useState([])
     const [hierarchyList, setHierarchyList] = useState()
@@ -122,8 +125,6 @@ function AddUserForm(props) {
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
     const [reducerState, dispatch] = useStateValue()
     const token = reducerState.token
-
-
 
     const clearHandler = (event) => {
         console.log("search cleared")
@@ -311,6 +312,19 @@ function AddUserForm(props) {
                 }
             })
     }
+    const viewUserHandler = (event) => {
+        const et = event.target
+        if (et.tagName == "BUTTON") {
+            setSelectedUser(event.target.id)
+            console.log("selected user: ", event.target.id)
+            setVisible2(!visible)
+        }
+        else {
+            setSelectedUser(event.target.className.baseVal)
+            console.log("selected user: ", event.target.className.baseVal)
+            setVisible2(!visible)
+        }
+    }
 
     async function postData(url, data) {
         console.log("in post data")
@@ -381,20 +395,12 @@ function AddUserForm(props) {
     }, [])
 
 
-
-    // if (userProfile) {
-    //     // console.log("....................................................", userProfile[0].access)
-    //     objAccess = userProfile[0].access
-    //     console.log("user Access Objecttt : ", objAccess)
-    // }
-
     const userRoleOptions = []
     if (userProfile) {
         {
             userProfile?.map(profile => {
                 userRoleOptions.push({ label: profile.role, value: profile._id })
             })
-            // userRoleOptions.push({ label: "Special", value: "Special" })
         }
         console.log("userRoleOptions", userRoleOptions)
     }
@@ -439,9 +445,9 @@ function AddUserForm(props) {
     if (userList.length > 0) {
         {
             userList?.map(user => {
-                // console.log("item:", item)
                 tableRows.push({
-                    showButton: <button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button>,
+                    removeButton: <button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button>,
+                    showButton: <button className="remove_button" id={user._id} onClick={viewUserHandler}><GrView className={user._id} /></button>,
                     full_name: user.name.firstName + " " + user.name.lastName,
                     // first_name: user.name.firstName,
                     // last_name: user.name.lastName,
@@ -466,8 +472,13 @@ function AddUserForm(props) {
         columns: [
             {
                 label: '',
+                field: 'removeButton',
+                width: 50,
+            },
+            {
+                label: '',
                 field: 'showButton',
-                width: 90,
+                width: 50,
             },
             {
                 label: 'Full Name',
@@ -531,23 +542,41 @@ function AddUserForm(props) {
         setVisible(false)
         setCurrentUserRole(undefined)
     }
+    const modal2CloseHandler = () => {
+        setVisible2(false)
+        // setCurrentUserRole(undefined)
+    }
 
     const accessChangeHandler = (event) => {
-        // console.log("event.target", event.target.id, event.target.checked)
         setObjAccess({
             ...objAccess,
             [event.target.id]: event.target.checked
         }
         )
-        // objAccess = {
-        //     ...objAccess,
-        //     [event.target.id]: event.target.checked
-        // }
         dispatchForm({ type: "SELECT_UROLE", val: { label: "Special", value: "Special" } })
         setCurrentUserRole({ label: "Special", value: "Special" })
     }
     console.log(objAccess)
     console.log(formState)
+
+    if (selectedUser) {
+        const selectedUserRole = {
+            label: (userList.filter((user) => user._id == selectedUser))[0].userRole.name,
+            value: (userList.filter((user) => user._id == selectedUser))[0].userRole._id
+        }
+        console.log("selectedUserRole", selectedUserRole)
+        const selectedBranchLocation = {
+            label:"",
+            value:""
+        }
+        console.log("selectedBranchLocation", selectedBranchLocation)
+        const selectedBranchName = {
+            label:"",
+            value:"",
+            location:""
+        }
+        console.log("selectedBranchName", selectedBranchName)
+    }
     return (
         <CContainer>
             <CRow className="mb-3">
@@ -664,54 +693,23 @@ function AddUserForm(props) {
                                     onChange={selectedUserRoleHandler}
                                     value={formState.uRole}
                                 />
-                                {/* <CFormSelect id="user_role" required onChange={selectedUserRoleHandler} value={formState.uRole}>
-                                    <option>Choose...</option>
-                                    <option value="Super-Admin">Super-Admin</option>
-                                    <option value="admin">admin</option>
-                                    <option value="HR">HR</option>
-                                    <option value="Interviewer">Interviewer</option>
-                                    <option value="Vendor">Vendor</option>
-                                    <option value="BCGVerification">BCGVerification</option>
-                                    <option value="Campus">Campus</option>
-                                    <option value="Employee">Employee</option>
-                                    <option value="Special">Special</option>
-                                </CFormSelect> */}
                             </CCol>
                         </CRow>
                         <CRow classname="mb-3">
                             {currentUserRole === undefined ? console.log("not yettttttttt") :
                                 currentUserRole.label == "Special" ? Object.entries(objAccess).map(([key, value]) => {
-                                    // console.log("key: ", key, "value: ", value, "currentUserRoleeeeeeeeee", formState.uRole)
                                     return (
                                         <CCol sm="3" key={key}>
                                             <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
                                         </CCol>
                                     )
                                 }) : Object.entries((userProfile?.filter(item => item.role == currentUserRole.label))[0].access).map(([key, value]) => {
-                                    // console.log(Object.entries((userProfile?.filter(item => item.role === currentUserRole))[0].access))
                                     return (
                                         <CCol sm="3" key={key}>
                                             <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
                                         </CCol>
                                     )
                                 })}
-                            {/* {
-                                formState.uRole != null ? Object.entries((userProfile?.filter(item => item.role === formState.uRole))[0].access).map(([key, value]) => {
-                                    console.log("key: ", key, "value: ", value, "currentUserRole", formState.uRole)
-                                    return (
-                                        <CCol sm="3" key={key}>
-                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
-                                        </CCol>
-                                    )
-                                }) : formState.uRole != "Special" ? Object.entries(objAccess).map(([key, value]) => {
-                                    console.log("key: ", key, "value: ", value, "currentUserRole", formState.uRole)
-                                    return (
-                                        <CCol sm="3" key={key}>
-                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
-                                        </CCol>
-                                    )
-                                }) : console.log("not yettttttttt")
-                            } */}
                         </CRow>
                         <CRow className="mb-3">
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="hirearchy_type">
@@ -739,7 +737,6 @@ function AddUserForm(props) {
                             </CCol>
                         </CRow>
                         <CRow className="mb-3">
-
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="job_type">Job Type : </CFormLabel>
                             <CCol className="align-items-end">
                                 <CFormCheck
@@ -856,7 +853,6 @@ function AddUserForm(props) {
                                     onChange={emailChangeHandler}
                                 />
                             </CCol>
-
                             <CFormLabel htmlFor="designation" className="col-sm-2 col-form-label">Designation</CFormLabel>
                             <CCol sm="4">
                                 <CFormControl
@@ -870,7 +866,6 @@ function AddUserForm(props) {
 
                         </CRow>
                         <CRow className="mb-3">
-
                             <CFormLabel htmlFor="location" className="col-sm-2 col-form-label">Branch Location</CFormLabel>
                             <CCol sm="4">
                                 <Select
@@ -902,6 +897,286 @@ function AddUserForm(props) {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={modalCloseHandler}>Close</CButton>
+                </CModalFooter>
+            </CModal>
+            <CModal size="xl" alignment="center" visible={visible2} backdrop={true}>
+                <CModalHeader onDismiss={modal2CloseHandler}>
+                    <CModalTitle>View/Edit Employee</CModalTitle>
+                </CModalHeader>
+                {console.log("selectedUser.name.firstName", selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Physically Challenged" ? true : false) : false)}
+                <CModalBody className="bg-light">
+                    <CForm onSubmit={formSubmitHandler}>
+                        <CRow className="mb-3">
+                            <CFormLabel htmlFor="f_name" className="col-sm-2 col-form-label">
+                                First Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].name.firstName : ""}
+                                    type="text"
+                                    id="f_name"
+                                    onChange={fNameChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                            <CFormLabel htmlFor="l_name" className="col-sm-2 col-form-label">
+                                Last Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].name.lastName : ""}
+                                    type="text"
+                                    id="l_name"
+                                    onChange={lNameChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="user_type">
+                                User Type:
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormSelect id="user_type" required onChange={selectedUserTypeHandler}
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].userType : ""}>
+                                    <option>Choose...</option>
+                                    <option value="admin">admin</option>
+                                    <option value="recruiter">recruiter</option>
+                                    <option value="vendor">vendor</option>
+                                    <option value="employee">employee</option>
+                                    <option value="interviewer">interviewer</option>
+                                </CFormSelect>
+                            </CCol>
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="user_role">
+                                User Role:
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={userRoleOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={selectedUserRoleHandler}
+                                    value={selectedUser ?
+                                        { label: (userList.filter((user) => user._id == selectedUser))[0].userRole.name, value: (userList.filter((user) => user._id == selectedUser))[0].userRole._id } :
+                                        null
+                                    }
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow classname="mb-3">
+                            {currentUserRole === undefined ? console.log("not yettttttttt") :
+                                currentUserRole.label == "Special" ? Object.entries(objAccess).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : Object.entries((userProfile?.filter(item => item.role == currentUserRole.label))[0].access).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                })}
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="hirearchy_type">
+                                Hierarchy Type
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormSelect id="hirearchy_type" required onChange={hirearchyTypeChangeHandler}
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].hierarchyID.type : ""}>
+                                    <option>Choose...</option>
+                                    <option value="Department">Department</option>
+                                    <option value="Sub-Department">Sub-Department</option>
+                                    <option value="Team">Team</option>
+                                    <option value="Management">Management</option>
+                                </CFormSelect>
+                            </CCol>
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="h_name">
+                                Hierarchy Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={hierarchyNameOptions.filter(hierarchy => hierarchy.type == formState.hType)}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={hiearchyNameChangeHandler}
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="job_type">Job Type : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Internship" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type1"
+                                    value="Internship"
+                                    label="Internship"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Full-Time" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type2"
+                                    value="Full-Time"
+                                    label="Full-Time"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Temporary" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type3"
+                                    value="Temporary"
+                                    label="Temporary"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                            </CCol>
+
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="diversity">Diversity : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "General" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity3"
+                                    value="General"
+                                    label="General"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Female" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity2"
+                                    value="Female"
+                                    label="Female"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Physically Challenged" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity1"
+                                    value="Physically Challenged"
+                                    label="Physically Challenged"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                            </CCol>
+
+                        </CRow>
+                        <CRow classname="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="gender">Gender : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Male" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender3"
+                                    value="Male"
+                                    label="Male"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Female" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender2"
+                                    value="Female"
+                                    label="Female"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Others" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender1"
+                                    value="Others"
+                                    label="Others"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+
+                            <CFormLabel htmlFor="email" className="col-sm-2 col-form-label">Email Address</CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].email : ""}
+                                    type="email"
+                                    id="email"
+                                    placeholder=""
+                                    required
+                                    onChange={emailChangeHandler}
+                                />
+                            </CCol>
+                            <CFormLabel htmlFor="designation" className="col-sm-2 col-form-label">Designation</CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].designation : ""}
+                                    type="text"
+                                    id="designation"
+                                    placeholder=""
+                                    required
+                                    onChange={designationChangeHandler}
+                                />
+                            </CCol>
+
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel htmlFor="location" className="col-sm-2 col-form-label">Branch Location</CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={branchLocationOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={locationChangeHandler}
+                                />
+                            </CCol>
+
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="branchID">Branch Name</CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={branchNameOptions.filter(branch => branch.location == formState.location)}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={branchIDHandler}
+                                />
+                            </CCol>
+
+                        </CRow>
+
+                        <br />
+
+                        <CCol className="d-flex align-items-center justify-content-center">
+                            <CButton type="submit" color="primary" onClick={modalCloseHandler}>save changes</CButton>
+                        </CCol>
+                    </CForm>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={modal2CloseHandler}>Close</CButton>
                 </CModalFooter>
             </CModal>
         </CContainer >
