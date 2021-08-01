@@ -5,9 +5,14 @@ export const initialState = {
     hierarchies: {},
     branchName: {},
     branchLocation: {},
+    selectedApproval: "",
 
 
-    token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1NTIzYjljMmNhZjAwMTUxMDQyNTIiLCJlbWFpbCI6ImpheWt1bWFyOTI0NkBnbWFpbC5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2Mjc3MTMyODMsImV4cCI6MTYyNzc0OTI4M30.ed9d-niVvoSlzlNGhbrAElFuMcR79VkcmqSi7W0vJZs",
+    "token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGZiZjlmZTg2OGM0YTAwMTU0ZmQwY2YiLCJlbWFpbCI6InNhbmthbHAxNzI4QGdtYWlsLmNvbSIsIlJvbGUiOiJTdXBlci1BZG1pbiIsImlhdCI6MTYyNzgwMjcxNywiZXhwIjoxNjI3ODM4NzE3fQ.H-p22Vogx91FD4HthiZ2Yrx0C186yVcqFgpUBEKX7_0",
+
+
+
+  
     userRole: "",
 }
 
@@ -42,9 +47,11 @@ const StateReducer = (reducerState, action) => {
                 branchName: action.branchName,
                 branchLocation: action.branchLocation
             }
-        case "CREATE APPROVAL":
-            console.log("create approval")
+        case "VIEW_APPROVAL":
+            console.log("view approval")
             return {
+                ...reducerState,
+                selectedApproval: action.approvalID,
 
             }
         default:
