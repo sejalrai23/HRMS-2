@@ -3,20 +3,22 @@ import SelectSearch, { fuzzySearch } from 'react-select-search';
 import "./AddUserForm.css"
 import endPoints from 'src/utils/EndPointApi';
 import { AiOutlineMinusCircle } from "react-icons/ai";
+import { GrView } from "react-icons/gr";
 import {
     CButton, CCol, CForm, CFormControl, CRow, CFormLabel, CFormSelect, CFormCheck, CContainer,
     CTable, CTableHead, CTableBody, CTableHeaderCell, CTableDataCell, CTableRow,
     CSpinner, CModal, CModalHeader, CModalFooter, CModalTitle, CModalBody
 } from '@coreui/react'
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated'
-
+import { MDBDataTableV5 } from 'mdbreact';
+import { useStateValue } from "../../../StateProvider"
 
 const InitialFormState = {
     fName: "",
     lName: "",
     uType: "",
-    uRole: "",
+    uRole: { label: undefined },
+    access: {},
     hType: "",
     hName: "",
     jType: "",
@@ -50,6 +52,14 @@ const formReducer = (formState, action) => {
                 ...formState,
                 uRole: action.val
             }
+        // case "CHANGE_ACCESS":
+        //     return {
+        //         ...formState,
+        //         access: {
+        //             ...formstate.access, 
+        //             action.val
+        //         }
+        //     }
         case "HTYPE_INPUT":
             return {
                 ...formState,
@@ -101,41 +111,20 @@ const formReducer = (formState, action) => {
 
 function AddUserForm(props) {
     const [filterBy, setFilter] = useState("fName")
+    const [selectedUser, setSelectedUser] = useState("")
     const [searchedItem, setSearchedItem] = useState()
     const [visible, setVisible] = useState(false)
+    const [visible2, setVisible2] = useState(false)
     const [isLoading, setIsLoading] = useState()
-    const [userList, setUserList] = useState()
+    const [userList, setUserList] = useState([])
     const [hierarchyList, setHierarchyList] = useState()
     const [branchList, setBranchList] = useState()
+    const [userProfile, setUserProfile] = useState()
+    const [currentUserRole, setCurrentUserRole] = useState()
+    const [objAccess, setObjAccess] = useState({})
     const [formState, dispatchForm] = useReducer(formReducer, InitialFormState)
-
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJhMWU5N2ViMWE4N2EwZWRjMjYzMjgiLCJlbWFpbCI6InJpc2hhYmhAZ2Vla3NhdHdlYi5jb20iLCJSb2xlIjoiU3VwZXItQWRtaW4iLCJpYXQiOjE2MjU3NDMwODMsImV4cCI6MTYyNTc3OTA4M30.38DspsQ85S453RfnrzOoF6PLahAW9jM4IHd1G-vpiyE";
-
-
-    const branchNameOptions = []
-    {
-        branchList?.map(branch => {
-            branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
-        })
-    }
-    console.log("branchNameOptions", branchNameOptions)
-
-    const branchLocationOptions = []
-    {
-        branchList?.map(branch => {
-            branchLocationOptions.push({ label: branch.location, value: branch.location })
-        })
-    }
-    console.log("branchLocationOptions", branchLocationOptions)
-
-    const hierarchyNameOptions = []
-    {
-        hierarchyList?.map(hierarchy => {
-            hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
-        })
-    }
-    console.log("hierarchyNameOptions", hierarchyNameOptions)
-
+    const [reducerState, dispatch] = useStateValue()
+    const token = reducerState.token
 
     const clearHandler = (event) => {
         console.log("search cleared")
@@ -200,7 +189,6 @@ function AddUserForm(props) {
         }
     }
 
-
     const fNameChangeHandler = (event) => {
         dispatchForm({ type: "FNAME_INPUT", val: event.target.value })
     };
@@ -211,7 +199,13 @@ function AddUserForm(props) {
         dispatchForm({ type: "SELECT_UTYPE", val: event.target.value })
     }
     const selectedUserRoleHandler = (event) => {
-        dispatchForm({ type: "SELECT_UROLE", val: event.target.value })
+        console.log("changeddd")
+        dispatchForm({ type: "SELECT_UROLE", val: event })
+        setCurrentUserRole(event)
+        if (event.label != "Special") {
+            setObjAccess(userProfile?.filter(item => item.role == event.label)[0].access)
+            console.log(objAccess)
+        }
     }
     const hirearchyTypeChangeHandler = (event) => {
         dispatchForm({ type: "HTYPE_INPUT", val: event.target.value })
@@ -245,25 +239,54 @@ function AddUserForm(props) {
 
     const formSubmitHandler = (event) => {
         event.preventDefault()
-        const newEmp = {
-            name: {
-                firstName: formState.fName,
-                lastName: formState.lName,
-            },
-            userType: formState.uType,
-            userRole: formState.uRole,
-            hierarchyID: formState.hName,
-            gender: formState.gender,
-            designation: formState.designation,
-            jobType: formState.jType,
-            diversity: formState.diversity,
-            email: formState.email,
-            location: formState.location,
-            branchID: formState.BID
+        let newEmp = {}
+        console.log("formState.uRole.label::::", formState.uRole.label)
+        if (formState.uRole.label != "Special") {
+            newEmp = {
+                name: {
+                    firstName: formState.fName,
+                    lastName: formState.lName,
+                },
+                userType: formState.uType,
+                userRole: {
+                    name: formState.uRole.label,
+                    _id: formState.uRole.value
+                },
+                hierarchyID: formState.hName,
+                gender: formState.gender,
+                designation: formState.designation,
+                jobType: formState.jType,
+                diversity: formState.diversity,
+                email: formState.email,
+                location: formState.location,
+                branchID: formState.BID
+            }
         }
-        console.log("adding: ", newEmp)
+        else {
+            newEmp = {
+                name: {
+                    firstName: formState.fName,
+                    lastName: formState.lName,
+                },
+                userType: formState.uType,
+                userRole: {
+                    name: formState.uRole.label,
+                },
+                access: objAccess,
+                hierarchyID: formState.hName,
+                gender: formState.gender,
+                designation: formState.designation,
+                jobType: formState.jType,
+                diversity: formState.diversity,
+                email: formState.email,
+                location: formState.location,
+                branchID: formState.BID
+            }
+        }
+        console.log("adding new emp ::::::::::::::::::::::::::: ", newEmp)
         postData(endPoints.addUser, newEmp)
             .then(data => {
+                console.log(data)
                 if (data.Success === true) {
                     showData(endPoints.searchUser)
                         .then(Data => {
@@ -273,6 +296,7 @@ function AddUserForm(props) {
             })
         event.target.reset()
     }
+
     const deleteUserHandler = (event) => {
         const delUser = {
             _id: event.target.className.baseVal
@@ -288,8 +312,19 @@ function AddUserForm(props) {
                 }
             })
     }
-
-
+    const viewUserHandler = (event) => {
+        const et = event.target
+        if (et.tagName == "BUTTON") {
+            setSelectedUser(event.target.id)
+            console.log("selected user: ", event.target.id)
+            setVisible2(!visible)
+        }
+        else {
+            setSelectedUser(event.target.className.baseVal)
+            console.log("selected user: ", event.target.className.baseVal)
+            setVisible2(!visible)
+        }
+    }
 
     async function postData(url, data) {
         console.log("in post data")
@@ -352,9 +387,196 @@ function AddUserForm(props) {
                 console.log("branchList:", Data)
                 setBranchList(Data)
             })
+        showData(endPoints.searchUserProfile)
+            .then(Data => {
+                console.log("userProfile:", Data)
+                setUserProfile(Data)
+            })
     }, [])
 
 
+    const userRoleOptions = []
+    if (userProfile) {
+        {
+            userProfile?.map(profile => {
+                userRoleOptions.push({ label: profile.role, value: profile._id })
+            })
+        }
+        console.log("userRoleOptions", userRoleOptions)
+    }
+
+    const branchNameOptions = []
+    if (branchList) {
+        {
+            branchList?.map(branch => {
+                branchNameOptions.push({ label: branch.name, value: branch._id, location: branch.location })
+            })
+        }
+        console.log("branchNameOptions", branchNameOptions)
+    }
+
+    const branchLocationOptions = []
+    if (branchList) {
+        let branchLocationObject = new Set()
+        {
+            branchList?.map(branch => {
+                branchLocationObject.add(branch.location)
+            })
+        }
+        {
+            for (let branch of branchLocationObject) {
+                branchLocationOptions.push({ label: branch, value: branch })
+            }
+        }
+        console.log("branchLocationOptions after", branchLocationOptions)
+    }
+
+    const hierarchyNameOptions = []
+    if (hierarchyList) {
+        {
+            hierarchyList?.map(hierarchy => {
+                hierarchyNameOptions.push({ label: hierarchy.name, value: hierarchy._id, type: hierarchy.type })
+            })
+        }
+        console.log("hierarchyNameOptions", hierarchyNameOptions)
+    }
+
+    const tableRows = []
+    if (userList.length > 0) {
+        {
+            userList?.map(user => {
+                tableRows.push({
+                    removeButton: <button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button>,
+                    showButton: <button className="remove_button" id={user._id} onClick={viewUserHandler}><GrView className={user._id} /></button>,
+                    full_name: user.name.firstName + " " + user.name.lastName,
+                    // first_name: user.name.firstName,
+                    // last_name: user.name.lastName,
+                    user_type: user.userType,
+                    user_role: user.userRole.name,
+                    hierarchy: user.hierarchyID.type + "," + user.hierarchyID.name,
+                    // hierarchy_type: user.hierarchyID.type,
+                    // hierarchy_name: user.hierarchyID.name,
+                    job_type: user.jobType,
+                    diversity: user.diversity,
+                    email: user.email,
+                    designation: user.designation,
+                    branch: user.branchID.location + "," + user.branchID.name,
+                    // branch_location: user.branchID.location,
+                    // branch_name: user.branchID.name,
+                })
+            })
+        }
+    }
+
+    const dataTable = {
+        columns: [
+            {
+                label: '',
+                field: 'removeButton',
+                width: 50,
+            },
+            {
+                label: '',
+                field: 'showButton',
+                width: 50,
+            },
+            {
+                label: 'Full Name',
+                field: 'full_name',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'User Type',
+                field: 'user_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'User Role',
+                field: 'user_role',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Hierarchy',
+                field: 'hierarchy',
+                sort: 'disabled',
+                width: 250,
+            },
+            {
+                label: 'Job Type',
+                field: 'job_type',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Diversity',
+                field: 'diversity',
+                sort: 'disabled',
+                width: 100,
+            },
+            {
+                label: 'Email Address',
+                field: 'email',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Designation',
+                field: 'designation',
+                sort: 'disabled',
+                width: 200,
+            },
+            {
+                label: 'Branch',
+                field: 'branch',
+                sort: 'disabled',
+                width: 250,
+            },
+        ],
+        rows: tableRows
+    }
+
+    const modalCloseHandler = () => {
+        setVisible(false)
+        setCurrentUserRole(undefined)
+    }
+    const modal2CloseHandler = () => {
+        setVisible2(false)
+        // setCurrentUserRole(undefined)
+    }
+
+    const accessChangeHandler = (event) => {
+        setObjAccess({
+            ...objAccess,
+            [event.target.id]: event.target.checked
+        }
+        )
+        dispatchForm({ type: "SELECT_UROLE", val: { label: "Special", value: "Special" } })
+        setCurrentUserRole({ label: "Special", value: "Special" })
+    }
+    console.log(objAccess)
+    console.log(formState)
+
+    if (selectedUser) {
+        const selectedUserRole = {
+            label: (userList.filter((user) => user._id == selectedUser))[0].userRole.name,
+            value: (userList.filter((user) => user._id == selectedUser))[0].userRole._id
+        }
+        console.log("selectedUserRole", selectedUserRole)
+        const selectedBranchLocation = {
+            label:"",
+            value:""
+        }
+        console.log("selectedBranchLocation", selectedBranchLocation)
+        const selectedBranchName = {
+            label:"",
+            value:"",
+            location:""
+        }
+        console.log("selectedBranchName", selectedBranchName)
+    }
     return (
         <CContainer>
             <CRow className="mb-3">
@@ -403,51 +625,22 @@ function AddUserForm(props) {
                     {isLoading === true && <CSpinner color="primary" />}
                 </CCol> */}
             </CRow>
-            <CTable striped responsive hover color="light">
-                <CTableHead color="primary">
-                    <CTableRow >
-                        <CTableHeaderCell className="text-center" scope="col"></CTableHeaderCell>
-                        <CTableHeaderCell className="text-center fnh" scope="col" style={{ width: "30%" }}>First Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Last Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">User Role</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Hierarchy Name</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Job Type</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Diversity</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Email Address</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Designation</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Location</CTableHeaderCell>
-                        <CTableHeaderCell className="text-center" scope="col">Branch Name</CTableHeaderCell>
-                    </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                    {
-                        userList?.map((user, key) => {
-                            return (
-                                <CTableRow key={user.email} className="t_row">
-                                    <CTableHeaderCell className="text-center" ><button className="remove_button" onClick={deleteUserHandler}><AiOutlineMinusCircle className={user._id} /></button></CTableHeaderCell>
-                                    <CTableDataCell className="text-center" scope="col" style={{ width: "30%" }}>{user.name.firstName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.name.lastName}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.userRole}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.type}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.hierarchyID.name}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.jobType}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.diversity}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.email}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.designation}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.location}</CTableDataCell>
-                                    <CTableDataCell className="text-center" scope="col">{user.branchID.name}</CTableDataCell>
-                                </CTableRow>
-                            )
-                        })
-                    }
-                </CTableBody>
-            </CTable>
+            <MDBDataTableV5
+                small
+                hover
+                // striped
+                fullPagination
+                entriesOptions={[5, 10, 20]}
+                entries={5}
+                // bordered
+                scrollX
+                searchTop={false}
+                searchBottom={false}
+                data={dataTable}
+            />;
             <CModal size="xl" alignment="center" visible={visible} backdrop={true}>
-                <CModalHeader onDismiss={() => setVisible(false)}>
-                    <CModalTitle>Add New Employee</CModalTitle>
+                <CModalHeader onDismiss={modalCloseHandler}>
+                    <CModalTitle>Add New User</CModalTitle>
                 </CModalHeader>
                 <CModalBody className="bg-light">
                     <CForm onSubmit={formSubmitHandler}>
@@ -493,18 +686,30 @@ function AddUserForm(props) {
                                 User Role:
                             </CFormLabel>
                             <CCol sm="4">
-                                <CFormSelect id="user_role" required onChange={selectedUserRoleHandler}>
-                                    <option>Choose...</option>
-                                    <option value="Super-Admin">Super-Admin</option>
-                                    <option value="admin">admin</option>
-                                    <option value="HR">HR</option>
-                                    <option value="Interviewer">Interviewer</option>
-                                    <option value="Vendor">Vendor</option>
-                                    <option value="BCGVerification">BCGVerification</option>
-                                    <option value="Campus">Campus</option>
-                                    <option value="Employee">Employee</option>
-                                </CFormSelect>
+                                <Select
+                                    options={userRoleOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={selectedUserRoleHandler}
+                                    value={formState.uRole}
+                                />
                             </CCol>
+                        </CRow>
+                        <CRow classname="mb-3">
+                            {currentUserRole === undefined ? console.log("not yettttttttt") :
+                                currentUserRole.label == "Special" ? Object.entries(objAccess).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : Object.entries((userProfile?.filter(item => item.role == currentUserRole.label))[0].access).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                })}
                         </CRow>
                         <CRow className="mb-3">
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="hirearchy_type">
@@ -532,7 +737,6 @@ function AddUserForm(props) {
                             </CCol>
                         </CRow>
                         <CRow className="mb-3">
-
                             <CFormLabel className="col-sm-2 col-form-label" htmlFor="job_type">Job Type : </CFormLabel>
                             <CCol className="align-items-end">
                                 <CFormCheck
@@ -649,7 +853,6 @@ function AddUserForm(props) {
                                     onChange={emailChangeHandler}
                                 />
                             </CCol>
-
                             <CFormLabel htmlFor="designation" className="col-sm-2 col-form-label">Designation</CFormLabel>
                             <CCol sm="4">
                                 <CFormControl
@@ -663,7 +866,6 @@ function AddUserForm(props) {
 
                         </CRow>
                         <CRow className="mb-3">
-
                             <CFormLabel htmlFor="location" className="col-sm-2 col-form-label">Branch Location</CFormLabel>
                             <CCol sm="4">
                                 <Select
@@ -689,12 +891,296 @@ function AddUserForm(props) {
                         <br />
 
                         <CCol className="d-flex align-items-center justify-content-center">
-                            <CButton type="submit" color="primary" onClick={() => setVisible(false)}>Add Employee</CButton>
+                            <CButton type="submit" color="primary" onClick={modalCloseHandler}>Add Employee</CButton>
                         </CCol>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>Close</CButton>
+                    <CButton color="secondary" onClick={modalCloseHandler}>Close</CButton>
+                </CModalFooter>
+            </CModal>
+            <CModal size="xl" alignment="center" visible={visible2} backdrop={true}>
+                <CModalHeader onDismiss={modal2CloseHandler}>
+                    <CModalTitle>View/Edit Employee</CModalTitle>
+                </CModalHeader>
+                {console.log("selectedUser.name.firstName", selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Physically Challenged" ? true : false) : false)}
+                <CModalBody className="bg-light">
+                    <CForm onSubmit={formSubmitHandler}>
+                        <CRow className="mb-3">
+                            <CFormLabel htmlFor="f_name" className="col-sm-2 col-form-label">
+                                First Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].name.firstName : ""}
+                                    type="text"
+                                    id="f_name"
+                                    onChange={fNameChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                            <CFormLabel htmlFor="l_name" className="col-sm-2 col-form-label">
+                                Last Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].name.lastName : ""}
+                                    type="text"
+                                    id="l_name"
+                                    onChange={lNameChangeHandler}
+                                    required
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="user_type">
+                                User Type:
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormSelect id="user_type" required onChange={selectedUserTypeHandler}
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].userType : ""}>
+                                    <option>Choose...</option>
+                                    <option value="admin">admin</option>
+                                    <option value="recruiter">recruiter</option>
+                                    <option value="vendor">vendor</option>
+                                    <option value="employee">employee</option>
+                                    <option value="interviewer">interviewer</option>
+                                </CFormSelect>
+                            </CCol>
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="user_role">
+                                User Role:
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={userRoleOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={selectedUserRoleHandler}
+                                    value={selectedUser ?
+                                        { label: (userList.filter((user) => user._id == selectedUser))[0].userRole.name, value: (userList.filter((user) => user._id == selectedUser))[0].userRole._id } :
+                                        null
+                                    }
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow classname="mb-3">
+                            {currentUserRole === undefined ? console.log("not yettttttttt") :
+                                currentUserRole.label == "Special" ? Object.entries(objAccess).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                }) : Object.entries((userProfile?.filter(item => item.role == currentUserRole.label))[0].access).map(([key, value]) => {
+                                    return (
+                                        <CCol sm="3" key={key}>
+                                            <CFormCheck id={key} label={key} defaultChecked={value} onChange={accessChangeHandler} />
+                                        </CCol>
+                                    )
+                                })}
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="hirearchy_type">
+                                Hierarchy Type
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <CFormSelect id="hirearchy_type" required onChange={hirearchyTypeChangeHandler}
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].hierarchyID.type : ""}>
+                                    <option>Choose...</option>
+                                    <option value="Department">Department</option>
+                                    <option value="Sub-Department">Sub-Department</option>
+                                    <option value="Team">Team</option>
+                                    <option value="Management">Management</option>
+                                </CFormSelect>
+                            </CCol>
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="h_name">
+                                Hierarchy Name
+                            </CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={hierarchyNameOptions.filter(hierarchy => hierarchy.type == formState.hType)}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={hiearchyNameChangeHandler}
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="job_type">Job Type : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Internship" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type1"
+                                    value="Internship"
+                                    label="Internship"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Full-Time" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type2"
+                                    value="Full-Time"
+                                    label="Full-Time"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].jobType == "Temporary" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="job_type"
+                                    id="job_type3"
+                                    value="Temporary"
+                                    label="Temporary"
+                                    onChange={choosenJobTypeHandler}
+                                    required
+                                />
+                            </CCol>
+
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="diversity">Diversity : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "General" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity3"
+                                    value="General"
+                                    label="General"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Female" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity2"
+                                    value="Female"
+                                    label="Female"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].diversity == "Physically Challenged" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="diversity"
+                                    id="diversity1"
+                                    value="Physically Challenged"
+                                    label="Physically Challenged"
+                                    onChange={diversityHandler}
+                                    required
+                                />
+                            </CCol>
+
+                        </CRow>
+                        <CRow classname="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="gender">Gender : </CFormLabel>
+                            <CCol className="align-items-end">
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Male" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender3"
+                                    value="Male"
+                                    label="Male"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Female" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender2"
+                                    value="Female"
+                                    label="Female"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                                <CFormCheck
+                                    defaultChecked={selectedUser ? ((userList.filter((user) => user._id == selectedUser))[0].gender == "Others" ? true : false) : false}
+                                    inline
+                                    type="radio"
+                                    name="gender"
+                                    id="gender1"
+                                    value="Others"
+                                    label="Others"
+                                    onChange={genderHandler}
+                                    required
+                                />
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+
+                            <CFormLabel htmlFor="email" className="col-sm-2 col-form-label">Email Address</CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].email : ""}
+                                    type="email"
+                                    id="email"
+                                    placeholder=""
+                                    required
+                                    onChange={emailChangeHandler}
+                                />
+                            </CCol>
+                            <CFormLabel htmlFor="designation" className="col-sm-2 col-form-label">Designation</CFormLabel>
+                            <CCol sm="4">
+                                <CFormControl
+                                    defaultValue={selectedUser ? (userList.filter((user) => user._id == selectedUser))[0].designation : ""}
+                                    type="text"
+                                    id="designation"
+                                    placeholder=""
+                                    required
+                                    onChange={designationChangeHandler}
+                                />
+                            </CCol>
+
+                        </CRow>
+                        <CRow className="mb-3">
+                            <CFormLabel htmlFor="location" className="col-sm-2 col-form-label">Branch Location</CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={branchLocationOptions}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={locationChangeHandler}
+                                />
+                            </CCol>
+
+                            <CFormLabel className="col-sm-2 col-form-label" htmlFor="branchID">Branch Name</CFormLabel>
+                            <CCol sm="4">
+                                <Select
+                                    options={branchNameOptions.filter(branch => branch.location == formState.location)}
+                                    isSearchable
+                                    // isClearable
+                                    onChange={branchIDHandler}
+                                />
+                            </CCol>
+
+                        </CRow>
+
+                        <br />
+
+                        <CCol className="d-flex align-items-center justify-content-center">
+
+                            <CButton type="submit" color="primary" onClick={modalCloseHandler}>Add User</CButton>
+
+                            
+
+                        </CCol>
+                    </CForm>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={modal2CloseHandler}>Close</CButton>
                 </CModalFooter>
             </CModal>
         </CContainer >

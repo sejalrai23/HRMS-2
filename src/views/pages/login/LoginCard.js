@@ -4,16 +4,18 @@ import { Link } from 'react-router-dom'
 import { CButton, CCard, CCardBody, CCol, CForm, CFormControl, CRow, CFormFloating, CFormLabel, CAlert } from '@coreui/react'
 import PropTypes from "prop-types";
 import endPoints from 'src/utils/EndPointApi';
+import { useStateValue } from "../../../StateProvider"
 import LoadingOverlay from 'react-loading-overlay';
 function LoginCard(props) {
 
     // const createAccountHandler = (event) => {
     //     props?.isNewUser(false);
     // }
-
+    const [reducerState, dispatch] = useStateValue()
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPassword, setEnteredPassword] = useState("");
-    const [errorMessage, seterrorMessage] = useState(false);
+    const [emailerrorMessage, setEmailerrorMessage] = useState(false);
+    const [passworderrorMessage, setPassworderrorMessage] = useState(false);
 
 
     const emailChangeHandler = (event) => {
@@ -29,16 +31,25 @@ function LoginCard(props) {
             email: enteredEmail,
             password: enteredPassword,
         };
+        console.log(credentials)
         postData(endPoints.loginURL, credentials)
             .then(data => {
                 console.log(data);
-                //     if (true) {
-                //         seterrorMessage(true);
 
-                // } 
+                if (data.email == "Invalid") {
+                    setEmailerrorMessage(true);
+                }
+                if (data.password == "Invalid") {
+                    setPassworderrorMessage(true);
+                }
+
+                dispatch({
+                    type: 'USER_LOGIN',
+                    token: data.token,
+                    userRole: data.role
+                }) // JSON data parsed by data.json() call
+
             });
-        console.log(credentials);
-
         setEnteredEmail("");
         setEnteredPassword("");
     };
@@ -46,11 +57,11 @@ function LoginCard(props) {
 
     async function postData(url, data) {
         console.log(data)
-        console.log(typeof (data))
         const response = await fetch(url, {
-            // mode : 'no-cors',
+            // mode: 'no-cors',
             method: 'POST', // *GET, POST, PUT, DELETE, etvc.
             headers: {
+                // "Access-Control-Allow-Origin": "*",
                 'Content-Type': 'application/json'
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -67,10 +78,10 @@ function LoginCard(props) {
                     <CRow>
                         <CCol ><h1 className="heading">Log In To Your Account</h1></CCol>
                         <p className="heading">Sign In to your account</p>
-                        {errorMessage ? <CAlert color="danger" dismissible> The email or password you entered is incorrect</CAlert> : ""}
+                        {emailerrorMessage ? <CAlert color="danger" dismissible> The email you entered is not registered</CAlert> : ""}
+                        {passworderrorMessage ? <CAlert color="danger" dismissible> The password you entered is incorrect</CAlert> : ""}
 
                     </CRow>
-
                     <CFormFloating className="mb-3" >
                         <CFormControl
                             size="sm"

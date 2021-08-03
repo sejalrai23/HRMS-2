@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import '../MRF/MRFform.css'
 import { MDBDataTableV5 } from 'mdbreact';
-import { CContainer, CRow, CCol, CBadge, CButton, CFormCheck, CFormControl } from '@coreui/react'
+import { CContainer, CRow, CCol, CBadge, CButton, CFormCheck, CFormControl, CModalFooter, CModalBody, CModalTitle, CModalHeader, CModal } from '@coreui/react'
 import { AppFooter, AppHeader2 } from '../../../components/index';
 import endPoints from "../../../utils/EndPointApi";
 import { AiOutlineMinusCircle } from "react-icons/ai";
@@ -12,28 +11,93 @@ import "./Approval.css";
 import ViewApprovalForm from '../MRF/ViewApprovalForm';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { useStateValue } from "../../../StateProvider"
+import { useStateValue } from "../../../StateProvider";
+import { makeStyles } from '@material-ui/core/styles';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+    button: {
+        marginTop: theme.spacing(1),
+        marginRight: theme.spacing(1),
+    },
+    actionsContainer: {
+        marginBottom: theme.spacing(2),
+    },
+    resetContainer: {
+        padding: theme.spacing(3),
+    },
+}));
 
 
 
 
 function Approval(props) {
     const [approvalMatrix, setApprovalMatrix] = useState([]);
-    const [reducerState, dispatch] = useStateValue()
-    const token = reducerState.token
+    const [reducerState, dispatch] = useStateValue();
+    const token = reducerState.token;
     // const [documentID, setDocumentID] = useState("");
-
+    const [hierarchyList, setHierarchyList] = useState()
+    const [branchList, setBranchList] = useState()
+    const [userList, setUserList] = useState()
+    const [tableRows, setTableRows] = useState([]);
+    const [visible, setVisible] = useState(false);
+    // console.log(tableRows);
     var searchPosition;
     var searchHierarchy;
     var searchBranch;
-
     var searchApprover;
 
+    if (approvalMatrix) { localStorage.setItem("approvalMatrix", JSON.stringify(approvalMatrix)) }
+    if (userList) { localStorage.setItem("userList", JSON.stringify(userList)) }
+    if (hierarchyList) { localStorage.setItem("hierarchyList", JSON.stringify(hierarchyList)) }
+    if (branchList) { localStorage.setItem("branchList", JSON.stringify(branchList)) }
 
 
+    const classes = useStyles();
+    const [activeStep, setActiveStep] = React.useState(0);
+    const steps = getSteps();
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+    const handleReset = () => {
+        setActiveStep(0);
+    };
 
-    async function showApprovalMatrix(url) {
-        // console.log("in show users")
+    function getSteps() {
+        return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+    }
+
+    function getStepContent(step) {
+        switch (step) {
+            case 0:
+                return `For each ad campaign that you create, you can control how much
+              you're willing to spend on clicks and conversions, which networks
+              and geographical locations you want your ads to show on, and more.`;
+            case 1:
+                return 'An ad group contains one or more ads which target a shared set of keywords.';
+            case 2:
+                return `Try out different ad text to see what brings in the most customers,
+                 they're running and how to resolve approval issues.`;
+            default:
+                return 'Unknown step';
+        }
+    }
+
+
+    async function showData(url) {
         // setIsLoading(true)
         const response = await fetch(url, {
             method: 'GET',
@@ -44,9 +108,46 @@ function Approval(props) {
         });
         const Data = await response.json();
         // setIsLoading(false)
-        // console.log(Data2);
         return Data
     }
+    useEffect(() => {
+        console.log("in use effect")
+        showData(endPoints.showApprovalMatrix)
+            .then(Data => {
+                console.log(Data);
+                setApprovalMatrix(Data);
+            })
+        showData(endPoints.searchUser)
+            .then(Data => {
+                console.log("user:", Data)
+                setUserList(Data)
+
+            })
+        showData(endPoints.searchHierarchy)
+            .then(Data => {
+                console.log("hierarchy:", Data)
+                setHierarchyList(Data)
+            })
+        showData(endPoints.searchBranch)
+            .then(Data => {
+                console.log("branch:", Data)
+                setBranchList(Data)
+            })
+
+    }, []);
+
+    const pageChangeHandler = (event) => {
+        // console.log("event id: ", event.target.id)
+        // const ApprovalSelected = approvalMatrix.filter((item) => item._id === event.target.id)
+        // localStorage.setItem("approval selected", JSON.stringify(ApprovalSelected))
+        console.log("event id: ", event.target.id)
+        localStorage.setItem("eventID", JSON.stringify(event.target.id));
+        dispatch({
+            type: "VIEW_APPROVAL",
+            approvalID: event.target.id
+        })
+    }
+
 
     async function deleteMatrix(url, data) {
         // console.log("in post data")
@@ -65,69 +166,37 @@ function Approval(props) {
         return Data1
     }
 
-    useEffect(() => {
-
-        showApprovalMatrix(endPoints.showApprovalMatrix).then(Data => {
-            setApprovalMatrix(Data)
-
-        });
-
-    }, [])
-    // var documentID = "";
-
     const dataDeleteHandler = (event) => {
         console.log("deleted")
         const documentID = event.target.id;
         // approvalMatrix?.map(data => {
         //     documentID = data._id;
         // })
-
         deleteMatrix(endPoints.deleteApprovalMatrix, { _id: documentID }).then(Data => { console.log(Data) });
         console.log(typeof (documentID));
-
-
-    }
-
-    const pageChangeHandler = (event) => {
-        console.log("pressed");
-        // <Link to="/viewapprovalform"  ></Link>
-
-
-
-
-
     }
 
 
     var approverList = "";
-
     const DataRows = []
     {
         approvalMatrix?.map(data => {
-
-            for (var i = 0; i < data.approversID.length; i++) {
-
-                approverList += data.approversID[i]._id.name.firstName + "  " + data.approversID[i]._id.name.lastName + " " + ",";
-                var approverListfinal = approverList;
-
+            {
+                for (var i = 0; i < data.approversID.length; i++) {
+                    approverList += [i + 1] + "." + "" + data.approversID[i]._id.name.firstName + " " + data.approversID[i]._id.name.lastName + " ";
+                    var approverListfinal = approverList;
+                }
+                approverList = "";
+                console.log(approverListfinal);
             }
-
-            approverList = "";
-
-            console.log(approverListfinal);
-
-
-            // console.log(data)
+            console.log(data)
             {
                 DataRows.push({
                     document_id: data._id,
                     delete: <div className="icons">
-                        <AiOutlineMinusCircle size={20} className="icon1" onClick={dataDeleteHandler} id={data._id} />
-                        <Link to="/viewapprovalform">
-                            <BsEyeFill size={20} className="icon2" onClick={pageChangeHandler} >
-
-                            </BsEyeFill>
-                        </Link>
+                        <Link to="/viewapprovalform"><CButton size="sm" color="primary" variant="ghost" id={data._id} className="icon1" onClick={pageChangeHandler}>Edit</CButton></Link>
+                        <CButton variant="ghost" color="info" size="sm" className="icon2" id={data._id} onClick={() => setVisible(!visible)} >View</CButton>
+                        <CButton variant="ghost" color="danger" size="sm" className="icon3" onClick={dataDeleteHandler} id={data._id} >Delete</CButton>
                     </div>,
                     position: data.position,
                     heirarchy: data.hierarchyID.name,
@@ -136,89 +205,43 @@ function Approval(props) {
                     verified: data.verified.toString(),
                     tatdate: data.tat,
                     approverName: approverListfinal,
-
                 })
+                // setTableRows(DataRows);
             }
-
-        })
+        });
+        // setTableRows(DataRows);
+        // tableRows.push(...DataRows);
     }
 
 
 
 
     console.log(approvalMatrix);
+    console.log(tableRows);
 
     // console.log(DataRows)
 
     const positionSearchHandler = (event) => {
         searchPosition = event.target.value;
-        console.log(searchPosition);
-
-
-
+        // console.log(searchPosition);
     }
-
     const heirarchySearchHandler = (event) => {
         searchHierarchy = event.target.value;
-
     }
-
     const branchSearchHandler = (event) => {
         searchBranch = event.target.value;
-
     }
     const approverSearchHandler = (event) => {
         searchApprover = event.target.value;
-
     }
-
-    // const filterHandler = (event) => {
-    //     let list = [];
-    //     switch (filterBy) {
-    //         case "searchPosition":
-    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase()))
-    //         case "searchCooling":
-    //             list = DataRows.filter(data => data.position.toUpperCase().includes(searchCooling.toUpperCase()))
-    //             break;
-
-
-    //     }
-    //     console.log(list);
-    // }
-
-
-
-    const rows = [
-        {
-            position: "data.position",
-            heirarchy: "data.hierarchyID.name",
-            branchname: "data.branchID.name",
-            cooling: "data.coolingPeriod",
-            verificationstatus: "data.verified",
-            tatdate: "data.tat",
-            approverName: "data.approversID[i]._id.name.firstName ",
-        },
-        {
-            position: "data.position",
-            heirarchy: "data.hierarchyID.name",
-            branchname: "data.branchID.name",
-            cooling: "data.coolingPeriod",
-            verificationstatus: "data.verified",
-            tatdate: "data.tat",
-            approverName: "data.approversID[i]._id.name.firstName ",
-        }
-    ];
-
 
 
     const datatable = {
         columns: [
-
             {
                 label: '',
                 field: 'delete',
-                width: 20
-
+                width: 200
             },
             {
                 label: 'position',
@@ -232,8 +255,6 @@ function Approval(props) {
                 sort: 'asc',
                 width: 50
             },
-
-
             {
                 label: 'Branch Name',
                 field: 'branchname',
@@ -246,7 +267,6 @@ function Approval(props) {
                 sort: 'asc',
                 width: 50
             },
-
             {
                 label: 'TAT',
                 field: 'tatdate',
@@ -269,85 +289,6 @@ function Approval(props) {
 
 
         rows: DataRows
-        // [
-        //     {
-
-        //         position: 'System Architect',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         cooling: '25',
-        //         verified: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         button: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        // ]
-        //     {
-
-        //         position: 'machine learning',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: 'full stack',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: 'web dev',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-        //     {
-
-        //         position: ' Architect',
-        //         heirarchy: 'dep-1',
-        //         branchname: 'Dwarka',
-        //         date: '2011/04/25',
-        //         verificationstatus: 'true',
-        //         tatdate: '2011/04/25',
-        //         approverName: "sejal",
-
-        //         id: <Link to="/approvalform"><CButton>
-        //             open
-        //         </CButton>
-        //         </Link>
-        //     },
-
-        // ],
     }
     const widerData = {
         columns: [
@@ -360,16 +301,12 @@ function Approval(props) {
     }
 
     // console.log(typeof (rows))
-
     // console.log(searchHierarchy);
-    const checkList = []
 
+    const checkList = []
     const changeValueHandler = (event) => {
         if (event.target.checked) {
             checkList.push(event.target.value);
-
-
-
         } else if (event.target.checked == false) {
             const index1 = checkList.indexOf(event.target.value);
             checkList.splice(index1, 1);
@@ -377,27 +314,39 @@ function Approval(props) {
         console.log(checkList);
     }
 
-
+    const filteredRows = [];
     const filterHandler = (event) => {
         if (checkList.includes("searchPosition")) {
-            const pos = DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase()))
-            console.log(pos);
+            DataRows.filter(data => data.position.toUpperCase().includes(searchPosition.toUpperCase())).map(data => filteredRows.push(data));
+            // console.log(pos);
+            // filteredRows.push(pos);
         }
         if (checkList.includes("searchHeirarchy")) {
-            const hei = DataRows.filter(data => data.heirarchy.toUpperCase().includes(searchHierarchy.toUpperCase()))
-            console.log(hei);
-
+            DataRows.filter(data => data.heirarchy.toUpperCase().includes(searchHierarchy.toUpperCase())).map(data => filteredRows.push(data));
+            // console.log(hei);
+            // filteredRows.push(hei);
         }
         if (checkList.includes("searchBranch")) {
-            const branch = DataRows.filter(data => data.branchname.toUpperCase().includes(searchBranch.toUpperCase()))
-            console.log(branch);
-
+            DataRows.filter(data => data.branchname.toUpperCase().includes(searchBranch.toUpperCase())).map(data => filteredRows.push(data))
+            // console.log(branch);
+            // filteredRows.push(branch);
         }
         if (checkList.includes("searchApprover")) {
-            const app = DataRows.filter(data => data.approverName.toUpperCase().includes(searchApprover.toUpperCase()))
-            console.log(app);
-
+            DataRows.filter(data => data.approverName.toUpperCase().includes(searchApprover.toUpperCase())).map(data => filteredRows.push(data));
+            // console.log(app);
+            // filteredRows.push(app);
         }
+        console.log(filteredRows);
+        let updatedRows = [...new Set(filteredRows)];
+        console.log(updatedRows);
+        // tableRows = [];
+        // setTableRows([]);
+        // setTableRows(updatedRows);
+    }
+
+    const clearFilterHandler = () => {
+        // setTableRows([]);
+        // setTableRows(DataRows);
     }
 
 
@@ -427,9 +376,7 @@ function Approval(props) {
                                         <CFormCheck id="flexCheckDefault" label="By Position" value="searchPosition" onChange={changeValueHandler} />
                                         <CRow>
                                             <input className="input" type="text" placeholder="enter position" onChange={positionSearchHandler} />
-
                                         </CRow>
-
                                     </CRow>
                                     <hr />
                                     <CRow>
@@ -450,34 +397,6 @@ function Approval(props) {
                                         </CRow>
                                     </CRow>
                                     <hr />
-                                    {/* <CRow>
-                                        <CFormCheck id="flexCheckDefault" label="By Cooling Period" value="searchCooling" onChange={changeValueHandler} />
-                                        <CRow>
-                                            <CFormControl
-                                                className="select"
-                                                type="number"
-                                                id="age"
-
-                                                onChange={coolingSearchHandler}
-                                            // required
-                                            />
-                                        </CRow>
-                                    </CRow>
-                                    <hr />
-                                    <CRow>
-                                        <CFormCheck id="flexCheckDefault" label="By TAT" value="searchTAT" />
-                                        <CRow>
-                                            <CFormControl
-                                                className="select"
-                                                type="number"
-                                                id="age"
-
-                                            // onChange={ageChangeHandler}
-                                            // required
-                                            />
-                                        </CRow>
-                                    </CRow> */}
-                                    <hr />
                                     <CRow>
                                         <CFormCheck id="flexCheckDefault" label="By Approver" value="searchApprover" onChange={changeValueHandler} />
                                         <CRow>
@@ -485,41 +404,78 @@ function Approval(props) {
                                         </CRow>
                                     </CRow>
                                     <CRow className="mt-4">
-                                        <CCol className="col-sm-2"></CCol>
-                                        <CCol className="col-sm-9">
-                                            <CButton onClick={filterHandler}>APPLY FILTER</CButton>
-
+                                        <CCol className="col-sm-4 mx-3">
+                                            <CButton shape="rounded-pill" onClick={filterHandler}>APPLY</CButton>
                                         </CCol>
-
-                                        <CCol className="col-sm-2"></CCol>
-
+                                        {/* <CCol className="col-sm-4"></CCol> */}
+                                        <CCol className="col-sm-4 mx-3" >
+                                            <CButton onClick={clearFilterHandler} shape="rounded-pill" color="danger">CLEAR</CButton>
+                                        </CCol>
                                     </CRow>
-
                                 </CRow>
-
                             </CCol>
 
                             <CCol className="col-sm-8 col-md-10 ">
                                 <CContainer fluid >
-                                    {/* <MDBDataTableV5
-                                        // small
-                                        hover
-                                        striped
-                                        fullPagination
-                                        entriesOptions={[5, 20, 25]}
-                                        entries={5}
-                                        bordered
-                                        
-                                        searchTop
-                                        searchBottom={false}
-                                        data={datatable}
-                                    />; */}
                                     <MDBDataTableV5 hover bordered
                                         entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} scrollX data={widerData} fullPagination />
                                 </CContainer>
                             </CCol>
                         </CRow>
                     </CContainer>
+                    <CModal alignment="center" visible={visible}>
+                        <CModalHeader onDismiss={() => setVisible(false)}>
+                            <CModalTitle>Approval Status</CModalTitle>
+                        </CModalHeader>
+                        <CModalBody>
+                            <div className={classes.root}>
+                                <Stepper activeStep={activeStep} orientation="vertical">
+                                    {steps.map((label, index) => (
+                                        <Step key={label}>
+                                            <StepLabel>{label}</StepLabel>
+                                            <StepContent>
+                                                <Typography>{getStepContent(index)}</Typography>
+                                                <div className={classes.actionsContainer}>
+                                                    <div>
+                                                        <Button
+                                                            disabled={activeStep === 0}
+                                                            onClick={handleBack}
+                                                            className={classes.button}
+                                                        >
+                                                            Back
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={handleNext}
+                                                            className={classes.button}
+                                                        >
+                                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </StepContent>
+                                        </Step>
+                                    ))}
+                                </Stepper>
+                                {activeStep === steps.length && (
+                                    <Paper square elevation={0} className={classes.resetContainer}>
+                                        <Typography>All steps completed - you&apos;re finished</Typography>
+                                        <Button onClick={handleReset} className={classes.button}>
+                                            Reset
+                                        </Button>
+                                    </Paper>
+                                )}
+                            </div>
+
+                        </CModalBody>
+                        <CModalFooter>
+                            <CButton color="secondary" onClick={() => setVisible(false)}>
+                                Close
+                            </CButton>
+                            <CButton color="primary">Save changes</CButton>
+                        </CModalFooter>
+                    </CModal>
                 </div>
                 <AppFooter />
             </div>
@@ -527,6 +483,3 @@ function Approval(props) {
     );
 }
 export default Approval;
-
-//filterbar align-self-start align-items-center justify-content-center
-//mainContent align-self-end align-items-center justify-content-center

@@ -4,21 +4,25 @@
 }
 
 .icon1{
-    left: 100%; position: relative; 
-    color :#4f5d73;
-}
-
-.icon1:hover{
-    color: red;
-}
-.icon2{
-    left: 200%; position: relative; 
-    color :#4f5d73;
-}
-
-.icon2:hover{
+    left: -2%; position: relative; 
     color: blue;
 }
+
+/* .icon1:hover{
+    color: red;
+} */
+.icon2{
+    left: 2%; position: relative; 
+    /* color: black; */
+}
+.icon3{
+    left: 6%; position: relative; 
+    color:red;
+}
+
+/* .icon2:hover{
+    color: blue;
+} */
 
 .filter{
     
@@ -47,5 +51,16 @@
 .select{
     margin:20px 20px;
      background-color : #EBEDEF !important;
+}
+
+.add:hover{
+    color :blue;
+    /* box-shadow: 0 0 5px blue; */
+
+}
+.remove:hover{
+    color: red;
+    /* box-shadow: 10px 10px 10px red; */
+
 }
 
