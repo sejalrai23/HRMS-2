@@ -209,8 +209,10 @@ function Approval(props) {
                 // setTableRows(DataRows);
             }
         });
+        // setTableRows(DataRows);
         // tableRows.push(...DataRows);
     }
+
 
 
 
